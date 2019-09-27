@@ -79,9 +79,8 @@ class BayesianModelSampling(Inference):
         types = [(var_name, "int") for var_name in self.topological_order]
         sampled = np.zeros(size, dtype=types).view(np.recarray)
 
-        pbar = tqdm(self.topological_order)
-        for node in pbar:
-            pbar.set_description("Generating for node: {node}".format(node=node))
+        #pbar = tqdm(self.topological_order)
+        for node in self.topological_order:
             cpd = self.model.get_cpds(node)
             states = range(self.cardinality[node])
             evidence = cpd.variables[:0:-1]

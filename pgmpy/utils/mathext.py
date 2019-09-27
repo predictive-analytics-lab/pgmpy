@@ -56,6 +56,16 @@ def cartesian(arrays, out=None):
 
     return out
 
+def _multidimensional_shifting(probabilities):
+    sample_size = probabilities.shape[1] - 1
+    
+    # get random shifting numbers & scale them correctly
+    random_shifts = np.random.random(probabilities.shape)
+    random_shifts /= random_shifts.sum(axis=1)[:, np.newaxis]
+    
+    # shift by numbers & find largest (by finding the smallest of the negative)
+    shifted_probabilities = random_shifts - probabilities
+    return np.argpartition(shifted_probabilities, sample_size, axis=1)[:, 0]
 
 def sample_discrete(values, weights, size=1):
     """
@@ -86,8 +96,9 @@ def sample_discrete(values, weights, size=1):
     if weights.ndim == 1:
         return np.random.choice(values, size=size, p=weights)
     else:
+        values = np.array(values)
         return np.fromiter(
-            map(lambda t: np.random.choice(values, p=t), weights), dtype="int"
+            values[_multidimensional_shifting(weights)], dtype="int"
         )
 
 
