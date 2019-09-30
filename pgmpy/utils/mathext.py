@@ -3,6 +3,7 @@ from collections import namedtuple
 import numpy as np
 from itertools import combinations, chain
 from pgmpy.extern.six.moves import map
+from numba.decorators import njit
 
 
 State = namedtuple("State", ["var", "state"])
@@ -56,16 +57,14 @@ def cartesian(arrays, out=None):
 
     return out
 
-def _multidimensional_shifting(probabilities):
-    sample_size = probabilities.shape[1] - 1
-    
-    # get random shifting numbers & scale them correctly
-    random_shifts = np.random.random(probabilities.shape)
-    random_shifts /= random_shifts.sum(axis=1)[:, np.newaxis]
-    
-    # shift by numbers & find largest (by finding the smallest of the negative)
-    shifted_probabilities = random_shifts - probabilities
-    return np.argpartition(shifted_probabilities, sample_size, axis=1)[:, 0]
+@njit
+def numba_sample(probs, values):
+    sample = np.zeros(probs.shape[0])
+    for i in np.arange(sample.shape[0]):
+        cdf = np.cumsum(probs[i])
+        x = np.random.random_sample()
+        sample[i] = np.argmax(x < cdf)
+    return sample
 
 def sample_discrete(values, weights, size=1):
     """
@@ -98,7 +97,7 @@ def sample_discrete(values, weights, size=1):
     else:
         values = np.array(values)
         return np.fromiter(
-            values[_multidimensional_shifting(weights)], dtype="int"
+            numba_sample(weights, values), dtype="int"
         )
 
 
