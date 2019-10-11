@@ -11,7 +11,6 @@ import numpy as np
 from pgmpy.factors.discrete import DiscreteFactor
 from pgmpy.extern import tabulate
 from pgmpy.extern import six
-from pgmpy.extern.six.moves import range, zip
 
 
 class TabularCPD(DiscreteFactor):
@@ -199,7 +198,7 @@ class TabularCPD(DiscreteFactor):
             if self.state_names and print_state_names:
                 for i in range(len(evidence_card)):
                     column_header = [str(evidence[i])] + [
-                        "{var}({state})".format(
+                        "{var}_{state}".format(
                             var=evidence[i], state=self.state_names[evidence[i]][d]
                         )
                         for d in col_indexes.T[i]
@@ -216,7 +215,7 @@ class TabularCPD(DiscreteFactor):
         if self.state_names and print_state_names:
             variable_array = [
                 [
-                    "{var}({state})".format(
+                    "{var}_{state}".format(
                         var=self.variable, state=self.state_names[self.variable][i]
                     )
                     for i in range(self.variable_card)

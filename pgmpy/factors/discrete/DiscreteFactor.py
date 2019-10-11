@@ -773,7 +773,7 @@ class DiscreteFactor(BaseFactor, StateNameMixin):
         """
         string_header = list(map(lambda x: six.text_type(x), self.scope()))
         string_header.append(
-            "{phi_or_p}({variables})".format(
+            "{phi_or_p}_{variables}".format(
                 phi_or_p=phi_or_p, variables=",".join(string_header)
             )
         )
@@ -783,7 +783,7 @@ class DiscreteFactor(BaseFactor, StateNameMixin):
         for prob in product(*[range(card) for card in self.cardinality]):
             if self.state_names and print_state_names:
                 prob_list = [
-                    "{var}({state})".format(
+                    "{var}_{state}".format(
                         var=list(self.variables)[i],
                         state=self.state_names[list(self.variables)[i]][prob[i]],
                     )
