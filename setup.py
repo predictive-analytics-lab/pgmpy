@@ -25,5 +25,27 @@ setup(
         "Topic :: Scientific/Engineering",
     ],
     long_description="https://github.com/pgmpy/pgmpy/blob/dev/README.md",
-    install_requires=[],
+    install_requires=[
+        "networkx >= 2.3",
+        "numpy >= 1.17.2",
+        "scipy >= 1.3.1",
+        "pandas >= 0.25",
+        "pyparsing >= 2.4.2",
+        "statsmodels >= 0.10.1",
+        "tqdm >= 4.36.1",
+        "joblib >= 0.14",
+        "numba >= 0.46",
+    ],
+    extras_require={
+        "dev": [
+            "black",
+            "mypy >= 0.720",
+            "pre-commit",
+            "pylint >= 2.0",
+            "pytest >= 3.3.2",
+            "pytest-cov >= 2.6.0",
+            "mock",
+            "nose",
+        ]
+    },
 )
