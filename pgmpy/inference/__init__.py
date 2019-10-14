@@ -9,8 +9,5 @@ __all__ = [
     "VariableElimination",
     "DBNInference",
     "BeliefPropagation",
-    "BayesianModelSampling",
-    "GibbsSampling",
     "Mplp",
-    "continuous",
 ]
