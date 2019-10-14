@@ -10,5 +10,3 @@ from .models import __all__
 from .readwrite import __all__
 from .sampling import __all__
 from .utils import __all__
-
-__version__ = "v0.1.8.dev45.PAL"

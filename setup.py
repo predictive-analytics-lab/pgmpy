@@ -2,11 +2,11 @@
 
 from setuptools import setup, find_packages
 
-import pgmpy
+VERSION = "v0.1.8.dev45.PAL"
 
 setup(
     name="pgmpy",
-    version=pgmpy.__version__,
+    version=VERSION,
     description="A library for Probabilistic Graphical Models",
     packages=find_packages(exclude=["tests"]),
     author="Ankur Ankan",
