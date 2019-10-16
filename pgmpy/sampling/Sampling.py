@@ -24,15 +24,15 @@ warnings.simplefilter('ignore', category=NumbaPendingDeprecationWarning)
 
 State = namedtuple("State", ["var", "state"])
 
-
-@njit
-def _range(j: int):
-    k = np.zeros(j)
-    i = 0
-    while i < j:
-        k[i] = i
-        i = i + 1
-    return k
+#
+# # @njit
+# def _range(j: int):
+#     k = np.zeros(j)
+#     i = 0
+#     while i < j:
+#         k[i] = i
+#         i = i + 1
+#     return k
 
 
 @njit
@@ -104,11 +104,12 @@ class BayesianModelSampling(Inference):
 
         p_red = partial(self.reduction, v_cpd=variable_cpd, v_evid=variable_evid)
 
-        pool = mp.Pool(mp.cpu_count())
+        # pool = mp.Pool(mp.cpu_count())
 
-        results = pool.map(p_red, [sc for sc in combinations])
+        # results = pool.map(p_red, [sc for sc in combinations])
+        results = map(p_red, [sc for sc in combinations])
 
-        pool.close()
+        # pool.close()
 
         return results
 
@@ -118,7 +119,7 @@ class BayesianModelSampling(Inference):
 
         ev_list = set(list(map(tuple, evidence.T)))
 
-        to_get_cartesian = [_range(self.cardinality[var]) for var in variable_evid]
+        to_get_cartesian = [np.arange(self.cardinality[var]) for var in variable_evid]
 
         combinations = [
             tuple(state_combination)
@@ -152,8 +153,8 @@ class BayesianModelSampling(Inference):
         pbar = tqdm(self.topological_order)
         for node in pbar:
             cpd = self.model.get_cpds(node)
-            states = np.array(range(self.cardinality[node]), copy=False)
-            evidence = cpd.variables[:0:-1]
+            states = np.arange(self.cardinality[node])
+            evidence = list(reversed(cpd.variables[1:]))
 
             if evidence:
                 evidence = np.vstack([sampled[i] for i in evidence])
