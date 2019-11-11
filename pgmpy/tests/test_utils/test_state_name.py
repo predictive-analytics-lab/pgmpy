@@ -220,8 +220,7 @@ class StateNameDecorator(unittest.TestCase):
         self.assertEqual(cpd.variable, "grade")
         self.assertEqual(cpd.variables, ["grade", "intel"])
         np_test.assert_array_equal(
-            cpd.get_values(),
-            np.array([[0.1, 0.1, 0.1], [0.1, 0.1, 0.1], [0.8, 0.8, 0.8]]),
+            cpd.get_values(), np.array([[0.1, 0.1, 0.1], [0.1, 0.1, 0.1], [0.8, 0.8, 0.8]])
         )
 
         cpd = TabularCPD(
@@ -239,8 +238,7 @@ class StateNameDecorator(unittest.TestCase):
         self.assertEqual(cpd.variable, "grade")
         self.assertEqual(cpd.variables, ["grade", "intel"])
         np_test.assert_array_equal(
-            cpd.get_values(),
-            np.array([[0.1, 0.1, 0.1], [0.1, 0.1, 0.1], [0.8, 0.8, 0.8]]),
+            cpd.get_values(), np.array([[0.1, 0.1, 0.1], [0.1, 0.1, 0.1], [0.8, 0.8, 0.8]])
         )
 
         cpd = TabularCPD(
@@ -259,8 +257,7 @@ class StateNameDecorator(unittest.TestCase):
         self.assertEqual(cpd.variable, "grade")
         self.assertEqual(cpd.variables, ["grade", "intel"])
         np_test.assert_array_equal(
-            cpd.get_values(),
-            np.array([[0.1, 0.1, 0.1], [0.1, 0.1, 0.1], [0.8, 0.8, 0.8]]),
+            cpd.get_values(), np.array([[0.1, 0.1, 0.1], [0.1, 0.1, 0.1], [0.8, 0.8, 0.8]])
         )
 
         cpd = TabularCPD(
@@ -278,23 +275,18 @@ class StateNameDecorator(unittest.TestCase):
         self.assertEqual(cpd.variable, "grade")
         self.assertEqual(cpd.variables, ["grade", "intel"])
         np_test.assert_array_equal(
-            cpd.get_values(),
-            np.array([[0.1, 0.1, 0.1], [0.1, 0.1, 0.1], [0.8, 0.8, 0.8]]),
+            cpd.get_values(), np.array([[0.1, 0.1, 0.1], [0.1, 0.1, 0.1], [0.8, 0.8, 0.8]])
         )
 
     def test_inference_query_statename(self):
-        inf_op1 = self.model_with_state_names.query(
-            ["grade"], evidence={"intel": "poor"}
-        )
+        inf_op1 = self.model_with_state_names.query(["grade"], evidence={"intel": "poor"})
         inf_op2 = self.model_no_state_names.query(["grade"], evidence={"intel": 0})
         req_op = DiscreteFactor(["grade"], [3], np.array([0.1, 0.1, 0.8]))
 
         self.assertEqual(inf_op1, req_op)
         self.assertEqual(inf_op1, req_op)
 
-        inf_op1 = self.model_with_state_names.map_query(
-            ["grade"], evidence={"intel": "poor"}
-        )
+        inf_op1 = self.model_with_state_names.map_query(["grade"], evidence={"intel": "poor"})
         inf_op2 = self.model_no_state_names.map_query(["grade"], evidence={"intel": 0})
         req_op1 = {"grade": "F"}
         req_op2 = {"grade": 2}

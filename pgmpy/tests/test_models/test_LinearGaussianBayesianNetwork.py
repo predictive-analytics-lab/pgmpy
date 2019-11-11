@@ -62,8 +62,7 @@ class TestLGBNMethods(unittest.TestCase):
         self.assertEqual(jgd.variables, ["x1", "x2", "x3"])
         np_test.assert_array_equal(jgd.mean, np.array([[1.0], [-4.5], [8.5]]))
         np_test.assert_array_equal(
-            jgd.covariance,
-            np.array([[4.0, 2.0, -2.0], [2.0, 5.0, -5.0], [-2.0, -5.0, 8.0]]),
+            jgd.covariance, np.array([[4.0, 2.0, -2.0], [2.0, 5.0, -5.0], [-2.0, -5.0, 8.0]])
         )
 
     @unittest.skip("TODO")
@@ -81,10 +80,6 @@ class TestLGBNMethods(unittest.TestCase):
     def test_not_implemented_methods(self):
         self.assertRaises(ValueError, self.model.get_cardinality, "x1")
         self.assertRaises(NotImplementedError, self.model.fit, [[1, 2, 3], [1, 5, 6]])
-        self.assertRaises(
-            NotImplementedError, self.model.predict, [[1, 2, 3], [1, 5, 6]]
-        )
+        self.assertRaises(NotImplementedError, self.model.predict, [[1, 2, 3], [1, 5, 6]])
         self.assertRaises(NotImplementedError, self.model.to_markov_model)
-        self.assertRaises(
-            NotImplementedError, self.model.is_imap, [[1, 2, 3], [1, 5, 6]]
-        )
+        self.assertRaises(NotImplementedError, self.model.is_imap, [[1, 2, 3], [1, 5, 6]])

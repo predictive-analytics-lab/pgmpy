@@ -8,17 +8,9 @@ import numpy.testing as np_test
 from pgmpy.models import BayesianModel, MarkovModel
 from pgmpy.base import DAG
 import pgmpy.tests.help_functions as hf
-from pgmpy.factors.discrete import (
-    TabularCPD,
-    JointProbabilityDistribution,
-    DiscreteFactor,
-)
+from pgmpy.factors.discrete import TabularCPD, JointProbabilityDistribution, DiscreteFactor
 from pgmpy.independencies import Independencies
-from pgmpy.estimators import (
-    BayesianEstimator,
-    BaseEstimator,
-    MaximumLikelihoodEstimator,
-)
+from pgmpy.estimators import BayesianEstimator, BaseEstimator, MaximumLikelihoodEstimator
 from pgmpy.base import DAG
 
 
@@ -32,9 +24,7 @@ class TestBaseModelCreation(unittest.TestCase):
     def test_class_init_with_data_string(self):
         self.g = BayesianModel([("a", "b"), ("b", "c")])
         self.assertListEqual(sorted(self.g.nodes()), ["a", "b", "c"])
-        self.assertListEqual(
-            hf.recursive_sorted(self.g.edges()), [["a", "b"], ["b", "c"]]
-        )
+        self.assertListEqual(hf.recursive_sorted(self.g.edges()), [["a", "b"], ["b", "c"]])
 
     def test_class_init_with_data_nonstring(self):
         BayesianModel([(1, 2), (2, 3)])
@@ -59,9 +49,7 @@ class TestBaseModelCreation(unittest.TestCase):
         self.assertListEqual(list(self.G.edges()), [("d", "e")])
         self.G.add_nodes_from(["a", "b", "c"])
         self.G.add_edge("a", "b")
-        self.assertListEqual(
-            hf.recursive_sorted(self.G.edges()), [["a", "b"], ["d", "e"]]
-        )
+        self.assertListEqual(hf.recursive_sorted(self.G.edges()), [["a", "b"], ["d", "e"]])
 
     def test_add_edge_nonstring(self):
         self.G.add_edge(1, 2)
@@ -76,9 +64,7 @@ class TestBaseModelCreation(unittest.TestCase):
     def test_add_edges_from_string(self):
         self.G.add_edges_from([("a", "b"), ("b", "c")])
         self.assertListEqual(sorted(self.G.nodes()), ["a", "b", "c"])
-        self.assertListEqual(
-            hf.recursive_sorted(self.G.edges()), [["a", "b"], ["b", "c"]]
-        )
+        self.assertListEqual(hf.recursive_sorted(self.G.edges()), [["a", "b"], ["b", "c"]])
         self.G.add_nodes_from(["d", "e", "f"])
         self.G.add_edges_from([("d", "e"), ("e", "f")])
         self.assertListEqual(sorted(self.G.nodes()), ["a", "b", "c", "d", "e", "f"])
@@ -94,9 +80,7 @@ class TestBaseModelCreation(unittest.TestCase):
         self.assertRaises(ValueError, self.G.add_edges_from, [("a", "a")])
 
     def test_add_edges_from_result_cycle(self):
-        self.assertRaises(
-            ValueError, self.G.add_edges_from, [("a", "b"), ("b", "c"), ("c", "a")]
-        )
+        self.assertRaises(ValueError, self.G.add_edges_from, [("a", "b"), ("b", "c"), ("c", "a")])
 
     def test_update_node_parents_bm_constructor(self):
         self.g = BayesianModel([("a", "b"), ("b", "c")])
@@ -168,9 +152,7 @@ class TestBayesianModelMethods(unittest.TestCase):
         self.assertRaises(ValueError, self.G2._get_ancestors_of, "h")
 
     def test_get_cardinality(self):
-        self.assertDictEqual(
-            self.G1.get_cardinality(), {"diff": 2, "intel": 3, "grade": 3}
-        )
+        self.assertDictEqual(self.G1.get_cardinality(), {"diff": 2, "intel": 3, "grade": 3})
 
     def test_get_cardinality_with_node(self):
         self.assertEqual(self.G1.get_cardinality("diff"), 2)
@@ -178,19 +160,13 @@ class TestBayesianModelMethods(unittest.TestCase):
         self.assertEqual(self.G1.get_cardinality("grade"), 3)
 
     def test_local_independencies(self):
+        self.assertEqual(self.G.local_independencies("a"), Independencies(["a", ["b", "c"]]))
         self.assertEqual(
-            self.G.local_independencies("a"), Independencies(["a", ["b", "c"]])
+            self.G.local_independencies("c"), Independencies(["c", ["a", "d", "e"], "b"])
         )
+        self.assertEqual(self.G.local_independencies("d"), Independencies(["d", "c", ["b", "a"]]))
         self.assertEqual(
-            self.G.local_independencies("c"),
-            Independencies(["c", ["a", "d", "e"], "b"]),
-        )
-        self.assertEqual(
-            self.G.local_independencies("d"), Independencies(["d", "c", ["b", "a"]])
-        )
-        self.assertEqual(
-            self.G.local_independencies("e"),
-            Independencies(["e", ["c", "b", "a"], "d"]),
+            self.G.local_independencies("e"), Independencies(["e", ["c", "b", "a"], "d"])
         )
         self.assertEqual(self.G.local_independencies("b"), Independencies(["b", "a"]))
         self.assertEqual(self.G1.local_independencies("grade"), Independencies())
@@ -205,9 +181,7 @@ class TestBayesianModelMethods(unittest.TestCase):
             fork.get_independencies(), Independencies(("X", "Z", "Y"), ("Z", "X", "Y"))
         )
         collider = BayesianModel([("X", "Y"), ("Z", "Y")])
-        self.assertEqual(
-            collider.get_independencies(), Independencies(("X", "Z"), ("Z", "X"))
-        )
+        self.assertEqual(collider.get_independencies(), Independencies(("X", "Z"), ("Z", "X")))
 
     def test_is_imap(self):
         val = [
@@ -250,9 +224,7 @@ class TestBayesianModelMethods(unittest.TestCase):
                 ("v", "q"),
             ]
         )
-        self.assertEqual(
-            set(G.get_markov_blanket("y")), set(["s", "w", "x", "u", "z", "v"])
-        )
+        self.assertEqual(set(G.get_markov_blanket("y")), set(["s", "w", "x", "u", "z", "v"]))
 
     def test_get_immoralities(self):
         G = BayesianModel([("x", "y"), ("z", "y"), ("x", "z"), ("w", "y")])
@@ -275,9 +247,7 @@ class TestBayesianModelMethods(unittest.TestCase):
         model_copy = self.G1.copy()
         self.assertEqual(sorted(self.G1.nodes()), sorted(model_copy.nodes()))
         self.assertEqual(sorted(self.G1.edges()), sorted(model_copy.edges()))
-        self.assertNotEqual(
-            id(self.G1.get_cpds("diff")), id(model_copy.get_cpds("diff"))
-        )
+        self.assertNotEqual(id(self.G1.get_cpds("diff")), id(model_copy.get_cpds("diff")))
 
         self.G1.remove_cpds("diff")
         diff_cpd = TabularCPD("diff", 2, values=[[0.3], [0.7]])
@@ -311,27 +281,17 @@ class TestBayesianModelCPD(unittest.TestCase):
 
     def test_active_trail_nodes(self):
         self.assertEqual(sorted(self.G2.active_trail_nodes("d")["d"]), ["d", "g", "l"])
-        self.assertEqual(
-            sorted(self.G2.active_trail_nodes("i")["i"]), ["g", "i", "l", "s"]
-        )
-        self.assertEqual(
-            sorted(self.G2.active_trail_nodes(["d", "i"])["d"]), ["d", "g", "l"]
-        )
+        self.assertEqual(sorted(self.G2.active_trail_nodes("i")["i"]), ["g", "i", "l", "s"])
+        self.assertEqual(sorted(self.G2.active_trail_nodes(["d", "i"])["d"]), ["d", "g", "l"])
 
     def test_active_trail_nodes_args(self):
         self.assertEqual(
-            sorted(self.G2.active_trail_nodes(["d", "l"], observed="g")["d"]),
-            ["d", "i", "s"],
+            sorted(self.G2.active_trail_nodes(["d", "l"], observed="g")["d"]), ["d", "i", "s"]
         )
+        self.assertEqual(sorted(self.G2.active_trail_nodes(["d", "l"], observed="g")["l"]), ["l"])
+        self.assertEqual(sorted(self.G2.active_trail_nodes("s", observed=["i", "l"])["s"]), ["s"])
         self.assertEqual(
-            sorted(self.G2.active_trail_nodes(["d", "l"], observed="g")["l"]), ["l"]
-        )
-        self.assertEqual(
-            sorted(self.G2.active_trail_nodes("s", observed=["i", "l"])["s"]), ["s"]
-        )
-        self.assertEqual(
-            sorted(self.G2.active_trail_nodes("s", observed=["d", "l"])["s"]),
-            ["g", "i", "s"],
+            sorted(self.G2.active_trail_nodes("s", observed=["d", "l"])["s"]), ["g", "i", "s"]
         )
 
     def test_is_active_trail_triplets(self):
@@ -360,18 +320,10 @@ class TestBayesianModelCPD(unittest.TestCase):
         cpd_d = TabularCPD("d", 2, values=np.random.rand(2, 1))
         cpd_i = TabularCPD("i", 2, values=np.random.rand(2, 1))
         cpd_g = TabularCPD(
-            "g",
-            2,
-            values=np.random.rand(2, 4),
-            evidence=["d", "i"],
-            evidence_card=[2, 2],
+            "g", 2, values=np.random.rand(2, 4), evidence=["d", "i"], evidence_card=[2, 2]
         )
-        cpd_l = TabularCPD(
-            "l", 2, values=np.random.rand(2, 2), evidence=["g"], evidence_card=[2]
-        )
-        cpd_s = TabularCPD(
-            "s", 2, values=np.random.rand(2, 2), evidence=["i"], evidence_card=[2]
-        )
+        cpd_l = TabularCPD("l", 2, values=np.random.rand(2, 2), evidence=["g"], evidence_card=[2])
+        cpd_s = TabularCPD("s", 2, values=np.random.rand(2, 2), evidence=["i"], evidence_card=[2])
         self.G.add_cpds(cpd_d, cpd_i, cpd_g, cpd_l, cpd_s)
 
         self.assertEqual(self.G.get_cpds("d").variable, "d")
@@ -379,9 +331,7 @@ class TestBayesianModelCPD(unittest.TestCase):
     def test_get_cpds1(self):
         self.model = BayesianModel([("A", "AB")])
         cpd_a = TabularCPD("A", 2, values=np.random.rand(2, 1))
-        cpd_ab = TabularCPD(
-            "AB", 2, values=np.random.rand(2, 2), evidence=["A"], evidence_card=[2]
-        )
+        cpd_ab = TabularCPD("AB", 2, values=np.random.rand(2, 2), evidence=["A"], evidence_card=[2])
 
         self.model.add_cpds(cpd_a, cpd_ab)
         self.assertEqual(self.model.get_cpds("A").variable, "A")
@@ -400,18 +350,10 @@ class TestBayesianModelCPD(unittest.TestCase):
         cpd_d = TabularCPD("d", 2, values=np.random.rand(2, 1))
         cpd_i = TabularCPD("i", 2, values=np.random.rand(2, 1))
         cpd_g = TabularCPD(
-            "g",
-            2,
-            values=np.random.rand(2, 4),
-            evidence=["d", "i"],
-            evidence_card=[2, 2],
+            "g", 2, values=np.random.rand(2, 4), evidence=["d", "i"], evidence_card=[2, 2]
         )
-        cpd_l = TabularCPD(
-            "l", 2, values=np.random.rand(2, 2), evidence=["g"], evidence_card=[2]
-        )
-        cpd_s = TabularCPD(
-            "s", 2, values=np.random.rand(2, 2), evidence=["i"], evidence_card=[2]
-        )
+        cpd_l = TabularCPD("l", 2, values=np.random.rand(2, 2), evidence=["g"], evidence_card=[2])
+        cpd_s = TabularCPD("s", 2, values=np.random.rand(2, 2), evidence=["i"], evidence_card=[2])
 
         self.G.add_cpds(cpd_d, cpd_i, cpd_g, cpd_l, cpd_s)
         self.assertEqual(self.G.get_cpds("d"), cpd_d)
@@ -430,19 +372,11 @@ class TestBayesianModelCPD(unittest.TestCase):
         )
 
         cpd_s = TabularCPD(
-            "s",
-            2,
-            values=np.array([[0.2, 0.3], [0.8, 0.7]]),
-            evidence=["i"],
-            evidence_card=[2],
+            "s", 2, values=np.array([[0.2, 0.3], [0.8, 0.7]]), evidence=["i"], evidence_card=[2]
         )
 
         cpd_l = TabularCPD(
-            "l",
-            2,
-            values=np.array([[0.2, 0.3], [0.8, 0.7]]),
-            evidence=["g"],
-            evidence_card=[2],
+            "l", 2, values=np.array([[0.2, 0.3], [0.8, 0.7]]), evidence=["g"], evidence_card=[2]
         )
 
         self.G.add_cpds(cpd_g, cpd_s, cpd_l)
@@ -456,11 +390,7 @@ class TestBayesianModelCPD(unittest.TestCase):
 
     def test_check_model1(self):
         cpd_g = TabularCPD(
-            "g",
-            2,
-            values=np.array([[0.2, 0.3], [0.8, 0.7]]),
-            evidence=["i"],
-            evidence_card=[2],
+            "g", 2, values=np.array([[0.2, 0.3], [0.8, 0.7]]), evidence=["i"], evidence_card=[2]
         )
         self.G.add_cpds(cpd_g)
         self.assertRaises(ValueError, self.G.check_model)
@@ -478,22 +408,14 @@ class TestBayesianModelCPD(unittest.TestCase):
         self.G.remove_cpds(cpd_g)
 
         cpd_g = TabularCPD(
-            "g",
-            2,
-            values=np.array([[0.2, 0.3], [0.8, 0.7]]),
-            evidence=["l"],
-            evidence_card=[2],
+            "g", 2, values=np.array([[0.2, 0.3], [0.8, 0.7]]), evidence=["l"], evidence_card=[2]
         )
         self.G.add_cpds(cpd_g)
         self.assertRaises(ValueError, self.G.check_model)
         self.G.remove_cpds(cpd_g)
 
         cpd_l = TabularCPD(
-            "l",
-            2,
-            values=np.array([[0.2, 0.3], [0.8, 0.7]]),
-            evidence=["d"],
-            evidence_card=[2],
+            "l", 2, values=np.array([[0.2, 0.3], [0.8, 0.7]]), evidence=["d"], evidence_card=[2]
         )
         self.G.add_cpds(cpd_l)
         self.assertRaises(ValueError, self.G.check_model)
@@ -514,10 +436,7 @@ class TestBayesianModelCPD(unittest.TestCase):
             "l",
             2,
             values=np.array(
-                [
-                    [0.2, 0.3, 0.4, 0.6, 0.2, 0.3, 0.4, 0.6],
-                    [0.8, 0.7, 0.6, 0.4, 0.8, 0.7, 0.6, 0.4],
-                ]
+                [[0.2, 0.3, 0.4, 0.6, 0.2, 0.3, 0.4, 0.6], [0.8, 0.7, 0.6, 0.4, 0.8, 0.7, 0.6, 0.4]]
             ),
             evidence=["g", "d", "i"],
             evidence_card=[2, 2, 2],
@@ -528,11 +447,7 @@ class TestBayesianModelCPD(unittest.TestCase):
 
     def test_check_model2(self):
         cpd_s = TabularCPD(
-            "s",
-            2,
-            values=np.array([[0.5, 0.3], [0.8, 0.7]]),
-            evidence=["i"],
-            evidence_card=[2],
+            "s", 2, values=np.array([[0.5, 0.3], [0.8, 0.7]]), evidence=["i"], evidence_card=[2]
         )
         self.G.add_cpds(cpd_s)
         self.assertRaises(ValueError, self.G.check_model)
@@ -550,11 +465,7 @@ class TestBayesianModelCPD(unittest.TestCase):
         self.G.remove_cpds(cpd_g)
 
         cpd_l = TabularCPD(
-            "l",
-            2,
-            values=np.array([[0.2, 0.3], [0.1, 0.7]]),
-            evidence=["g"],
-            evidence_card=[2],
+            "l", 2, values=np.array([[0.2, 0.3], [0.1, 0.7]]), evidence=["g"], evidence_card=[2]
         )
         self.G.add_cpds(cpd_l)
         self.assertRaises(ValueError, self.G.check_model)
@@ -568,9 +479,7 @@ class TestBayesianModelFitPredict(unittest.TestCase):
     def setUp(self):
         self.model_disconnected = BayesianModel()
         self.model_disconnected.add_nodes_from(["A", "B", "C", "D", "E"])
-        self.model_connected = BayesianModel(
-            [("A", "B"), ("C", "B"), ("C", "D"), ("B", "E")]
-        )
+        self.model_connected = BayesianModel([("A", "B"), ("C", "B"), ("C", "D"), ("B", "E")])
 
         self.model2 = BayesianModel([("A", "C"), ("B", "C")])
         self.data1 = pd.DataFrame(data={"A": [0, 0, 1], "B": [0, 1, 0], "C": [1, 1, 0]})
@@ -596,20 +505,12 @@ class TestBayesianModelFitPredict(unittest.TestCase):
             self.data1,
             estimator=BayesianEstimator,
             prior_type="dirichlet",
-            pseudo_counts={
-                "A": [[9], [3]],
-                "B": [[9], [3]],
-                "C": [[9, 9, 9, 9], [3, 3, 3, 3]],
-            },
+            pseudo_counts={"A": [[9], [3]], "B": [[9], [3]], "C": [[9, 9, 9, 9], [3, 3, 3, 3]]},
         )
-        self.assertEqual(
-            self.model2.get_cpds("B"), TabularCPD("B", 2, [[11.0 / 15], [4.0 / 15]])
-        )
+        self.assertEqual(self.model2.get_cpds("B"), TabularCPD("B", 2, [[11.0 / 15], [4.0 / 15]]))
 
     def test_fit_missing_data(self):
-        self.model2.fit(
-            self.data2, state_names={"C": [0, 1]}, complete_samples_only=False
-        )
+        self.model2.fit(self.data2, state_names={"C": [0, 1]}, complete_samples_only=False)
         cpds = set(
             [
                 TabularCPD("A", 2, [[0.5], [0.5]]),
@@ -627,8 +528,7 @@ class TestBayesianModelFitPredict(unittest.TestCase):
 
     def test_disconnected_fit(self):
         values = pd.DataFrame(
-            np.random.randint(low=0, high=2, size=(1000, 5)),
-            columns=["A", "B", "C", "D", "E"],
+            np.random.randint(low=0, high=2, size=(1000, 5)), columns=["A", "B", "C", "D", "E"]
         )
         self.model_disconnected.fit(values)
 
@@ -636,10 +536,7 @@ class TestBayesianModelFitPredict(unittest.TestCase):
             cpd = self.model_disconnected.get_cpds(node)
             self.assertEqual(cpd.variable, node)
             np_test.assert_array_equal(cpd.cardinality, np.array([2]))
-            value = (
-                values.ix[:, node].value_counts()
-                / values.ix[:, node].value_counts().sum()
-            )
+            value = values.ix[:, node].value_counts() / values.ix[:, node].value_counts().sum()
             value = value.reindex(sorted(value.index)).values
             np_test.assert_array_equal(cpd.values, value)
 
@@ -983,8 +880,7 @@ class TestBayesianModelFitPredict(unittest.TestCase):
     def test_connected_predict_probability(self):
         np.random.seed(42)
         values = pd.DataFrame(
-            np.random.randint(low=0, high=2, size=(100, 5)),
-            columns=["A", "B", "C", "D", "E"],
+            np.random.randint(low=0, high=2, size=(100, 5)), columns=["A", "B", "C", "D", "E"]
         )
         fit_data = values[:80]
         predict_data = values[80:].copy()
@@ -1040,29 +936,22 @@ class TestBayesianModelFitPredict(unittest.TestCase):
             atol=0,
         )
         predict_data = pd.DataFrame(
-            np.random.randint(low=0, high=2, size=(1, 5)),
-            columns=["A", "B", "C", "F", "E"],
+            np.random.randint(low=0, high=2, size=(1, 5)), columns=["A", "B", "C", "F", "E"]
         )[:]
 
     def test_predict_probability_errors(self):
         np.random.seed(42)
         values = pd.DataFrame(
-            np.random.randint(low=0, high=2, size=(2, 5)),
-            columns=["A", "B", "C", "D", "E"],
+            np.random.randint(low=0, high=2, size=(2, 5)), columns=["A", "B", "C", "D", "E"]
         )
         fit_data = values[:1]
         predict_data = values[1:].copy()
         self.model_connected.fit(fit_data)
-        self.assertRaises(
-            ValueError, self.model_connected.predict_probability, predict_data
-        )
+        self.assertRaises(ValueError, self.model_connected.predict_probability, predict_data)
         predict_data = pd.DataFrame(
-            np.random.randint(low=0, high=2, size=(1, 5)),
-            columns=["A", "B", "C", "F", "E"],
+            np.random.randint(low=0, high=2, size=(1, 5)), columns=["A", "B", "C", "F", "E"]
         )[:]
-        self.assertRaises(
-            ValueError, self.model_connected.predict_probability, predict_data
-        )
+        self.assertRaises(ValueError, self.model_connected.predict_probability, predict_data)
 
     def tearDown(self):
         del self.model_connected

@@ -61,12 +61,8 @@ class Independencies(object):
         if not isinstance(other, Independencies):
             return False
         return all(
-            independency in other.get_assertions()
-            for independency in self.get_assertions()
-        ) and all(
-            independency in self.get_assertions()
-            for independency in other.get_assertions()
-        )
+            independency in other.get_assertions() for independency in self.get_assertions()
+        ) and all(independency in self.get_assertions() for independency in other.get_assertions())
 
     def __ne__(self, other):
         return not self.__eq__(other)
@@ -140,9 +136,7 @@ class Independencies(object):
                         IndependenceAssertion(assertion[0], assertion[1], assertion[2])
                     )
                 except IndexError:
-                    self.independencies.append(
-                        IndependenceAssertion(assertion[0], assertion[1])
-                    )
+                    self.independencies.append(IndependenceAssertion(assertion[0], assertion[1]))
 
     def closure(self):
         """
@@ -224,9 +218,7 @@ class Independencies(object):
                 return []
             else:
                 return [
-                    IndependenceAssertion(
-                        ind.event1, ind.event2 - {elem}, {elem} | ind.event3
-                    )
+                    IndependenceAssertion(ind.event1, ind.event2 - {elem}, {elem} | ind.event3)
                     for elem in ind.event2
                 ]
 
@@ -293,9 +285,7 @@ class Independencies(object):
             return False
 
         implications = self.closure().get_assertions()
-        return all(
-            ind in implications for ind in entailed_independencies.get_assertions()
-        )
+        return all(ind in implications for ind in entailed_independencies.get_assertions())
 
     def is_equivalent(self, other):
         """
@@ -408,9 +398,7 @@ class IndependenceAssertion(object):
         if any([event2, event3]) and not event1:
             raise ValueError("event1 needs to be specified")
         if event3 and not all([event1, event2]):
-            raise ValueError(
-                "event1" if not event1 else "event2" + " needs to be specified"
-            )
+            raise ValueError("event1" if not event1 else "event2" + " needs to be specified")
 
         self.event1 = frozenset(self._return_list_if_str(event1))
         self.event2 = frozenset(self._return_list_if_str(event2))

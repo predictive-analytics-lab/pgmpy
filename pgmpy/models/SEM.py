@@ -135,9 +135,7 @@ class SEMGraph(DAG):
 
         # Set the error variances
         for var in self.err_graph.nodes():
-            self.err_graph.nodes[var]["weight"] = (
-                err_var[var] if var in err_var.keys() else np.NaN
-            )
+            self.err_graph.nodes[var]["weight"] = err_var[var] if var in err_var.keys() else np.NaN
 
         self.full_graph_struct = self._get_full_graph_struct()
 
@@ -253,16 +251,12 @@ class SEMGraph(DAG):
             graph_struct = struct
         else:
             raise ValueError(
-                "Expected struct to be str or nx.DiGraph. Got {t}".format(
-                    t=type(struct)
-                )
+                "Expected struct to be str or nx.DiGraph. Got {t}".format(t=type(struct))
             )
 
         ancestors_list = set()
         for node in observed:
-            ancestors_list = ancestors_list.union(
-                nx.algorithms.dag.ancestors(graph_struct, node)
-            )
+            ancestors_list = ancestors_list.union(nx.algorithms.dag.ancestors(graph_struct, node))
 
         # Direction of flow of information
         # up ->  from parent to child
@@ -335,9 +329,7 @@ class SEMGraph(DAG):
         full_graph = self.full_graph_struct.copy()
 
         if not (X, Y) in full_graph.edges():
-            raise ValueError(
-                "The edge from {X} -> {Y} doesn't exist in the graph".format(X=X, Y=Y)
-            )
+            raise ValueError("The edge from {X} -> {Y} doesn't exist in the graph".format(X=X, Y=Y))
 
         if (X in self.observed) and (Y in self.observed):
             full_graph.remove_edge(X, Y)
@@ -407,9 +399,9 @@ class SEMGraph(DAG):
         else:
             explanatory_var = X
 
-        d_connected_x = self.active_trail_nodes(
-            [explanatory_var], struct=transformed_graph
-        )[explanatory_var]
+        d_connected_x = self.active_trail_nodes([explanatory_var], struct=transformed_graph)[
+            explanatory_var
+        ]
 
         # Condition on X to block any paths going through X.
         d_connected_y = self.active_trail_nodes(
@@ -445,9 +437,7 @@ class SEMGraph(DAG):
         moral_graph = graph.to_undirected()
 
         for node in graph.nodes():
-            moral_graph.add_edges_from(
-                itertools.combinations(graph.predecessors(node), 2)
-            )
+            moral_graph.add_edges_from(itertools.combinations(graph.predecessors(node), 2))
 
         return moral_graph
 
@@ -471,9 +461,7 @@ class SEMGraph(DAG):
         set or None: If there is a nearest separator returns the set of separators else returns None.
         """
         W = set()
-        ancestral_G = G.subgraph(
-            nx.ancestors(G, Y).union(nx.ancestors(G, Z)).union({Y, Z})
-        ).copy()
+        ancestral_G = G.subgraph(nx.ancestors(G, Y).union(nx.ancestors(G, Z)).union({Y, Z})).copy()
 
         # Optimization: Remove all error nodes which don't have any correlation as it doesn't add any new path. If not removed it can create a lot of
         # extra paths resulting in a much higher runtime.
@@ -497,9 +485,7 @@ class SEMGraph(DAG):
             if node in self.observed:
                 W.add(node)
             else:
-                to_visit.extend(
-                    [node for node in M.neighbors(node) if node not in visited]
-                )
+                to_visit.extend([node for node in M.neighbors(node) if node not in visited])
         # for path in nx.all_simple_paths(M, Y, Z):
         #     path_set = set(path)
         #     if (len(path) >= 3) and not (W & path_set):
@@ -613,9 +599,7 @@ class SEMGraph(DAG):
 
         err_adj = nx.to_numpy_matrix(self.err_graph, nodelist=nodelist, weight=None)
         np.fill_diagonal(err_adj, 1.0)  # Variance exists for each error term.
-        err_fixed = nx.to_numpy_matrix(
-            self.err_graph, nodelist=nodelist, weight="weight"
-        )
+        err_fixed = nx.to_numpy_matrix(self.err_graph, nodelist=nodelist, weight="weight")
 
         # Add the variance of the error terms.
         for index, node in enumerate(nodelist):
@@ -699,9 +683,7 @@ class SEMGraph(DAG):
         wedge_x_mask = adj_matrix[p : p + q, p + q + m :]
 
         err_nodelist = y_vars + x_vars + eta_vars + xi_vars
-        err_adj_matrix = nx.to_numpy_matrix(
-            err_graph, nodelist=err_nodelist, weight=weight
-        )
+        err_adj_matrix = nx.to_numpy_matrix(err_graph, nodelist=err_nodelist, weight=weight)
 
         if not weight == "weight":
             np.fill_diagonal(err_adj_matrix, 1.0)
@@ -793,13 +775,9 @@ class SEMGraph(DAG):
         x = set()
         y = set()
         for exo in xi:
-            x.update(
-                [x for x in lisrel_graph.neighbors(exo) if x not in lisrel_latents]
-            )
+            x.update([x for x in lisrel_graph.neighbors(exo) if x not in lisrel_latents])
         for endo in eta:
-            y.update(
-                [y for y in lisrel_graph.neighbors(endo) if y not in lisrel_latents]
-            )
+            y.update([y for y in lisrel_graph.neighbors(endo) if y not in lisrel_latents])
 
         # If some node has edges from both eta and xi, replace it with another latent variable
         # otherwise it won't get included in any of the matrices.
@@ -821,10 +799,7 @@ class SEMGraph(DAG):
             graph=lisrel_graph, err_graph=lisrel_err_graph, weight=None, var=var_names
         )
         fixed_masks = self.__standard_lisrel_masks(
-            graph=lisrel_graph,
-            err_graph=lisrel_err_graph,
-            weight="weight",
-            var=var_names,
+            graph=lisrel_graph, err_graph=lisrel_err_graph, weight="weight", var=var_names
         )
         return (var_names, edges_masks, fixed_masks)
 
@@ -901,9 +876,7 @@ class SEMAlg:
 
         # Masks represent the parameters which need to be learnt while training.
         self.B_mask = np.multiply(np.where(self.B_fixed_mask != 0, 0.0, 1.0), self.B)
-        self.zeta_mask = np.multiply(
-            np.where(self.zeta_fixed_mask != 0, 0.0, 1.0), self.zeta
-        )
+        self.zeta_mask = np.multiply(np.where(self.zeta_fixed_mask != 0, 0.0, 1.0), self.zeta)
 
     def to_SEMGraph(self):
         """
@@ -939,10 +912,7 @@ class SEMAlg:
 
         # TODO: Add edge weights
         sem_graph = SEMGraph(
-            ebunch=graph.edges(),
-            latents=latents,
-            err_corr=err_graph.edges(),
-            err_var=err_var,
+            ebunch=graph.edges(), latents=latents, err_corr=err_graph.edges(), err_var=err_var
         )
         return sem_graph
 
@@ -978,9 +948,7 @@ class SEMAlg:
             raise ValueError("Parameters for the model has not been specified.")
 
         B_inv = np.linalg.inv(np.eye(self.B_fixed_mask.shape[0]) - self.B_fixed_mask)
-        implied_cov = (
-            self.wedge_y @ B_inv @ self.zeta_fixed_mask @ B_inv.T @ self.wedge_y.T
-        )
+        implied_cov = self.wedge_y @ B_inv @ self.zeta_fixed_mask @ B_inv.T @ self.wedge_y.T
 
         # Check if implied covariance matrix is positive definite.
         if not np.all(np.linalg.eigvals(implied_cov) > 0):
@@ -995,9 +963,7 @@ class SEMAlg:
 
         # Generate samples and return a dataframe.
         samples = np.random.multivariate_normal(
-            mean=[0 for i in range(implied_cov.shape[0])],
-            cov=implied_cov,
-            size=n_samples,
+            mean=[0 for i in range(implied_cov.shape[0])], cov=implied_cov, size=n_samples
         )
         return pd.DataFrame(samples, columns=observed)
 
@@ -1048,13 +1014,11 @@ class SEM(SEMGraph):
             var = Word(alphanums)
             reg_gram = (
                 OneOrMore(
-                    var.setResultsName("predictors", listAllMatches=True)
-                    + Optional(Suppress("+"))
+                    var.setResultsName("predictors", listAllMatches=True) + Optional(Suppress("+"))
                 )
                 + "~"
                 + OneOrMore(
-                    var.setResultsName("covariates", listAllMatches=True)
-                    + Optional(Suppress("+"))
+                    var.setResultsName("covariates", listAllMatches=True) + Optional(Suppress("+"))
                 )
             )
             intercept_gram = var("inter_var") + "~" + Word("1")
@@ -1062,16 +1026,14 @@ class SEM(SEMGraph):
                 var("covar_var1")
                 + "~~"
                 + OneOrMore(
-                    var.setResultsName("covar_var2", listAllMatches=True)
-                    + Optional(Suppress("+"))
+                    var.setResultsName("covar_var2", listAllMatches=True) + Optional(Suppress("+"))
                 )
             )
             latent_gram = (
                 var("latent")
                 + "=~"
                 + OneOrMore(
-                    var.setResultsName("obs", listAllMatches=True)
-                    + Optional(Suppress("+"))
+                    var.setResultsName("obs", listAllMatches=True) + Optional(Suppress("+"))
                 )
             )
 
@@ -1092,10 +1054,7 @@ class SEM(SEMGraph):
                         results = reg_gram.parseString(line, parseAll=True)
                         for pred in results["predictors"]:
                             ebunch.extend(
-                                [
-                                    (covariate, pred)
-                                    for covariate in results["covariates"]
-                                ]
+                                [(covariate, pred) for covariate in results["covariates"]]
                             )
                     elif covar_gram.matches(line):
                         results = covar_gram.parseString(line, parseAll=True)
@@ -1105,9 +1064,7 @@ class SEM(SEMGraph):
                     elif latent_gram.matches(line):
                         results = latent_gram.parseString(line, parseAll=True)
                         latents.append(results["latent"])
-                        ebunch.extend(
-                            [(results["latent"], obs) for obs in results["obs"]]
-                        )
+                        ebunch.extend([(results["latent"], obs) for obs in results["obs"]])
 
             # Step 4: Call the parent __init__ with the arguments
             super(SEM, self).__init__(ebunch=ebunch, latents=latents, err_corr=err_corr)
@@ -1226,11 +1183,7 @@ class SEM(SEMGraph):
             media/File:Example_Structural_equation_model.svg
         """
         return cls(
-            syntax="graph",
-            ebunch=ebunch,
-            latents=latents,
-            err_corr=err_corr,
-            err_var=err_var,
+            syntax="graph", ebunch=ebunch, latents=latents, err_corr=err_corr, err_var=err_var
         )
 
     @classmethod
@@ -1326,17 +1279,11 @@ class SEM(SEMGraph):
         observed = var_names["y"] + var_names["x"]
 
         return cls.from_RAM(
-            variables=eta,
-            B=B,
-            zeta=zeta,
-            observed=observed,
-            fixed_values={"B": B, "zeta": zeta},
+            variables=eta, B=B, zeta=zeta, observed=observed, fixed_values={"B": B, "zeta": zeta}
         )
 
     @classmethod
-    def from_RAM(
-        cls, variables, B, zeta, observed=None, wedge_y=None, fixed_values=None
-    ):
+    def from_RAM(cls, variables, B, zeta, observed=None, wedge_y=None, fixed_values=None):
         r"""
         Initializes a `SEM` instance using Reticular Action Model(RAM) notation. The model
         is defined as:

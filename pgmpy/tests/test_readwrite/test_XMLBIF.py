@@ -141,14 +141,7 @@ class TestXMLBIFReaderMethods(unittest.TestCase):
         self.reader = XMLBIFReader(string=TEST_FILE)
 
     def test_get_variables(self):
-        var_expected = [
-            "kid",
-            "light_on",
-            "bowel_problem",
-            "dog_out",
-            "hear_bark",
-            "family_out",
-        ]
+        var_expected = ["kid", "light_on", "bowel_problem", "dog_out", "hear_bark", "family_out"]
         self.assertListEqual(self.reader.variables, var_expected)
 
     def test_get_states(self):
@@ -226,14 +219,7 @@ class TestXMLBIFReaderMethodsFile(unittest.TestCase):
         self.reader = XMLBIFReader("dog_problem.xml")
 
     def test_get_variables(self):
-        var_expected = [
-            "kid",
-            "light_on",
-            "bowel_problem",
-            "dog_out",
-            "hear_bark",
-            "family_out",
-        ]
+        var_expected = ["kid", "light_on", "bowel_problem", "dog_out", "hear_bark", "family_out"]
         self.assertListEqual(self.reader.variables, var_expected)
 
     def test_get_states(self):
@@ -311,20 +297,14 @@ class TestXMLBIFWriterMethodsString(unittest.TestCase):
         self.expected_model = reader.get_model()
         self.writer = XMLBIFWriter(self.expected_model)
 
-        self.model_stateless = BayesianModel(
-            [("D", "G"), ("I", "G"), ("G", "L"), ("I", "S")]
-        )
+        self.model_stateless = BayesianModel([("D", "G"), ("I", "G"), ("G", "L"), ("I", "S")])
         self.cpd_d = TabularCPD(variable="D", variable_card=2, values=[[0.6, 0.4]])
         self.cpd_i = TabularCPD(variable="I", variable_card=2, values=[[0.7, 0.3]])
 
         self.cpd_g = TabularCPD(
             variable="G",
             variable_card=3,
-            values=[
-                [0.3, 0.05, 0.9, 0.5],
-                [0.4, 0.25, 0.08, 0.3],
-                [0.3, 0.7, 0.02, 0.2],
-            ],
+            values=[[0.3, 0.05, 0.9, 0.5], [0.4, 0.25, 0.08, 0.3], [0.3, 0.7, 0.02, 0.2]],
             evidence=["I", "D"],
             evidence_card=[2, 2],
         )
@@ -345,9 +325,7 @@ class TestXMLBIFWriterMethodsString(unittest.TestCase):
             evidence_card=[2],
         )
 
-        self.model_stateless.add_cpds(
-            self.cpd_d, self.cpd_i, self.cpd_g, self.cpd_l, self.cpd_s
-        )
+        self.model_stateless.add_cpds(self.cpd_d, self.cpd_i, self.cpd_g, self.cpd_l, self.cpd_s)
         self.writer_stateless = XMLBIFWriter(self.model_stateless)
 
     def test_write_xmlbif_statefull(self):
@@ -380,9 +358,7 @@ class TestXMLBIFWriterMethodsString(unittest.TestCase):
     def assert_models_equivelent(self, expected, got):
         self.assertSetEqual(set(expected.nodes()), set(got.nodes()))
         for node in expected.nodes():
-            self.assertListEqual(
-                list(expected.get_parents(node)), list(got.get_parents(node))
-            )
+            self.assertListEqual(list(expected.get_parents(node)), list(got.get_parents(node)))
             cpds_expected = expected.get_cpds(node=node)
             cpds_got = got.get_cpds(node=node)
             np_test.assert_array_equal(cpds_expected.values, cpds_got.values)

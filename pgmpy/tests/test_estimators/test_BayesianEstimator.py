@@ -26,20 +26,14 @@ class TestBayesianEstimator(unittest.TestCase):
         self.est3 = BayesianEstimator(self.m1, self.d2)
 
     def test_estimate_cpd_dirichlet(self):
-        cpd_A = self.est1.estimate_cpd(
-            "A", prior_type="dirichlet", pseudo_counts=[[0], [1]]
-        )
+        cpd_A = self.est1.estimate_cpd("A", prior_type="dirichlet", pseudo_counts=[[0], [1]])
         self.assertEqual(cpd_A, TabularCPD("A", 2, [[0.5], [0.5]]))
 
-        cpd_B = self.est1.estimate_cpd(
-            "B", prior_type="dirichlet", pseudo_counts=[[9], [3]]
-        )
+        cpd_B = self.est1.estimate_cpd("B", prior_type="dirichlet", pseudo_counts=[[9], [3]])
         self.assertEqual(cpd_B, TabularCPD("B", 2, [[11.0 / 15], [4.0 / 15]]))
 
         cpd_C = self.est1.estimate_cpd(
-            "C",
-            prior_type="dirichlet",
-            pseudo_counts=[[0.4, 0.4, 0.4, 0.4], [0.6, 0.6, 0.6, 0.6]],
+            "C", prior_type="dirichlet", pseudo_counts=[[0.4, 0.4, 0.4, 0.4], [0.6, 0.6, 0.6, 0.6]]
         )
         self.assertEqual(
             cpd_C,
@@ -73,9 +67,7 @@ class TestBayesianEstimator(unittest.TestCase):
         )
 
     def test_estimate_cpd_shortcuts(self):
-        cpd_C1 = self.est2.estimate_cpd(
-            "C", prior_type="BDeu", equivalent_sample_size=9
-        )
+        cpd_C1 = self.est2.estimate_cpd("C", prior_type="BDeu", equivalent_sample_size=9)
         cpd_C1_correct = TabularCPD(
             "C",
             3,
@@ -104,11 +96,7 @@ class TestBayesianEstimator(unittest.TestCase):
 
     def test_get_parameters(self):
         cpds = set(
-            [
-                self.est3.estimate_cpd("A"),
-                self.est3.estimate_cpd("B"),
-                self.est3.estimate_cpd("C"),
-            ]
+            [self.est3.estimate_cpd("A"), self.est3.estimate_cpd("B"), self.est3.estimate_cpd("C")]
         )
         self.assertSetEqual(set(self.est3.get_parameters()), cpds)
 
@@ -132,12 +120,7 @@ class TestBayesianEstimator(unittest.TestCase):
             ]
         )
         self.assertSetEqual(
-            set(
-                self.est3.get_parameters(
-                    prior_type="dirichlet", pseudo_counts=pseudo_counts
-                )
-            ),
-            cpds,
+            set(self.est3.get_parameters(prior_type="dirichlet", pseudo_counts=pseudo_counts)), cpds
         )
 
     def tearDown(self):

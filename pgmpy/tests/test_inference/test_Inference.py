@@ -13,18 +13,10 @@ class TestInferenceBase(unittest.TestCase):
     def setUp(self):
         self.bayesian = BayesianModel([("a", "b"), ("b", "c"), ("c", "d"), ("d", "e")])
         a_cpd = TabularCPD("a", 2, [[0.4, 0.6]])
-        b_cpd = TabularCPD(
-            "b", 2, [[0.2, 0.4], [0.8, 0.6]], evidence=["a"], evidence_card=[2]
-        )
-        c_cpd = TabularCPD(
-            "c", 2, [[0.1, 0.2], [0.9, 0.8]], evidence=["b"], evidence_card=[2]
-        )
-        d_cpd = TabularCPD(
-            "d", 2, [[0.4, 0.3], [0.6, 0.7]], evidence=["c"], evidence_card=[2]
-        )
-        e_cpd = TabularCPD(
-            "e", 2, [[0.3, 0.2], [0.7, 0.8]], evidence=["d"], evidence_card=[2]
-        )
+        b_cpd = TabularCPD("b", 2, [[0.2, 0.4], [0.8, 0.6]], evidence=["a"], evidence_card=[2])
+        c_cpd = TabularCPD("c", 2, [[0.1, 0.2], [0.9, 0.8]], evidence=["b"], evidence_card=[2])
+        d_cpd = TabularCPD("d", 2, [[0.4, 0.3], [0.6, 0.7]], evidence=["c"], evidence_card=[2])
+        e_cpd = TabularCPD("e", 2, [[0.3, 0.2], [0.7, 0.8]], evidence=["d"], evidence_card=[2])
         self.bayesian.add_cpds(a_cpd, b_cpd, c_cpd, d_cpd, e_cpd)
 
         self.markov = MarkovModel([("a", "b"), ("b", "d"), ("a", "c"), ("c", "d")])
@@ -37,49 +29,26 @@ class TestInferenceBase(unittest.TestCase):
     def test_bayesian_inference_init(self):
         infer_bayesian = Inference(self.bayesian)
         self.assertEqual(set(infer_bayesian.variables), {"a", "b", "c", "d", "e"})
-        self.assertEqual(
-            infer_bayesian.cardinality, {"a": 2, "b": 2, "c": 2, "d": 2, "e": 2}
-        )
+        self.assertEqual(infer_bayesian.cardinality, {"a": 2, "b": 2, "c": 2, "d": 2, "e": 2})
         self.assertIsInstance(infer_bayesian.factors, defaultdict)
         self.assertEqual(
             set(infer_bayesian.factors["a"]),
-            set(
-                [
-                    self.bayesian.get_cpds("a").to_factor(),
-                    self.bayesian.get_cpds("b").to_factor(),
-                ]
-            ),
+            set([self.bayesian.get_cpds("a").to_factor(), self.bayesian.get_cpds("b").to_factor()]),
         )
         self.assertEqual(
             set(infer_bayesian.factors["b"]),
-            set(
-                [
-                    self.bayesian.get_cpds("b").to_factor(),
-                    self.bayesian.get_cpds("c").to_factor(),
-                ]
-            ),
+            set([self.bayesian.get_cpds("b").to_factor(), self.bayesian.get_cpds("c").to_factor()]),
         )
         self.assertEqual(
             set(infer_bayesian.factors["c"]),
-            set(
-                [
-                    self.bayesian.get_cpds("c").to_factor(),
-                    self.bayesian.get_cpds("d").to_factor(),
-                ]
-            ),
+            set([self.bayesian.get_cpds("c").to_factor(), self.bayesian.get_cpds("d").to_factor()]),
         )
         self.assertEqual(
             set(infer_bayesian.factors["d"]),
-            set(
-                [
-                    self.bayesian.get_cpds("d").to_factor(),
-                    self.bayesian.get_cpds("e").to_factor(),
-                ]
-            ),
+            set([self.bayesian.get_cpds("d").to_factor(), self.bayesian.get_cpds("e").to_factor()]),
         )
         self.assertEqual(
-            set(infer_bayesian.factors["e"]),
-            set([self.bayesian.get_cpds("e").to_factor()]),
+            set(infer_bayesian.factors["e"]), set([self.bayesian.get_cpds("e").to_factor()])
         )
 
     def test_markov_inference_init(self):

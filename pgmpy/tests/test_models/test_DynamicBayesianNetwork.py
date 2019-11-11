@@ -32,9 +32,7 @@ class TestDynamicBayesianNetworkCreation(unittest.TestCase):
         )
 
     def test_add_edge_going_backward(self):
-        self.assertRaises(
-            NotImplementedError, self.network.add_edge, ("a", 1), ("b", 0)
-        )
+        self.assertRaises(NotImplementedError, self.network.add_edge, ("a", 1), ("b", 0))
 
     def test_add_edge_with_farther_timeslice(self):
         self.assertRaises(ValueError, self.network.add_edge, ("a", 2), ("b", 4))
@@ -88,20 +86,12 @@ class TestDynamicBayesianNetworkMethods(unittest.TestCase):
             evidence_card=[2, 2],
         )
         self.d_i_cpd = TabularCPD(
-            ("D", 1),
-            2,
-            values=[[0.6, 0.3], [0.4, 0.7]],
-            evidence=[("D", 0)],
-            evidence_card=[2],
+            ("D", 1), 2, values=[[0.6, 0.3], [0.4, 0.7]], evidence=[("D", 0)], evidence_card=[2]
         )
         self.diff_cpd = TabularCPD(("D", 0), 2, values=[[0.6, 0.4]])
         self.intel_cpd = TabularCPD(("I", 0), 2, values=[[0.7, 0.3]])
         self.i_i_cpd = TabularCPD(
-            ("I", 1),
-            2,
-            values=[[0.5, 0.4], [0.5, 0.6]],
-            evidence=[("I", 0)],
-            evidence_card=[2],
+            ("I", 1), 2, values=[[0.5, 0.4], [0.5, 0.6]], evidence=[("I", 0)], evidence_card=[2]
         )
         self.grade_1_cpd = TabularCPD(
             ("G", 1),
@@ -115,46 +105,27 @@ class TestDynamicBayesianNetworkMethods(unittest.TestCase):
         self.network.add_edges_from(
             [(("a", 0), ("b", 0)), (("a", 0), ("a", 1)), (("b", 0), ("b", 1))]
         )
-        self.assertListEqual(
-            sorted(self.network.get_intra_edges()), [(("a", 0), ("b", 0))]
-        )
-        self.assertListEqual(
-            sorted(self.network.get_intra_edges(1)), [(("a", 1), ("b", 1))]
-        )
+        self.assertListEqual(sorted(self.network.get_intra_edges()), [(("a", 0), ("b", 0))])
+        self.assertListEqual(sorted(self.network.get_intra_edges(1)), [(("a", 1), ("b", 1))])
         self.assertRaises(ValueError, self.network.get_intra_edges, -1)
         self.assertRaises(ValueError, self.network.get_intra_edges, "-")
         self.assertListEqual(
-            sorted(self.network.get_inter_edges()),
-            [(("a", 0), ("a", 1)), (("b", 0), ("b", 1))],
+            sorted(self.network.get_inter_edges()), [(("a", 0), ("a", 1)), (("b", 0), ("b", 1))]
         )
 
     def test_get_interface_nodes(self):
         self.network.add_edges_from(
-            [
-                (("D", 0), ("G", 0)),
-                (("I", 0), ("G", 0)),
-                (("D", 0), ("D", 1)),
-                (("I", 0), ("I", 1)),
-            ]
+            [(("D", 0), ("G", 0)), (("I", 0), ("G", 0)), (("D", 0), ("D", 1)), (("I", 0), ("I", 1))]
         )
-        self.assertListEqual(
-            sorted(self.network.get_interface_nodes()), [("D", 0), ("I", 0)]
-        )
+        self.assertListEqual(sorted(self.network.get_interface_nodes()), [("D", 0), ("I", 0)])
         self.assertRaises(ValueError, self.network.get_interface_nodes, -1)
         self.assertRaises(ValueError, self.network.get_interface_nodes, "-")
 
     def test_get_slice_nodes(self):
         self.network.add_edges_from(
-            [
-                (("D", 0), ("G", 0)),
-                (("I", 0), ("G", 0)),
-                (("D", 0), ("D", 1)),
-                (("I", 0), ("I", 1)),
-            ]
+            [(("D", 0), ("G", 0)), (("I", 0), ("G", 0)), (("D", 0), ("D", 1)), (("I", 0), ("I", 1))]
         )
-        self.assertListEqual(
-            sorted(self.network.get_slice_nodes()), [("D", 0), ("G", 0), ("I", 0)]
-        )
+        self.assertListEqual(sorted(self.network.get_slice_nodes()), [("D", 0), ("G", 0), ("I", 0)])
         self.assertListEqual(
             sorted(self.network.get_slice_nodes(1)), [("D", 1), ("G", 1), ("I", 1)]
         )
@@ -168,20 +139,14 @@ class TestDynamicBayesianNetworkMethods(unittest.TestCase):
 
     def test_get_cpds(self):
         self.network.add_edges_from(
-            [
-                (("D", 0), ("G", 0)),
-                (("I", 0), ("G", 0)),
-                (("D", 0), ("D", 1)),
-                (("I", 0), ("I", 1)),
-            ]
+            [(("D", 0), ("G", 0)), (("I", 0), ("G", 0)), (("D", 0), ("D", 1)), (("I", 0), ("I", 1))]
         )
         self.network.add_cpds(
             self.grade_cpd, self.d_i_cpd, self.diff_cpd, self.intel_cpd, self.i_i_cpd
         )
         self.network.initialize_initial_state()
         self.assertEqual(
-            set(self.network.get_cpds()),
-            set([self.diff_cpd, self.intel_cpd, self.grade_cpd]),
+            set(self.network.get_cpds()), set([self.diff_cpd, self.intel_cpd, self.grade_cpd])
         )
         self.assertEqual(
             {cpd.variable for cpd in self.network.get_cpds(time_slice=1)},
@@ -190,12 +155,7 @@ class TestDynamicBayesianNetworkMethods(unittest.TestCase):
 
     def test_add_multiple_cpds(self):
         self.network.add_edges_from(
-            [
-                (("D", 0), ("G", 0)),
-                (("I", 0), ("G", 0)),
-                (("D", 0), ("D", 1)),
-                (("I", 0), ("I", 1)),
-            ]
+            [(("D", 0), ("G", 0)), (("I", 0), ("G", 0)), (("D", 0), ("D", 1)), (("I", 0), ("I", 1))]
         )
         self.network.add_cpds(
             self.grade_cpd, self.d_i_cpd, self.diff_cpd, self.intel_cpd, self.i_i_cpd
@@ -210,12 +170,7 @@ class TestDynamicBayesianNetworkMethods(unittest.TestCase):
 
         self.network.add_nodes_from(["D", "G", "I", "S", "L"])
         self.network.add_edges_from(
-            [
-                (("D", 0), ("G", 0)),
-                (("I", 0), ("G", 0)),
-                (("D", 0), ("D", 1)),
-                (("I", 0), ("I", 1)),
-            ]
+            [(("D", 0), ("G", 0)), (("I", 0), ("G", 0)), (("D", 0), ("D", 1)), (("I", 0), ("I", 1))]
         )
         self.network.add_cpds(
             self.grade_cpd, self.d_i_cpd, self.diff_cpd, self.intel_cpd, self.i_i_cpd
@@ -241,12 +196,7 @@ class TestDynamicBayesianNetworkMethods(unittest.TestCase):
 
     def test_copy(self):
         self.network.add_edges_from(
-            [
-                (("D", 0), ("G", 0)),
-                (("I", 0), ("G", 0)),
-                (("D", 0), ("D", 1)),
-                (("I", 0), ("I", 1)),
-            ]
+            [(("D", 0), ("G", 0)), (("I", 0), ("G", 0)), (("D", 0), ("D", 1)), (("I", 0), ("I", 1))]
         )
         cpd = TabularCPD(
             ("G", 0),
@@ -261,15 +211,9 @@ class TestDynamicBayesianNetworkMethods(unittest.TestCase):
         self.assertListEqual(sorted(self.network._nodes()), sorted(copy._nodes()))
         self.assertListEqual(sorted(self.network.edges()), sorted(copy.edges()))
         self.assertListEqual(self.network.get_cpds(), copy.get_cpds())
-        self.assertListEqual(
-            sorted(self.network.get_intra_edges()), sorted(copy.get_intra_edges())
-        )
-        self.assertListEqual(
-            sorted(self.network.get_inter_edges()), sorted(copy.get_inter_edges())
-        )
-        self.assertListEqual(
-            sorted(self.network.get_slice_nodes()), sorted(copy.get_slice_nodes())
-        )
+        self.assertListEqual(sorted(self.network.get_intra_edges()), sorted(copy.get_intra_edges()))
+        self.assertListEqual(sorted(self.network.get_inter_edges()), sorted(copy.get_inter_edges()))
+        self.assertListEqual(sorted(self.network.get_slice_nodes()), sorted(copy.get_slice_nodes()))
 
         copy.cpds[0].values = np.array(
             [[0.4, 0.05, 0.3, 0.5], [0.3, 0.25, 0.5, 0.3], [0.3, 0.7, 0.2, 0.2]]
@@ -285,21 +229,13 @@ class TestDynamicBayesianNetworkMethods(unittest.TestCase):
         self.assertNotEqual(sorted(self.network._nodes()), sorted(copy._nodes()))
         self.assertNotEqual(sorted(self.network.edges()), sorted(copy.edges()))
         self.assertNotEqual(self.network.get_cpds(), copy.get_cpds())
-        self.assertNotEqual(
-            sorted(self.network.get_intra_edges()), sorted(copy.get_intra_edges())
-        )
-        self.assertListEqual(
-            sorted(self.network.get_inter_edges()), sorted(copy.get_inter_edges())
-        )
-        self.assertNotEqual(
-            sorted(self.network.get_slice_nodes()), sorted(copy.get_slice_nodes())
-        )
+        self.assertNotEqual(sorted(self.network.get_intra_edges()), sorted(copy.get_intra_edges()))
+        self.assertListEqual(sorted(self.network.get_inter_edges()), sorted(copy.get_inter_edges()))
+        self.assertNotEqual(sorted(self.network.get_slice_nodes()), sorted(copy.get_slice_nodes()))
 
         self.network.add_edge(("A", 0), ("D", 1))
         copy.add_edge(("Z", 0), ("D", 1))
-        self.assertNotEqual(
-            sorted(self.network.get_inter_edges()), sorted(copy.get_inter_edges())
-        )
+        self.assertNotEqual(sorted(self.network.get_inter_edges()), sorted(copy.get_inter_edges()))
 
     def tearDown(self):
         del self.network
@@ -309,12 +245,7 @@ class TestDynamicBayesianNetworkMethods2(unittest.TestCase):
     def setUp(self):
         self.G = DynamicBayesianNetwork()
         self.G.add_edges_from(
-            [
-                (("D", 0), ("G", 0)),
-                (("I", 0), ("G", 0)),
-                (("D", 0), ("D", 1)),
-                (("I", 0), ("I", 1)),
-            ]
+            [(("D", 0), ("G", 0)), (("I", 0), ("G", 0)), (("D", 0), ("D", 1)), (("I", 0), ("I", 1))]
         )
         """
         G.edges()
@@ -335,11 +266,7 @@ class TestDynamicBayesianNetworkMethods2(unittest.TestCase):
         )
 
         d_i_cpd = TabularCPD(
-            ("D", 1),
-            2,
-            values=[[0.6, 0.3], [0.4, 0.7]],
-            evidence=[("D", 0)],
-            evidence_card=[2],
+            ("D", 1), 2, values=[[0.6, 0.3], [0.4, 0.7]], evidence=[("D", 0)], evidence_card=[2]
         )
 
         diff_cpd = TabularCPD(("D", 0), 2, values=[[0.6, 0.4]])
@@ -347,11 +274,7 @@ class TestDynamicBayesianNetworkMethods2(unittest.TestCase):
         intel_cpd = TabularCPD(("I", 0), 2, values=[[0.7, 0.3]])
 
         i_i_cpd = TabularCPD(
-            ("I", 1),
-            2,
-            values=[[0.5, 0.4], [0.5, 0.6]],
-            evidence=[("I", 0)],
-            evidence_card=[2],
+            ("I", 1), 2, values=[[0.5, 0.4], [0.5, 0.6]], evidence=[("I", 0)], evidence_card=[2]
         )
 
         grade_1_cpd = TabularCPD(
@@ -383,22 +306,14 @@ class TestDynamicBayesianNetworkMethods2(unittest.TestCase):
         self.G.remove_cpds(diff_cpd)
 
         grade_cpd = TabularCPD(
-            ("G", 0),
-            2,
-            values=[[0.6, 0.3], [0.4, 0.7]],
-            evidence=[("D", 0)],
-            evidence_card=[2],
+            ("G", 0), 2, values=[[0.6, 0.3], [0.4, 0.7]], evidence=[("D", 0)], evidence_card=[2]
         )
         self.G.add_cpds(grade_cpd)
         self.assertRaises(ValueError, self.G.check_model)
         self.G.remove_cpds(grade_cpd)
 
         diff_cpd = TabularCPD(
-            ("D", 0),
-            2,
-            values=[[0.6, 0.3], [0.4, 0.7]],
-            evidence=[("D", 1)],
-            evidence_card=[2],
+            ("D", 0), 2, values=[[0.6, 0.3], [0.4, 0.7]], evidence=[("D", 1)], evidence_card=[2]
         )
         self.G.add_cpds(diff_cpd)
         self.assertRaises(ValueError, self.G.check_model)
@@ -427,11 +342,7 @@ class TestDynamicBayesianNetworkMethods2(unittest.TestCase):
         self.G.remove_cpds(grade_cpd)
 
         grade_cpd = TabularCPD(
-            ("G", 0),
-            2,
-            values=[[0.6, 0.3], [0.4, 0.7]],
-            evidence=[("D", 1)],
-            evidence_card=[2],
+            ("G", 0), 2, values=[[0.6, 0.3], [0.4, 0.7]], evidence=[("D", 1)], evidence_card=[2]
         )
         self.G.add_cpds(grade_cpd)
         self.assertRaises(ValueError, self.G.check_model)
@@ -451,11 +362,7 @@ class TestDynamicBayesianNetworkMethods2(unittest.TestCase):
         self.G.remove_cpds(grade_cpd)
 
         d_i_cpd = TabularCPD(
-            ("D", 1),
-            2,
-            values=[[0.1, 0.3], [0.4, 0.7]],
-            evidence=[("D", 0)],
-            evidence_card=[2],
+            ("D", 1), 2, values=[[0.1, 0.3], [0.4, 0.7]], evidence=[("D", 0)], evidence_card=[2]
         )
         self.G.add_cpds(d_i_cpd)
         self.assertRaises(ValueError, self.G.check_model)
@@ -472,11 +379,7 @@ class TestDynamicBayesianNetworkMethods2(unittest.TestCase):
         self.G.remove_cpds(intel_cpd)
 
         i_i_cpd = TabularCPD(
-            ("I", 1),
-            2,
-            values=[[0.9, 0.4], [0.5, 0.6]],
-            evidence=[("I", 0)],
-            evidence_card=[2],
+            ("I", 1), 2, values=[[0.9, 0.4], [0.5, 0.6]], evidence=[("I", 0)], evidence_card=[2]
         )
         self.G.add_cpds(i_i_cpd)
         self.assertRaises(ValueError, self.G.check_model)

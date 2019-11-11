@@ -28,9 +28,7 @@ class StateNameMixin:
                         "The state names must be for the form: {variable: list_of_states}"
                     )
                 elif not len(set(value)) == len(value):
-                    raise ValueError(
-                        "Repeated statenames for variable: {var}".format(var=key)
-                    )
+                    raise ValueError("Repeated statenames for variable: {var}".format(var=key))
 
             self.state_names = state_names
             # Create maps for easy access to specific state names of state numbers.
@@ -46,8 +44,7 @@ class StateNameMixin:
                     }
         else:
             self.state_names = {
-                var: list(range(int(cardinality[index])))
-                for index, var in enumerate(variables)
+                var: list(range(int(cardinality[index]))) for index, var in enumerate(variables)
             }
             self.name_to_no = {
                 var: {i: i for i in range(int(cardinality[index]))}
@@ -69,7 +66,7 @@ class StateNameMixin:
         Given `var` and `state_name` return the state number.
         """
         if self.state_names:
-            return self.name_to_no[var][state_name]
+            return self.name_to_no[var][self.no_to_name[var][state_name]]
         else:
             return state_name
 

@@ -323,28 +323,20 @@ class ProbModelXMLWriter(object):
         self.variables = etree.SubElement(self.probnet, "Variables")
         self.links = etree.SubElement(self.probnet, "Links")
         self.potentials = etree.SubElement(self.probnet, "Potentials")
-        self.additional_constraints = etree.SubElement(
-            self.probnet, "AdditionalConstraints"
-        )
+        self.additional_constraints = etree.SubElement(self.probnet, "AdditionalConstraints")
 
         # adding information for probnet
         self.probnet.attrib["type"] = self.data["probnet"]["type"]
         try:
-            etree.SubElement(self.probnet, "Language").text = self.data["probnet"][
-                "Language"
-            ]
+            etree.SubElement(self.probnet, "Language").text = self.data["probnet"]["Language"]
         except KeyError:
             pass
         try:
-            etree.SubElement(self.probnet, "Comment").text = self.data["probnet"][
-                "Comment"
-            ]
+            etree.SubElement(self.probnet, "Comment").text = self.data["probnet"]["Comment"]
         except KeyError:
             pass
         try:
-            self._add_additional_properties(
-                self.xml, self.data["probnet"]["AdditionalProperties"]
-            )
+            self._add_additional_properties(self.xml, self.data["probnet"]["AdditionalProperties"])
         except KeyError:
             etree.SubElement(self.probnet, "AdditionalProperties")
         try:
@@ -395,31 +387,21 @@ class ProbModelXMLWriter(object):
         variable_element = etree.SubElement(
             self.variables,
             "Variable",
-            attrib={
-                "name": variable,
-                "type": variable_data["type"],
-                "role": variable_data["role"],
-            },
+            attrib={"name": variable, "type": variable_data["type"], "role": variable_data["role"]},
         )
 
         try:
-            etree.SubElement(variable_element, "Comment").text = variable_data[
-                "Comment"
-            ]
+            etree.SubElement(variable_element, "Comment").text = variable_data["Comment"]
         except KeyError:
             pass
         try:
-            etree.SubElement(
-                variable_element, "Coordinates", variable_data["Coordinates"]
-            )
+            etree.SubElement(variable_element, "Coordinates", variable_data["Coordinates"])
         except KeyError:
             pass
 
         try:
             for key, value in sorted(variable_data["AdditionalProperties"].items()):
-                etree.SubElement(
-                    variable_element, "Property", attrib={"name": key, "value": value}
-                )
+                etree.SubElement(variable_element, "Property", attrib={"name": key, "value": value})
         except KeyError:
             etree.SubElement(variable_element, "AdditionalProperties")
         states = etree.SubElement(variable_element, "States")
@@ -442,11 +424,7 @@ class ProbModelXMLWriter(object):
         link = etree.SubElement(
             self.links,
             "Link",
-            attrib={
-                "var1": edge[0],
-                "var2": edge[1],
-                "directed": edge_data["directed"],
-            },
+            attrib={"var1": edge[0], "var2": edge[1], "directed": edge_data["directed"]},
         )
         try:
             etree.SubElement(link, "Comment").text = edge_data["Comment"]
@@ -472,9 +450,7 @@ class ProbModelXMLWriter(object):
         for argument in sorted(constraint_data):
             name = argument
             value = constraint_data[name]
-            etree.SubElement(
-                constraint_element, "Argument", attrib={"name": name, "value": value}
-            )
+            etree.SubElement(constraint_element, "Argument", attrib={"name": name, "value": value})
 
     def _add_decision_criteria(self, criteria_dict):
         """
@@ -493,9 +469,7 @@ class ProbModelXMLWriter(object):
         """
         decision_tag = etree.SubElement(self.xml, "DecisionCriteria", attrib={})
         for criteria in sorted(criteria_dict):
-            criteria_tag = etree.SubElement(
-                decision_tag, "Criterion", attrib={"name": criteria}
-            )
+            criteria_tag = etree.SubElement(decision_tag, "Criterion", attrib={"name": criteria})
             self._add_additional_properties(criteria_tag, criteria_dict[criteria])
 
     def _add_potential(self, potential, parent_tag):
@@ -535,57 +509,40 @@ class ProbModelXMLWriter(object):
             )
         self._add_element(potential, "Comment", potential_tag)
         if "AdditionalProperties" in potential:
-            self._add_additional_properties(
-                potential_tag, potential["AdditionalProperties"]
-            )
+            self._add_additional_properties(potential_tag, potential["AdditionalProperties"])
         if potential_type == "delta":
-            etree.SubElement(
-                potential_tag, "Variable", attrib={"name": potential["Variable"]}
-            )
+            etree.SubElement(potential_tag, "Variable", attrib={"name": potential["Variable"]})
             self._add_element(potential, "State", potential_tag)
             self._add_element(potential, "StateIndex", potential_tag)
             self._add_element(potential, "NumericValue", potential_tag)
         else:
             if "UtilityVariable" in potential:
                 etree.SubElement(
-                    potential_tag,
-                    "UtilityVariable",
-                    attrib={"name": potential["UtilityVariable"]},
+                    potential_tag, "UtilityVariable", attrib={"name": potential["UtilityVariable"]}
                 )
             if "Variables" in potential:
                 variable_tag = etree.SubElement(potential_tag, "Variables")
                 for var in sorted(potential["Variables"]):
                     etree.SubElement(variable_tag, "Variable", attrib={"name": var})
                     for child in sorted(potential["Variables"][var]):
-                        etree.SubElement(
-                            variable_tag, "Variable", attrib={"name": child}
-                        )
+                        etree.SubElement(variable_tag, "Variable", attrib={"name": child})
             self._add_element(potential, "Values", potential_tag)
             if "UncertainValues" in potential:
-                value_tag = etree.SubElement(
-                    potential_tag, "UncertainValues", attrib={}
-                )
+                value_tag = etree.SubElement(potential_tag, "UncertainValues", attrib={})
                 for value in sorted(potential["UncertainValues"]):
                     try:
                         etree.SubElement(
                             value_tag,
                             "Value",
-                            attrib={
-                                "distribution": value["distribution"],
-                                "name": value["name"],
-                            },
+                            attrib={"distribution": value["distribution"], "name": value["name"]},
                         ).text = value["value"]
                     except KeyError:
                         etree.SubElement(
-                            value_tag,
-                            "Value",
-                            attrib={"distribution": value["distribution"]},
+                            value_tag, "Value", attrib={"distribution": value["distribution"]}
                         ).text = value["value"]
             if "TopVariable" in potential:
                 etree.SubElement(
-                    potential_tag,
-                    "TopVariable",
-                    attrib={"name": potential["TopVariable"]},
+                    potential_tag, "TopVariable", attrib={"name": potential["TopVariable"]}
                 )
             if "Branches" in potential:
                 branches_tag = etree.SubElement(potential_tag, "Branches")
@@ -594,9 +551,7 @@ class ProbModelXMLWriter(object):
                     if "States" in branch:
                         states_tag = etree.SubElement(branch_tag, "States")
                         for state in sorted(branch["States"]):
-                            etree.SubElement(
-                                states_tag, "State", attrib={"name": state["name"]}
-                            )
+                            etree.SubElement(states_tag, "State", attrib={"name": state["name"]})
                     if "Potential" in branch:
                         self._add_potential(branch["Potential"], branch_tag)
                     self._add_element(potential, "Label", potential_tag)
@@ -860,9 +815,7 @@ class ProbModelXMLReader(object):
         for argument in constraint.findall("Argument"):
             argument_name = argument.attrib["name"]
             argument_value = argument.attrib["value"]
-            self.probnet["AdditionalConstraints"][constraint_name][
-                argument_name
-            ] = argument_value
+            self.probnet["AdditionalConstraints"][constraint_name][argument_name] = argument_value
 
     def add_criterion(self, criterion):
         """
@@ -884,9 +837,9 @@ class ProbModelXMLReader(object):
             for prop in criterion.findall("AdditionalProperties/Property"):
                 prop_name = prop.attrib["name"]
                 prop_value = prop.attrib["value"]
-                self.probnet["DecisionCriteria"][criterion_name][
-                    "AdditionalProperties"
-                ][prop_name] = prop_value
+                self.probnet["DecisionCriteria"][criterion_name]["AdditionalProperties"][
+                    prop_name
+                ] = prop_value
 
     def add_comment(self, comment):
         """
@@ -944,9 +897,7 @@ class ProbModelXMLReader(object):
         self.probnet["Variables"][variable_name]["type"] = variable.attrib["type"]
         self.probnet["Variables"][variable_name]["role"] = variable.attrib["role"]
         if variable.find("Comment") is not None:
-            self.probnet["Variables"][variable_name]["Comment"] = variable.find(
-                "Comment"
-            ).text
+            self.probnet["Variables"][variable_name]["Comment"] = variable.find("Comment").text
         if variable.find("Coordinates") is not None:
             self.probnet["Variables"][variable_name]["Coordinates"] = variable.find(
                 "Coordinates"
@@ -1023,9 +974,7 @@ class ProbModelXMLReader(object):
         if potential.find("Comment") is not None:
             potential_dict["Comment"] = potential.find("Comment").text
         for prop in potential.findall("AdditionalProperties/Property"):
-            potential_dict["AdditionalProperties"][prop.attrib["name"]] = prop.attrib[
-                "value"
-            ]
+            potential_dict["AdditionalProperties"][prop.attrib["name"]] = prop.attrib["value"]
         if potential_type == "delta":
             potential_dict["Variable"] = potential.find("Variable").attrib["name"]
             if potential.find("State") is not None:
@@ -1036,9 +985,7 @@ class ProbModelXMLReader(object):
                 potential_dict["NumericValue"] = potential.find("NumericValue").text
         else:
             if potential.find("UtilityVariable") is not None:
-                potential_dict["UtilityVaribale"] = potential.find(
-                    "UtilityVariable"
-                ).attrib["name"]
+                potential_dict["UtilityVaribale"] = potential.find("UtilityVariable").attrib["name"]
             if len(potential.findall("Variables/Variable")):
                 potential_dict["Variables"] = {}
                 var_list = []
@@ -1060,15 +1007,10 @@ class ProbModelXMLReader(object):
                         )
                     except KeyError:
                         potential_dict["UncertainValues"].append(
-                            {
-                                "distribution": value.attrib["distribution"],
-                                "value": value.text,
-                            }
+                            {"distribution": value.attrib["distribution"], "value": value.text}
                         )
             if potential.find("TopVariable") is not None:
-                potential_dict["TopVariable"] = potential.find("TopVariable").attrib[
-                    "name"
-                ]
+                potential_dict["TopVariable"] = potential.find("TopVariable").attrib["name"]
 
             if len(potential.findall("Branches/Branch")):
                 potential_dict["Branches"] = []
@@ -1115,14 +1057,10 @@ class ProbModelXMLReader(object):
             if potential.find("Coefficients") is not None:
                 potential_dict["Coefficients"] = potential.find("Coefficients").text
             if potential.find("CovarianceMatrix") is not None:
-                potential_dict["CovarianceMatrix"] = potential.find(
-                    "CovarianceMatrix"
-                ).text
+                potential_dict["CovarianceMatrix"] = potential.find("CovarianceMatrix").text
             if potential.find("Potential") is not None:
                 potential_dict["Potential"] = {}
-                self.add_potential(
-                    potential.find("Potential"), potential_dict["Potential"]
-                )
+                self.add_potential(potential.find("Potential"), potential_dict["Potential"])
             if len(potential.findall("NumericVariables/Variable")):
                 potential_dict["NumericVariables"] = []
                 for variable in potential.findall("NumericVariables/Variable"):
@@ -1159,9 +1097,7 @@ class ProbModelXMLReader(object):
                 arr = list(map(float, cpd["Values"].split()))
                 values = np.array(arr)
                 values = values.reshape((len(states), values.size // len(states)))
-                tabular_cpds.append(
-                    TabularCPD(var, len(states), values, evidence, evidence_card)
-                )
+                tabular_cpds.append(TabularCPD(var, len(states), values, evidence, evidence_card))
 
             model.add_cpds(*tabular_cpds)
 

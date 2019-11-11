@@ -224,9 +224,7 @@ class ConstraintBasedEstimator(StructureEstimator):
         >>> # Both networks belong to the same PDAG/are I-equivalent
         """
 
-        skel, separating_sets = ConstraintBasedEstimator.build_skeleton(
-            nodes, independencies
-        )
+        skel, separating_sets = ConstraintBasedEstimator.build_skeleton(nodes, independencies)
         pdag = ConstraintBasedEstimator.skeleton_to_pdag(skel, separating_sets)
         dag = ConstraintBasedEstimator.pdag_to_dag(pdag)
 
@@ -305,12 +303,8 @@ class ConstraintBasedEstimator(StructureEstimator):
             #                    undirected neighbors + parents of X are a clique
             found = False
             for X in pdag.nodes():
-                directed_outgoing_edges = set(pdag.successors(X)) - set(
-                    pdag.predecessors(X)
-                )
-                undirected_neighbors = set(pdag.successors(X)) & set(
-                    pdag.predecessors(X)
-                )
+                directed_outgoing_edges = set(pdag.successors(X)) - set(pdag.predecessors(X))
+                undirected_neighbors = set(pdag.successors(X)) & set(pdag.predecessors(X))
                 neighbors_are_clique = all(
                     (
                         pdag.has_edge(Y, Z)
@@ -545,9 +539,7 @@ class ConstraintBasedEstimator(StructureEstimator):
         graph = UndirectedGraph(combinations(nodes, 2))
         lim_neighbors = 0
         separating_sets = dict()
-        while not all(
-            [len(list(graph.neighbors(node))) < lim_neighbors for node in nodes]
-        ):
+        while not all([len(list(graph.neighbors(node))) < lim_neighbors for node in nodes]):
             for node in nodes:
                 for neighbor in list(graph.neighbors(node)):
                     # search if there is a set of neighbors (of size lim_neighbors)
@@ -556,9 +548,7 @@ class ConstraintBasedEstimator(StructureEstimator):
                         set(graph.neighbors(node)) - set([neighbor]), lim_neighbors
                     ):
                         if is_independent(node, neighbor, separating_set):
-                            separating_sets[
-                                frozenset((node, neighbor))
-                            ] = separating_set
+                            separating_sets[frozenset((node, neighbor))] = separating_set
                             graph.remove_edge(node, neighbor)
                             break
             lim_neighbors += 1

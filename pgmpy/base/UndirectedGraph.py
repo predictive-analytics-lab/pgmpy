@@ -143,9 +143,7 @@ class UndirectedGraph(nx.Graph):
 
         if weights:
             if len(nodes) != len(weights):
-                raise ValueError(
-                    "The number of elements in nodes and weights" "should be equal."
-                )
+                raise ValueError("The number of elements in nodes and weights" "should be equal.")
             for index in range(len(nodes)):
                 self.add_node(node=nodes[index], weight=weights[index])
         else:
@@ -242,9 +240,7 @@ class UndirectedGraph(nx.Graph):
 
         if weights:
             if len(ebunch) != len(weights):
-                raise ValueError(
-                    "The number of elements in ebunch and weights" "should be equal"
-                )
+                raise ValueError("The number of elements in ebunch and weights" "should be equal")
             for index in range(len(ebunch)):
                 self.add_edge(ebunch[index][0], ebunch[index][1], weight=weights[index])
         else:

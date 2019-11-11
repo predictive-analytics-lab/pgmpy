@@ -29,9 +29,7 @@ class TestFactorSet(unittest.TestCase):
         factor_set1 = FactorSet(self.phi1, self.phi2)
         factor_set2 = FactorSet(self.phi3, self.phi4)
         factor_set3 = factor_set2.product(factor_set1, inplace=False)
-        self.assertEqual(
-            {self.phi1, self.phi2, self.phi3, self.phi4}, factor_set3.factors
-        )
+        self.assertEqual({self.phi1, self.phi2, self.phi3, self.phi4}, factor_set3.factors)
 
     def test_factorset_divide(self):
         phi1 = DiscreteFactor(["x1", "x2", "x3"], [2, 3, 2], range(1, 13))

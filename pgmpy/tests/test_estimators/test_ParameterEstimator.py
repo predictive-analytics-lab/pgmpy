@@ -14,20 +14,14 @@ class TestParameterEstimator(unittest.TestCase):
             data={"A": [0, 0, 1], "B": [0, 1, 0], "C": [1, 1, 0], "D": ["X", "Y", "Z"]}
         )
         self.d2 = DataFrame(
-            data={
-                "A": [0, NaN, 1],
-                "B": [0, 1, 0],
-                "C": [1, 1, NaN],
-                "D": [NaN, "Y", NaN],
-            }
+            data={"A": [0, NaN, 1], "B": [0, 1, 0], "C": [1, 1, NaN], "D": [NaN, "Y", NaN]}
         )
 
     def test_state_count(self):
         e = ParameterEstimator(self.m1, self.d1)
         self.assertEqual(e.state_counts("A").values.tolist(), [[2], [1]])
         self.assertEqual(
-            e.state_counts("C").values.tolist(),
-            [[0.0, 0.0, 1.0, 0.0], [1.0, 1.0, 0.0, 0.0]],
+            e.state_counts("C").values.tolist(), [[0.0, 0.0, 1.0, 0.0], [1.0, 1.0, 0.0, 0.0]]
         )
 
     def test_missing_data(self):
@@ -42,9 +36,7 @@ class TestParameterEstimator(unittest.TestCase):
             e.state_counts("C", complete_samples_only=True).values.tolist(),
             [[0, 0, 0, 0], [0, 0, 0, 0]],
         )
-        self.assertEqual(
-            e.state_counts("C").values.tolist(), [[0, 0, 0, 0], [1, 0, 0, 0]]
-        )
+        self.assertEqual(e.state_counts("C").values.tolist(), [[0, 0, 0, 0], [1, 0, 0, 0]])
 
     def tearDown(self):
         del self.m1

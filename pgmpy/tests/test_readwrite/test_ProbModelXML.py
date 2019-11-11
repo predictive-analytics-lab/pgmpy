@@ -271,23 +271,19 @@ class TestProbModelXMLReaderString(unittest.TestCase):
     def test_additionalconstraints(self):
         additionalconstraints_expected = {"MaxNumParents": {"numParents": "5"}}
         self.assertDictEqual(
-            self.reader_string.probnet["AdditionalConstraints"],
-            additionalconstraints_expected,
+            self.reader_string.probnet["AdditionalConstraints"], additionalconstraints_expected
         )
         self.assertDictEqual(
-            self.reader_file.probnet["AdditionalConstraints"],
-            additionalconstraints_expected,
+            self.reader_file.probnet["AdditionalConstraints"], additionalconstraints_expected
         )
 
     def test_additionalproperties(self):
         additionalproperties_expected = {"elvira.title": "X ray result"}
         self.assertDictEqual(
-            self.reader_string.probnet["AdditionalProperties"],
-            additionalproperties_expected,
+            self.reader_string.probnet["AdditionalProperties"], additionalproperties_expected
         )
         self.assertDictEqual(
-            self.reader_file.probnet["AdditionalProperties"],
-            additionalproperties_expected,
+            self.reader_file.probnet["AdditionalProperties"], additionalproperties_expected
         )
 
     def test_decisioncriteria(self):
@@ -319,18 +315,12 @@ class TestProbModelXMLReaderString(unittest.TestCase):
                                     "Potential": {
                                         "Subpotentials": [
                                             {
-                                                "Potential": {
-                                                    "type": "Table",
-                                                    "Values": "3",
-                                                },
+                                                "Potential": {"type": "Table", "Values": "3"},
                                                 "type": "Exponential",
                                             },
                                             {
                                                 "NumericVariables": ["C0", "C1"],
-                                                "Potential": {
-                                                    "type": "Table",
-                                                    "Values": u"–1",
-                                                },
+                                                "Potential": {"type": "Table", "Values": u"–1"},
                                                 "Coefficients": u"4 –1",
                                                 "type": "Exponential",
                                             },
@@ -390,9 +380,7 @@ class TestProbModelXMLReaderString(unittest.TestCase):
             }
         ]
 
-        self.assertListEqual(
-            self.reader_string.probnet["Potentials"], potential_expected
-        )
+        self.assertListEqual(self.reader_string.probnet["Potentials"], potential_expected)
         self.assertListEqual(self.reader_file.probnet["Potentials"], potential_expected)
 
     def test_get_model(self):
@@ -680,9 +668,7 @@ class TestProbModelXMLReaderString(unittest.TestCase):
             },
         }
         edge_expected = {
-            "LungCancer": {
-                "TuberculosisOrCancer": {"weight": None, "directed": "true"}
-            },
+            "LungCancer": {"TuberculosisOrCancer": {"weight": None, "directed": "true"}},
             "Smoker": {
                 "LungCancer": {"weight": None, "directed": "true"},
                 "Bronchitis": {"weight": None, "directed": "true"},
@@ -695,9 +681,7 @@ class TestProbModelXMLReaderString(unittest.TestCase):
                 "Dyspnea": {"weight": None, "directed": "true"},
             },
             "Bronchitis": {"Dyspnea": {"weight": None, "directed": "true"}},
-            "Tuberculosis": {
-                "TuberculosisOrCancer": {"weight": None, "directed": "true"}
-            },
+            "Tuberculosis": {"TuberculosisOrCancer": {"weight": None, "directed": "true"}},
         }
 
         cpds_expected = [
@@ -797,10 +781,7 @@ class TestProbModelXMLWriter(unittest.TestCase):
                                                         "type": "Exponential",
                                                     },
                                                     {
-                                                        "NumericVariables": [
-                                                            "C0",
-                                                            "C1",
-                                                        ],
+                                                        "NumericVariables": ["C0", "C1"],
                                                         "Potential": {
                                                             "type": "Table",
                                                             "Values": "-1",
@@ -845,18 +826,12 @@ class TestProbModelXMLWriter(unittest.TestCase):
                                     "Subpotentials": [
                                         {
                                             "NumericVariables": ["C0"],
-                                            "Potential": {
-                                                "type": "Table",
-                                                "Values": "0.3",
-                                            },
+                                            "Potential": {"type": "Table", "Values": "0.3"},
                                             "Coefficients": "1",
                                             "type": "Exponential",
                                         },
                                         {
-                                            "Potential": {
-                                                "type": "Table",
-                                                "Values": "0.7",
-                                            },
+                                            "Potential": {"type": "Table", "Values": "0.7"},
                                             "type": "Exponential",
                                         },
                                     ],
@@ -1054,9 +1029,7 @@ class TestProbModelXMLWriter(unittest.TestCase):
   </DecisionCriteria>
 </ProbModelXML>"""
         )
-        self.assertEqual(
-            str(self.writer.__str__()[:-1]), str(etree.tostring(self.expected_xml))
-        )
+        self.assertEqual(str(self.writer.__str__()[:-1]), str(etree.tostring(self.expected_xml)))
 
     def test_write_file(self):
         self.expected_xml = etree.XML(
@@ -1240,12 +1213,8 @@ class TestProbModelXMLWriter(unittest.TestCase):
         self.writer.write_file("test_xml.pgmx")
         with open("test_xml.pgmx", "r") as myfile:
             data = myfile.read()
-        self.assertEqual(
-            str(self.writer.__str__()[:-1]), str(etree.tostring(self.expected_xml))
-        )
-        self.assertEqual(
-            str(data), str(etree.tostring(self.expected_xml).decode("utf-8"))
-        )
+        self.assertEqual(str(self.writer.__str__()[:-1]), str(etree.tostring(self.expected_xml)))
+        self.assertEqual(str(data), str(etree.tostring(self.expected_xml).decode("utf-8")))
 
     def tearDown(self):
         try:
@@ -1346,10 +1315,7 @@ class TestProbModelXMLmethods(unittest.TestCase):
         }
         edges = {
             "LungCancer": {"TuberculosisOrCancer": {"directed": "true"}},
-            "Smoker": {
-                "LungCancer": {"directed": "true"},
-                "Bronchitis": {"directed": "true"},
-            },
+            "Smoker": {"LungCancer": {"directed": "true"}, "Bronchitis": {"directed": "true"}},
             "Dyspnea": {},
             "X-ray": {},
             "VisitToAsia": {"Tuberculosis": {"directed": "true"}},
@@ -1366,10 +1332,7 @@ class TestProbModelXMLmethods(unittest.TestCase):
                 "Values": np.array([[0.95, 0.05], [0.02, 0.98]]),
                 "Variables": {"X-ray": ["TuberculosisOrCancer"]},
             },
-            {
-                "Values": np.array([[0.7, 0.3], [0.4, 0.6]]),
-                "Variables": {"Bronchitis": ["Smoker"]},
-            },
+            {"Values": np.array([[0.7, 0.3], [0.4, 0.6]]), "Variables": {"Bronchitis": ["Smoker"]}},
             {
                 "Values": np.array([[0.9, 0.1, 0.3, 0.7], [0.2, 0.8, 0.1, 0.9]]),
                 "Variables": {"Dyspnea": ["TuberculosisOrCancer", "Bronchitis"]},
@@ -1411,21 +1374,15 @@ class TestProbModelXMLmethods(unittest.TestCase):
             evidence = cpd["Variables"][var]
             values = cpd["Values"]
             states = len(nodes[var]["States"])
-            evidence_card = [
-                len(nodes[evidence_var]["States"]) for evidence_var in evidence
-            ]
-            tabular_cpds.append(
-                TabularCPD(var, states, values, evidence, evidence_card)
-            )
+            evidence_card = [len(nodes[evidence_var]["States"]) for evidence_var in evidence]
+            tabular_cpds.append(TabularCPD(var, states, values, evidence, evidence_card))
         self.maxDiff = None
         self.model.add_cpds(*tabular_cpds)
 
     def test_get_probmodel_data(self):
         model_data = get_probmodel_data(self.model)
         xmlfile = ProbModelXMLWriter(model_data)
-        with open(
-            "pgmpy/tests/test_readwrite/testdata/test_probmodelxml_data.json"
-        ) as data_file:
+        with open("pgmpy/tests/test_readwrite/testdata/test_probmodelxml_data.json") as data_file:
             model_data_expected = json.load(data_file)
         xmlfile_expected = etree.XML(
             """<ProbModelXML formatVersion="1.0">
@@ -1647,6 +1604,4 @@ class TestProbModelXMLmethods(unittest.TestCase):
 </ProbModelXML>"""
         )
         self.assertDictEqual(model_data, model_data_expected)
-        self.assertEqual(
-            str(xmlfile.__str__()[:-1]), str(etree.tostring(xmlfile_expected))
-        )
+        self.assertEqual(str(xmlfile.__str__()[:-1]), str(etree.tostring(xmlfile_expected)))

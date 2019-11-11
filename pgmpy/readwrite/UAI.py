@@ -56,9 +56,7 @@ class UAIReader(object):
         no_variables = Word(nums).setResultsName("no_variables")
         grammar = network_name + no_variables
         self.no_variables = int(grammar.parseString(self.network)["no_variables"])
-        domain_variables = (Word(nums) * self.no_variables).setResultsName(
-            "domain_variables"
-        )
+        domain_variables = (Word(nums) * self.no_variables).setResultsName("domain_variables")
         grammar += domain_variables
         no_functions = Word(nums).setResultsName("no_functions")
         grammar += no_functions
@@ -67,25 +65,17 @@ class UAIReader(object):
         for function in range(0, self.no_functions):
             scope_grammar = Word(nums).setResultsName("fun_scope_" + str(function))
             grammar += scope_grammar
-            function_scope = grammar.parseString(self.network)[
-                "fun_scope_" + str(function)
-            ]
+            function_scope = grammar.parseString(self.network)["fun_scope_" + str(function)]
             function_grammar = ((integer) * int(function_scope)).setResultsName(
                 "fun_" + str(function)
             )
             grammar += function_grammar
 
-        floatnumber = Combine(
-            Word(nums) + Optional(Literal(".") + Optional(Word(nums)))
-        )
+        floatnumber = Combine(Word(nums) + Optional(Literal(".") + Optional(Word(nums))))
         for function in range(0, self.no_functions):
-            no_values_grammar = Word(nums).setResultsName(
-                "fun_no_values_" + str(function)
-            )
+            no_values_grammar = Word(nums).setResultsName("fun_no_values_" + str(function))
             grammar += no_values_grammar
-            no_values = grammar.parseString(self.network)[
-                "fun_no_values_" + str(function)
-            ]
+            no_values = grammar.parseString(self.network)["fun_no_values_" + str(function)]
             values_grammar = ((floatnumber) * int(no_values)).setResultsName(
                 "fun_values_" + str(function)
             )
@@ -170,9 +160,7 @@ class UAIReader(object):
         """
         edges = []
         for function in range(0, self.no_functions):
-            function_variables = self.grammar.parseString(self.network)[
-                "fun_" + str(function)
-            ]
+            function_variables = self.grammar.parseString(self.network)["fun_" + str(function)]
             if isinstance(function_variables, int):
                 function_variables = [function_variables]
             if self.network_type == "BAYES":
@@ -206,22 +194,16 @@ class UAIReader(object):
         """
         tables = []
         for function in range(0, self.no_functions):
-            function_variables = self.grammar.parseString(self.network)[
-                "fun_" + str(function)
-            ]
+            function_variables = self.grammar.parseString(self.network)["fun_" + str(function)]
             if isinstance(function_variables, int):
                 function_variables = [function_variables]
             if self.network_type == "BAYES":
                 child_var = "var_" + str(function_variables[-1])
-                values = self.grammar.parseString(self.network)[
-                    "fun_values_" + str(function)
-                ]
+                values = self.grammar.parseString(self.network)["fun_values_" + str(function)]
                 tables.append((child_var, list(values)))
             elif self.network_type == "MARKOV":
                 function_variables = ["var_" + str(var) for var in function_variables]
-                values = self.grammar.parseString(self.network)[
-                    "fun_values_" + str(function)
-                ]
+                values = self.grammar.parseString(self.network)["fun_values_" + str(function)]
                 tables.append((function_variables, list(values)))
         return tables
 
@@ -265,9 +247,7 @@ class UAIReader(object):
                 variables = table[0]
                 cardinality = [int(self.domain[var]) for var in variables]
                 value = list(map(float, table[1]))
-                factor = DiscreteFactor(
-                    variables=variables, cardinality=cardinality, values=value
-                )
+                factor = DiscreteFactor(variables=variables, cardinality=cardinality, values=value)
                 factors.append(factor)
 
             model.add_factors(*factors)
@@ -375,12 +355,8 @@ class UAIWriter(object):
             for cpd in cpds:
                 child_var = cpd.variable
                 evidence = cpd.variables[:0:-1]
-                function = [
-                    str(variables.index((var, self.domain[var]))) for var in evidence
-                ]
-                function.append(
-                    str(variables.index((child_var, self.domain[child_var])))
-                )
+                function = [str(variables.index((var, self.domain[var]))) for var in evidence]
+                function.append(str(variables.index((child_var, self.domain[child_var]))))
                 functions.append(function)
             return functions
         elif isinstance(self.model, MarkovModel):
@@ -389,9 +365,7 @@ class UAIWriter(object):
             variables = sorted(self.domain.items(), key=lambda x: (x[1], x[0]))
             for factor in factors:
                 scope = factor.scope()
-                function = [
-                    str(variables.index((var, self.domain[var]))) for var in scope
-                ]
+                function = [str(variables.index((var, self.domain[var]))) for var in scope]
                 functions.append(function)
             return functions
         else:

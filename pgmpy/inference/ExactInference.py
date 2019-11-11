@@ -10,12 +10,7 @@ from pgmpy.extern.six.moves import filter, range
 from pgmpy.extern.six import string_types
 from pgmpy.factors import factor_product
 from pgmpy.inference import Inference
-from pgmpy.inference.EliminationOrder import (
-    WeightedMinFill,
-    MinNeighbors,
-    MinFill,
-    MinWeight,
-)
+from pgmpy.inference.EliminationOrder import WeightedMinFill, MinNeighbors, MinFill, MinWeight
 from pgmpy.models import JunctionTree, BayesianModel
 
 
@@ -34,9 +29,7 @@ class VariableElimination(Inference):
         -------
         dict: Modified working factors.
         """
-        working_factors = {
-            node: {factor for factor in self.factors[node]} for node in self.factors
-        }
+        working_factors = {node: {factor for factor in self.factors[node]} for node in self.factors}
 
         # Dealing with evidence. Reducing factors over it before VE is run.
         if evidence:
@@ -51,9 +44,7 @@ class VariableElimination(Inference):
                 del working_factors[evidence_var]
         return working_factors
 
-    def _get_elimination_order(
-        self, variables, evidence, elimination_order, show_progress=True
-    ):
+    def _get_elimination_order(self, variables, evidence, elimination_order, show_progress=True):
         """
         Deals with all elimination order parameters given to _variable_elimination method
         and returns a list of variables that are to be eliminated
@@ -67,20 +58,14 @@ class VariableElimination(Inference):
         list: A list of variables names in the order they need to be eliminated.
         """
         to_eliminate = (
-            set(self.variables)
-            - set(variables)
-            - set(evidence.keys() if evidence else [])
+            set(self.variables) - set(variables) - set(evidence.keys() if evidence else [])
         )
 
         # Step 1: If elimination_order is a list, verify it's correct and return.
-        if hasattr(elimination_order, "__iter__") and (
-            not isinstance(elimination_order, str)
-        ):
+        if hasattr(elimination_order, "__iter__") and (not isinstance(elimination_order, str)):
             if any(
                 var in elimination_order
-                for var in set(variables).union(
-                    set(evidence.keys() if evidence else [])
-                )
+                for var in set(variables).union(set(evidence.keys() if evidence else []))
             ):
                 raise ValueError(
                     "Elimination order contains variables which are in"
@@ -94,9 +79,7 @@ class VariableElimination(Inference):
             return to_eliminate
 
         # Step 3: If elimination order is a str, compute the order using the specified heuristic.
-        elif isinstance(elimination_order, str) and isinstance(
-            self.model, BayesianModel
-        ):
+        elif isinstance(elimination_order, str) and isinstance(self.model, BayesianModel):
             heuristic_dict = {
                 "weightedminfill": WeightedMinFill,
                 "minneighbors": MinNeighbors,
@@ -207,12 +190,7 @@ class VariableElimination(Inference):
             return query_var_factor
 
     def query(
-        self,
-        variables,
-        evidence=None,
-        elimination_order="MinFill",
-        joint=True,
-        show_progress=True,
+        self, variables, evidence=None, elimination_order="MinFill", joint=True, show_progress=True
     ):
         """
         Parameters
@@ -255,11 +233,7 @@ class VariableElimination(Inference):
         )
 
     def max_marginal(
-        self,
-        variables=None,
-        evidence=None,
-        elimination_order="MinFill",
-        show_progress=True,
+        self, variables=None, evidence=None, elimination_order="MinFill", show_progress=True
     ):
         """
         Computes the max-marginal over the variables given the evidence.
@@ -301,11 +275,7 @@ class VariableElimination(Inference):
         return np.max(final_distribution.values)
 
     def map_query(
-        self,
-        variables=None,
-        evidence=None,
-        elimination_order="MinFill",
-        show_progress=True,
+        self, variables=None, evidence=None, elimination_order="MinFill", show_progress=True
     ):
         """
         Computes the MAP Query over the variables given the evidence.
@@ -388,14 +358,12 @@ class VariableElimination(Inference):
         # If the elimination order does not contain the same variables as the model
         if set(elimination_order) != set(self.variables):
             raise ValueError(
-                "Set of variables in elimination order"
-                " different from variables in model"
+                "Set of variables in elimination order" " different from variables in model"
             )
 
         eliminated_variables = set()
         working_factors = {
-            node: [factor.scope() for factor in self.factors[node]]
-            for node in self.factors
+            node: [factor.scope() for factor in self.factors[node]] for node in self.factors
         }
 
         # The set of cliques that should be in the induced graph
@@ -419,9 +387,7 @@ class VariableElimination(Inference):
                 working_factors[variable].append(list(phi))
             eliminated_variables.add(var)
 
-        edges_comb = [
-            itertools.combinations(c, 2) for c in filter(lambda x: len(x) > 1, cliques)
-        ]
+        edges_comb = [itertools.combinations(c, 2) for c in filter(lambda x: len(x) > 1, cliques)]
         return nx.Graph(itertools.chain(*edges_comb))
 
     def induced_width(self, elimination_order):
@@ -524,9 +490,7 @@ class BeliefPropagation(Inference):
 
         # \beta_j = \beta_j * \frac{\sigma_{i \rightarrow j}}{\mu_{i, j}}
         self.clique_beliefs[recieving_clique] *= (
-            sigma / self.sepset_beliefs[sepset_key]
-            if self.sepset_beliefs[sepset_key]
-            else sigma
+            sigma / self.sepset_beliefs[sepset_key] if self.sepset_beliefs[sepset_key] else sigma
         )
 
         # \mu_{i, j} = \sigma_{i \rightarrow j}
@@ -572,10 +536,7 @@ class BeliefPropagation(Inference):
             marginal_2 = getattr(self.clique_beliefs[edge[1]], operation)(
                 list(frozenset(edge[1]) - sepset), inplace=False
             )
-            if (
-                marginal_1 != marginal_2
-                or marginal_1 != self.sepset_beliefs[sepset_key]
-            ):
+            if marginal_1 != marginal_2 or marginal_1 != self.sepset_beliefs[sepset_key]:
                 return False
         return True
 
@@ -598,12 +559,9 @@ class BeliefPropagation(Inference):
         """
         # Initialize clique beliefs as well as sepset beliefs
         self.clique_beliefs = {
-            clique: self.junction_tree.get_factors(clique)
-            for clique in self.junction_tree.nodes()
+            clique: self.junction_tree.get_factors(clique) for clique in self.junction_tree.nodes()
         }
-        self.sepset_beliefs = {
-            frozenset(edge): None for edge in self.junction_tree.edges()
-        }
+        self.sepset_beliefs = {frozenset(edge): None for edge in self.junction_tree.edges()}
 
         for clique in self.junction_tree.nodes():
             if not self._is_converged(operation=operation):
@@ -612,9 +570,7 @@ class BeliefPropagation(Inference):
                 # upward pass
                 for neighbor_clique in neighbors:
                     self._update_beliefs(neighbor_clique, clique, operation=operation)
-                bfs_edges = nx.algorithms.breadth_first_search.bfs_edges(
-                    self.junction_tree, clique
-                )
+                bfs_edges = nx.algorithms.breadth_first_search.bfs_edges(self.junction_tree, clique)
                 # update the beliefs of all the nodes starting from the root to leaves using root's belief
                 # downward pass
                 for edge in bfs_edges:
@@ -791,13 +747,9 @@ class BeliefPropagation(Inference):
         # Sum product variable elimination on the subtree
         variable_elimination = VariableElimination(subtree)
         if operation == "marginalize":
-            return variable_elimination.query(
-                variables=variables, evidence=evidence, joint=joint
-            )
+            return variable_elimination.query(variables=variables, evidence=evidence, joint=joint)
         elif operation == "maximize":
-            return variable_elimination.map_query(
-                variables=variables, evidence=evidence
-            )
+            return variable_elimination.map_query(variables=variables, evidence=evidence)
 
     def query(self, variables, evidence=None, joint=True):
         """

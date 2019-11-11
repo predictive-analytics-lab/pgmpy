@@ -55,9 +55,7 @@ class CausalInference(object):
         self.graph = self.dag.to_undirected()
         self.latent_variables = _variable_or_iterable_to_set(latent_vars)
         self.set_nodes = _variable_or_iterable_to_set(set_nodes)
-        self.observed_variables = frozenset(self.dag.nodes()).difference(
-            self.latent_variables
-        )
+        self.observed_variables = frozenset(self.dag.nodes()).difference(self.latent_variables)
 
     def __repr__(self):
         variables = ", ".join(map(str, sorted(self.observed_variables)))
@@ -266,10 +264,7 @@ class CausalInference(object):
             if not parents:
                 p = "P({})".format(node)
             else:
-                parents = [
-                    "do({})".format(n) if n in self.set_nodes else str(n)
-                    for n in parents
-                ]
+                parents = ["do({})".format(n) if n in self.set_nodes else str(n) for n in parents]
                 p = "P({}|{})".format(node, ",".join(parents))
             products.append(p)
         return "".join(products)
@@ -293,13 +288,7 @@ class CausalInference(object):
         return adjustment_list[np.argmin(adjustment_list)]
 
     def estimate_ate(
-        self,
-        X,
-        Y,
-        data,
-        estimand_strategy="smallest",
-        estimator_type="linear",
-        **kwargs
+        self, X, Y, data, estimand_strategy="smallest", estimator_type="linear", **kwargs
     ):
         """
         Estimate the average treatment effect (ATE) of X on Y.

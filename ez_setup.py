@@ -101,9 +101,7 @@ def _build_egg(egg, tarball, to_dir):
 
 def _do_download(version, download_base, to_dir, download_delay):
     egg = os.path.join(
-        to_dir,
-        "setuptools-%s-py%d.%d.egg"
-        % (version, sys.version_info[0], sys.version_info[1]),
+        to_dir, "setuptools-%s-py%d.%d.egg" % (version, sys.version_info[0], sys.version_info[1])
     )
     if not os.path.exists(egg):
         tarball = download_setuptools(version, download_base, to_dir, download_delay)
@@ -121,10 +119,7 @@ def _do_download(version, download_base, to_dir, download_delay):
 
 
 def use_setuptools(
-    version=DEFAULT_VERSION,
-    download_base=DEFAULT_URL,
-    to_dir=os.curdir,
-    download_delay=15,
+    version=DEFAULT_VERSION, download_base=DEFAULT_URL, to_dir=os.curdir, download_delay=15
 ):
     to_dir = os.path.abspath(to_dir)
     rep_modules = "pkg_resources", "setuptools"
@@ -399,8 +394,7 @@ def main(version=DEFAULT_VERSION):
     """Install or upgrade setuptools and EasyInstall"""
     options = _parse_args()
     tarball = download_setuptools(
-        download_base=options.download_base,
-        downloader_factory=options.downloader_factory,
+        download_base=options.download_base, downloader_factory=options.downloader_factory
     )
     return _install(tarball, _build_install_args(options))
 

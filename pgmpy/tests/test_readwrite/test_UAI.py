@@ -109,14 +109,7 @@ class TestUAIReader(unittest.TestCase):
 class TestUAIWriter(unittest.TestCase):
     def setUp(self):
         self.maxDiff = None
-        variables = [
-            "kid",
-            "bowel-problem",
-            "dog-out",
-            "family-out",
-            "hear-bark",
-            "light-on",
-        ]
+        variables = ["kid", "bowel-problem", "dog-out", "family-out", "hear-bark", "light-on"]
         edges = [
             ["family-out", "dog-out"],
             ["bowel-problem", "dog-out"],
@@ -159,9 +152,7 @@ class TestUAIWriter(unittest.TestCase):
                 len(states[var]),
                 values,
                 evidence=parents[var],
-                evidence_card=[
-                    len(states[evidence_var]) for evidence_var in parents[var]
-                ],
+                evidence_card=[len(states[evidence_var]) for evidence_var in parents[var]],
             )
             tabular_cpds.append(cpd)
         self.bayesmodel.add_cpds(*tabular_cpds)
@@ -238,6 +229,4 @@ class TestUAIWriter(unittest.TestCase):
 4.0 2.4 1.0 0.0
 12
 2.25 3.25 3.75 0.0 0.0 10.0 1.875 4.0 3.333 2.0 2.0 3.4"""
-        self.assertEqual(
-            str(self.markovwriter.__str__()), str(self.expected_markov_file)
-        )
+        self.assertEqual(str(self.markovwriter.__str__()), str(self.expected_markov_file))

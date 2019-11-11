@@ -213,9 +213,7 @@ class FactorSet(object):
         factor_set = self if inplace else self.copy()
         factor_set1 = factorset.copy()
 
-        factor_set.add_factors(
-            *[phi.identity_factor() / phi for phi in factor_set1.factors]
-        )
+        factor_set.add_factors(*[phi.identity_factor() / phi for phi in factor_set1.factors])
 
         if not inplace:
             return factor_set
@@ -258,9 +256,7 @@ class FactorSet(object):
         )
 
         for factor in factors_to_be_marginalized:
-            variables_to_be_marginalized = list(
-                set(factor.scope()).intersection(variables)
-            )
+            variables_to_be_marginalized = list(set(factor.scope()).intersection(variables))
             if inplace:
                 factor.marginalize(variables_to_be_marginalized, inplace=True)
             else:

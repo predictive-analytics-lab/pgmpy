@@ -116,9 +116,7 @@ class FactorGraph(UndirectedGraph):
         ...                   ('b', phi2), ('c', phi2)])
         """
         for factor in factors:
-            if set(factor.variables) - set(factor.variables).intersection(
-                set(self.nodes())
-            ):
+            if set(factor.variables) - set(factor.variables).intersection(set(self.nodes())):
                 raise ValueError("Factors defined on variable not in the model", factor)
 
             self.factors.append(factor)
@@ -204,9 +202,7 @@ class FactorGraph(UndirectedGraph):
         variable_nodes = set([x for factor in self.factors for x in factor.scope()])
         factor_nodes = set(self.nodes()) - variable_nodes
 
-        if not all(
-            isinstance(factor_node, DiscreteFactor) for factor_node in factor_nodes
-        ):
+        if not all(isinstance(factor_node, DiscreteFactor) for factor_node in factor_nodes):
             raise ValueError("Factors not associated for all the random variables")
 
         if not (bipartite.is_bipartite(self)) or not (
@@ -378,13 +374,9 @@ class FactorGraph(UndirectedGraph):
         else:
             factor_nodes = self.get_factor_nodes()
             if node not in factor_nodes:
-                raise ValueError(
-                    "Factors are not associated with the " "corresponding node."
-                )
+                raise ValueError("Factors are not associated with the " "corresponding node.")
             factors = list(
-                filter(
-                    lambda x: set(x.scope()) == set(self.neighbors(node)), self.factors
-                )
+                filter(lambda x: set(x.scope()) == set(self.neighbors(node)), self.factors)
             )
             return factors[0]
 
@@ -415,9 +407,7 @@ class FactorGraph(UndirectedGraph):
         >>> G.get_partition_function()
         """
         factor = self.factors[0]
-        factor = factor_product(
-            factor, *[self.factors[i] for i in range(1, len(self.factors))]
-        )
+        factor = factor_product(factor, *[self.factors[i] for i in range(1, len(self.factors))])
         if set(factor.scope()) != set(self.get_variable_nodes()):
             raise ValueError("DiscreteFactor for all the random variables not defined.")
 

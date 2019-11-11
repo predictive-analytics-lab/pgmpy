@@ -20,9 +20,7 @@ class TestBaseEstimator(unittest.TestCase):
             }
         )
 
-        self.titanic_data = pd.read_csv(
-            "pgmpy/tests/test_estimators/testdata/titanic_train.csv"
-        )
+        self.titanic_data = pd.read_csv("pgmpy/tests/test_estimators/testdata/titanic_train.csv")
 
     def test_state_count(self):
         e = BaseEstimator(self.d1)
@@ -33,44 +31,33 @@ class TestBaseEstimator(unittest.TestCase):
         )
 
     def test_missing_data(self):
-        e = BaseEstimator(
-            self.d2, state_names={"C": [0, 1]}, complete_samples_only=False
-        )
+        e = BaseEstimator(self.d2, state_names={"C": [0, 1]}, complete_samples_only=False)
         self.assertEqual(
             e.state_counts("A", complete_samples_only=True).values.tolist(), [[0], [0]]
         )
         self.assertEqual(e.state_counts("A").values.tolist(), [[1], [1]])
         self.assertEqual(
-            e.state_counts(
-                "C", parents=["A", "B"], complete_samples_only=True
-            ).values.tolist(),
+            e.state_counts("C", parents=["A", "B"], complete_samples_only=True).values.tolist(),
             [[0, 0, 0, 0], [0, 0, 0, 0]],
         )
         self.assertEqual(
-            e.state_counts("C", parents=["A", "B"]).values.tolist(),
-            [[0, 0, 0, 0], [1, 0, 0, 0]],
+            e.state_counts("C", parents=["A", "B"]).values.tolist(), [[0, 0, 0, 0], [1, 0, 0, 0]]
         )
 
     def test_test_conditional_independence(self):
-        data = pd.DataFrame(
-            np.random.randint(0, 2, size=(1000, 4)), columns=list("ABCD")
-        )
+        data = pd.DataFrame(np.random.randint(0, 2, size=(1000, 4)), columns=list("ABCD"))
         data["E"] = data["A"] + data["B"] + data["C"]
         est = BaseEstimator(data)
 
         self.assertTrue(est.test_conditional_independence("A", "C"))  # independent
         self.assertTrue(est.test_conditional_independence("A", "B", "D"))  # independent
-        self.assertFalse(
-            est.test_conditional_independence("A", "B", ["D", "E"])
-        )  # dependent
+        self.assertFalse(est.test_conditional_independence("A", "B", ["D", "E"]))  # dependent
 
     def test_test_conditional_independence_titanic(self):
         est = BaseEstimator(self.titanic_data)
 
         self.assertTrue(est.test_conditional_independence("Embarked", "Sex"))
-        self.assertFalse(
-            est.test_conditional_independence("Pclass", "Survived", ["Embarked"])
-        )
+        self.assertFalse(est.test_conditional_independence("Pclass", "Survived", ["Embarked"]))
         self.assertTrue(
             est.test_conditional_independence("Embarked", "Survived", ["Sex", "Pclass"])
         )

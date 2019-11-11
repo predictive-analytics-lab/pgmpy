@@ -9,9 +9,7 @@ from pgmpy.estimators import SEMEstimator, IVEstimator
 
 class TestSEMEstimator(unittest.TestCase):
     def setUp(self):
-        self.custom = SEMGraph(
-            ebunch=[("a", "b"), ("b", "c")], latents=[], err_corr=[], err_var={}
-        )
+        self.custom = SEMGraph(ebunch=[("a", "b"), ("b", "c")], latents=[], err_corr=[], err_var={})
         a = np.random.randn(10 ** 3)
         b = a + np.random.normal(loc=0, scale=0.1, size=10 ** 3)
         c = b + np.random.normal(loc=0, scale=0.2, size=10 ** 3)
@@ -50,9 +48,7 @@ class TestSEMEstimator(unittest.TestCase):
         self.demo_lisrel = self.demo.to_lisrel()
 
         self.demo_data = pd.read_csv(
-            "pgmpy/tests/test_estimators/testdata/democracy1989a.csv",
-            index_col=0,
-            header=0,
+            "pgmpy/tests/test_estimators/testdata/democracy1989a.csv", index_col=0, header=0
         )
 
         self.union = SEMGraph(
@@ -77,9 +73,7 @@ class TestSEMEstimator(unittest.TestCase):
     def test_get_init_values(self):
         demo_estimator = SEMEstimator(self.demo)
         for method in ["random", "std"]:
-            B_init, zeta_init = demo_estimator.get_init_values(
-                data=self.demo_data, method=method
-            )
+            B_init, zeta_init = demo_estimator.get_init_values(data=self.demo_data, method=method)
 
             demo_lisrel = self.demo.to_lisrel()
             m = len(demo_lisrel.eta)
@@ -87,9 +81,7 @@ class TestSEMEstimator(unittest.TestCase):
             self.assertEqual(zeta_init.shape, (m, m))
 
             union_estimator = SEMEstimator(self.union)
-            B_init, zeta_init = union_estimator.get_init_values(
-                data=self.union_data, method=method
-            )
+            B_init, zeta_init = union_estimator.get_init_values(data=self.union_data, method=method)
             union_lisrel = self.union.to_lisrel()
             m = len(union_lisrel.eta)
             self.assertEqual(B_init.shape, (m, m))
@@ -110,18 +102,10 @@ class TestSEMEstimator(unittest.TestCase):
     @unittest.skip
     def test_custom_estimator_random_init(self):
         estimator = SEMEstimator(self.custom_lisrel)
+        summary = estimator.fit(self.custom_data, method="ml", max_iter=10 ** 6, opt="adam")
+        summary = estimator.fit(self.custom_data, method="uls", max_iter=10 ** 6, opt="adam")
         summary = estimator.fit(
-            self.custom_data, method="ml", max_iter=10 ** 6, opt="adam"
-        )
-        summary = estimator.fit(
-            self.custom_data, method="uls", max_iter=10 ** 6, opt="adam"
-        )
-        summary = estimator.fit(
-            self.custom_data,
-            method="gls",
-            max_iter=10 ** 6,
-            opt="adam",
-            W=np.ones((3, 3)),
+            self.custom_data, method="gls", max_iter=10 ** 6, opt="adam", W=np.ones((3, 3))
         )
 
     @unittest.skip
@@ -140,11 +124,7 @@ class TestSEMEstimator(unittest.TestCase):
     def test_custom_estimator_std_init(self):
         estimator = SEMEstimator(self.custom_lisrel)
         summary = estimator.fit(
-            self.custom_data,
-            method="ml",
-            init_values="std",
-            max_iter=10 ** 6,
-            opt="adam",
+            self.custom_data, method="ml", init_values="std", max_iter=10 ** 6, opt="adam"
         )
 
 

@@ -15,9 +15,7 @@ class TestBicScore(unittest.TestCase):
         self.m2 = BayesianModel([("C", "A"), ("C", "B"), ("A", "D")])
 
         # data_link - "https://www.kaggle.com/c/titanic/download/train.csv"
-        self.titanic_data = pd.read_csv(
-            "pgmpy/tests/test_estimators/testdata/titanic_train.csv"
-        )
+        self.titanic_data = pd.read_csv("pgmpy/tests/test_estimators/testdata/titanic_train.csv")
         self.titanic_data2 = self.titanic_data[["Survived", "Sex", "Pclass"]]
 
     def test_score(self):

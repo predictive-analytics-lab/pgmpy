@@ -10,12 +10,7 @@ class TestGradLogPDFGaussian(unittest.TestCase):
     def setUp(self):
         mean = np.array([1, 2, 3, 4])
         covariance = np.array(
-            [
-                [1, 0.2, 0.4, 0.7],
-                [0.2, 2, 0.5, 0.8],
-                [0.4, 0.5, 3, 0.6],
-                [0.7, 0.8, 0.6, 4],
-            ]
+            [[1, 0.2, 0.4, 0.7], [0.2, 2, 0.5, 0.8], [0.4, 0.5, 3, 0.6], [0.7, 0.8, 0.6, 4]]
         )
         self.test_model = JGD(["x", "y", "z", "t"], mean, covariance)
         self.test_gradient = GradLogPDFGaussian([0, 0, 0, 0], self.test_model)
@@ -49,9 +44,7 @@ class TestLeapFrog(unittest.TestCase):
             grad_log_pdf=GradLogPDFGaussian,
             grad_log_position=None,
         )
-        grad_log_position, _ = GradLogPDFGaussian(
-            position, self.test_model
-        ).get_gradient_log_pdf()
+        grad_log_position, _ = GradLogPDFGaussian(position, self.test_model).get_gradient_log_pdf()
         self.test_without_grad_log = LeapFrog(
             model=self.test_model,
             position=position,
@@ -88,11 +81,7 @@ class TestLeapFrog(unittest.TestCase):
             )
         with self.assertRaises(TypeError):
             LeapFrog(
-                model=self.test_model,
-                position=[1],
-                momentum=[1],
-                stepsize=0.1,
-                grad_log_pdf=1,
+                model=self.test_model, position=[1], momentum=[1], stepsize=0.1, grad_log_pdf=1
             )
         with self.assertRaises(ValueError):
             LeapFrog(
@@ -123,27 +112,17 @@ class TestLeapFrog(unittest.TestCase):
 
     def test_leapfrog_methods(self):
         new_pos, new_momentum, new_grad = self.test_with_grad_log.get_proposed_values()
-        np.testing.assert_almost_equal(
-            new_pos, np.array([-0.35634146, -0.25609756, -0.33])
-        )
+        np.testing.assert_almost_equal(new_pos, np.array([-0.35634146, -0.25609756, -0.33]))
         np.testing.assert_almost_equal(
             new_momentum, np.array([-1.3396624, -0.70344884, -1.16963415])
         )
-        np.testing.assert_almost_equal(
-            new_grad, np.array([-1.0123835, 1.00139798, -0.46422764])
-        )
-        new_pos, new_momentum, new_grad = (
-            self.test_without_grad_log.get_proposed_values()
-        )
-        np.testing.assert_almost_equal(
-            new_pos, np.array([-0.5001626, -0.32195122, -0.45333333])
-        )
+        np.testing.assert_almost_equal(new_grad, np.array([-1.0123835, 1.00139798, -0.46422764]))
+        new_pos, new_momentum, new_grad = self.test_without_grad_log.get_proposed_values()
+        np.testing.assert_almost_equal(new_pos, np.array([-0.5001626, -0.32195122, -0.45333333]))
         np.testing.assert_almost_equal(
             new_momentum, np.array([-1.42947981, -0.60709102, -1.21246612])
         )
-        np.testing.assert_almost_equal(
-            new_grad, np.array([-0.89536651, 0.98893516, -0.39566396])
-        )
+        np.testing.assert_almost_equal(new_grad, np.array([-0.89536651, 0.98893516, -0.39566396]))
 
     def tearDown(self):
         del self.test_model
@@ -166,9 +145,7 @@ class TestModifiedEuler(unittest.TestCase):
             grad_log_pdf=GradLogPDFGaussian,
             grad_log_position=None,
         )
-        grad_log_position, _ = GradLogPDFGaussian(
-            position, self.test_model
-        ).get_gradient_log_pdf()
+        grad_log_position, _ = GradLogPDFGaussian(position, self.test_model).get_gradient_log_pdf()
         self.test_without_grad_log = ModifiedEuler(
             model=self.test_model,
             position=position,
@@ -183,9 +160,7 @@ class TestModifiedEuler(unittest.TestCase):
         np.testing.assert_almost_equal(new_pos, np.array([-1.0, 0.5]))
         np.testing.assert_almost_equal(new_momentum, np.array([-2.0, 1.0]))
         np.testing.assert_almost_equal(new_grad, np.array([-0.93406593, 0.08241758]))
-        new_pos, new_momentum, new_grad = (
-            self.test_without_grad_log.get_proposed_values()
-        )
+        new_pos, new_momentum, new_grad = self.test_without_grad_log.get_proposed_values()
         np.testing.assert_almost_equal(new_pos, np.array([-0.6, 0.3]))
         np.testing.assert_almost_equal(new_momentum, np.array([-2.0, 1.0]))
         np.testing.assert_almost_equal(new_grad, np.array([-0.56043956, 0.04945055]))

@@ -129,14 +129,7 @@ class DynamicBayesianNetwork(DAG):
         >>> sorted(dbn._nodes())
         ['B', 'A', 'C']
         """
-        return list(
-            set(
-                [
-                    node
-                    for node, timeslice in super(DynamicBayesianNetwork, self).nodes()
-                ]
-            )
-        )
+        return list(set([node for node, timeslice in super(DynamicBayesianNetwork, self).nodes()]))
 
     def add_edge(self, start, end, **kwargs):
         """
@@ -179,13 +172,9 @@ class DynamicBayesianNetwork(DAG):
                 start = (start[0], 0)
                 end = (end[0], 1)
             elif start[1] > end[1]:
-                raise NotImplementedError(
-                    "Edges in backward direction are not allowed."
-                )
+                raise NotImplementedError("Edges in backward direction are not allowed.")
             elif start[1] != end[1]:
-                raise ValueError(
-                    "Edges over multiple time slices is not currently supported"
-                )
+                raise ValueError("Edges over multiple time slices is not currently supported")
         except TypeError:
             raise ValueError("Nodes must be of type (node, time_slice).")
 
@@ -499,9 +488,7 @@ class DynamicBayesianNetwork(DAG):
                         "proper parents associated with it.".format(node=node)
                     )
                 if not np.allclose(
-                    cpd.to_factor()
-                    .marginalize([node], inplace=False)
-                    .values.flatten("C"),
+                    cpd.to_factor().marginalize([node], inplace=False).values.flatten("C"),
                     np.ones(np.product(evidence_card)),
                     atol=0.01,
                 ):
@@ -554,27 +541,19 @@ class DynamicBayesianNetwork(DAG):
                         new_cpd = TabularCPD(
                             temp_var,
                             cpd.variable_card,
-                            cpd.values.reshape(
-                                cpd.variable_card, np.prod(evidence_card)
-                            ),
+                            cpd.values.reshape(cpd.variable_card, np.prod(evidence_card)),
                             parents,
                             evidence_card,
                         )
                     else:
                         if cpd.get_evidence():
-                            initial_cpd = cpd.marginalize(
-                                cpd.get_evidence(), inplace=False
-                            )
+                            initial_cpd = cpd.marginalize(cpd.get_evidence(), inplace=False)
                             new_cpd = TabularCPD(
-                                temp_var,
-                                cpd.variable_card,
-                                np.reshape(initial_cpd.values, (-1, 2)),
+                                temp_var, cpd.variable_card, np.reshape(initial_cpd.values, (-1, 2))
                             )
                         else:
                             new_cpd = TabularCPD(
-                                temp_var,
-                                cpd.variable_card,
-                                np.reshape(cpd.values, (-1, 2)),
+                                temp_var, cpd.variable_card, np.reshape(cpd.values, (-1, 2))
                             )
                     self.add_cpds(new_cpd)
             self.check_model()

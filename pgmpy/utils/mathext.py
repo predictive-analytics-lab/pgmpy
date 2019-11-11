@@ -57,6 +57,7 @@ def cartesian(arrays, out=None):
 
     return out
 
+
 @njit
 def numba_sample(probs, values):
     sample = np.zeros(probs.shape[0])
@@ -65,6 +66,7 @@ def numba_sample(probs, values):
         x = np.random.random_sample()
         sample[i] = np.argmax(x < cdf)
     return sample
+
 
 def sample_discrete(values, weights, size=1):
     """
@@ -96,9 +98,7 @@ def sample_discrete(values, weights, size=1):
         return np.random.choice(values, size=size, p=weights)
     else:
         values = np.array(values)
-        return np.fromiter(
-            numba_sample(weights, values), dtype="int"
-        )
+        return np.fromiter(numba_sample(weights, values), dtype="int")
 
 
 def powerset(l):

@@ -120,9 +120,7 @@ class TestMinFill(BaseEliminationTest):
 
     def test_elimination_order(self):
         elimination_order = self.elimination_order.get_elimination_order()
-        self.assertEqual(
-            set(elimination_order), {"diff", "grade", "sat", "reco", "intel"}
-        )
+        self.assertEqual(set(elimination_order), {"diff", "grade", "sat", "reco", "intel"})
 
     def test_elimination_order_given_nodes(self):
         elimination_order = self.elimination_order.get_elimination_order(

@@ -158,9 +158,7 @@ class DAG(nx.DiGraph):
 
         if weights:
             if len(nodes) != len(weights):
-                raise ValueError(
-                    "The number of elements in nodes and weights" "should be equal."
-                )
+                raise ValueError("The number of elements in nodes and weights" "should be equal.")
             for index in range(len(nodes)):
                 self.add_node(node=nodes[index], weight=weights[index])
         else:
@@ -257,9 +255,7 @@ class DAG(nx.DiGraph):
 
         if weights:
             if len(ebunch) != len(weights):
-                raise ValueError(
-                    "The number of elements in ebunch and weights" "should be equal"
-                )
+                raise ValueError("The number of elements in ebunch and weights" "should be equal")
             for index in range(len(ebunch)):
                 self.add_edge(ebunch[index][0], ebunch[index][1], weight=weights[index])
         else:
@@ -305,9 +301,7 @@ class DAG(nx.DiGraph):
         moral_graph = UndirectedGraph(self.to_undirected().edges())
 
         for node in self.nodes():
-            moral_graph.add_edges_from(
-                itertools.combinations(self.get_parents(node), 2)
-            )
+            moral_graph.add_edges_from(itertools.combinations(self.get_parents(node), 2))
 
         return moral_graph
 
@@ -347,9 +341,7 @@ class DAG(nx.DiGraph):
         >>> graph.get_roots()
         ['A', 'E']
         """
-        return [
-            node for node, in_degree in dict(self.in_degree()).items() if in_degree == 0
-        ]
+        return [node for node, in_degree in dict(self.in_degree()).items() if in_degree == 0]
 
     def get_children(self, node):
         """
@@ -400,9 +392,7 @@ class DAG(nx.DiGraph):
                         - set(self.active_trail_nodes(start, observed=observed)[start])
                     )
                     if d_seperated_variables:
-                        independencies.add_assertions(
-                            [start, d_seperated_variables, observed]
-                        )
+                        independencies.add_assertions([start, d_seperated_variables, observed])
 
         independencies.reduce()
 
@@ -433,19 +423,13 @@ class DAG(nx.DiGraph):
         """
 
         independencies = Independencies()
-        for variable in (
-            variables if isinstance(variables, (list, tuple)) else [variables]
-        ):
+        for variable in variables if isinstance(variables, (list, tuple)) else [variables]:
             non_descendents = (
-                set(self.nodes())
-                - {variable}
-                - set(nx.dfs_preorder_nodes(self, variable))
+                set(self.nodes()) - {variable} - set(nx.dfs_preorder_nodes(self, variable))
             )
             parents = set(self.get_parents(variable))
             if non_descendents - parents:
-                independencies.add_assertions(
-                    [variable, non_descendents - parents, parents]
-                )
+                independencies.add_assertions([variable, non_descendents - parents, parents])
         return independencies
 
     def is_iequivalent(self, model):
@@ -484,10 +468,7 @@ class DAG(nx.DiGraph):
         skeleton = nx.algorithms.isomorphism.GraphMatcher(
             self.to_undirected(), model.to_undirected()
         )
-        if (
-            skeleton.is_isomorphic()
-            and self.get_immoralities() == model.get_immoralities()
-        ):
+        if skeleton.is_isomorphic() and self.get_immoralities() == model.get_immoralities():
             return True
         return False
 
@@ -607,9 +588,7 @@ class DAG(nx.DiGraph):
         Page 75 Algorithm 3.1
         """
         if observed:
-            observed_list = (
-                observed if isinstance(observed, (list, tuple)) else [observed]
-            )
+            observed_list = observed if isinstance(observed, (list, tuple)) else [observed]
         else:
             observed_list = []
         ancestors_list = self._get_ancestors_of(observed_list)

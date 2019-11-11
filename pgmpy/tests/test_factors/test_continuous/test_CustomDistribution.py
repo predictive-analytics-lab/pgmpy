@@ -47,12 +47,8 @@ class TestCustomDistribution(unittest.TestCase):
         self.assertRaises(TypeError, CustomDistribution, set(["x1", "x2"]), self.pdf2)
         self.assertRaises(TypeError, CustomDistribution, {"x1": 1, "x2": 2}, self.pdf1)
 
-        self.assertRaises(
-            TypeError, CustomDistribution, set(["x", "y", "z"]), self.pdf3
-        )
-        self.assertRaises(
-            TypeError, CustomDistribution, {"x": 1, "y": 2, "z": 3}, self.pdf3
-        )
+        self.assertRaises(TypeError, CustomDistribution, set(["x", "y", "z"]), self.pdf3)
+        self.assertRaises(TypeError, CustomDistribution, {"x": 1, "y": 2, "z": 3}, self.pdf3)
 
     def test_class_init_valueerror(self):
         self.assertRaises(ValueError, CustomDistribution, ["x", "x"], self.pdf1)
@@ -62,9 +58,7 @@ class TestCustomDistribution(unittest.TestCase):
         self.assertRaises(ValueError, CustomDistribution, ["x1", "x2", "x2"], self.pdf2)
 
         self.assertRaises(ValueError, CustomDistribution, ["x", "x"], self.pdf1)
-        self.assertRaises(
-            ValueError, CustomDistribution, ["x", "y", "y", "z", "z"], self.pdf1
-        )
+        self.assertRaises(ValueError, CustomDistribution, ["x", "y", "y", "z", "z"], self.pdf1)
 
 
 class TestCustomDistributionMethods(unittest.TestCase):
@@ -78,9 +72,7 @@ class TestCustomDistributionMethods(unittest.TestCase):
         return z * (np.power(x, 1) * np.power(y, 2)) / beta(x, y)
 
     def pdf4(self, x1, x2, x3):
-        return multivariate_normal.pdf(
-            [x1, x2, x3], [0, 0, 0], [[1, 0, 0], [0, 1, 0], [0, 0, 1]]
-        )
+        return multivariate_normal.pdf([x1, x2, x3], [0, 0, 0], [[1, 0, 0], [0, 1, 0], [0, 0, 1]])
 
     def setUp(self):
         self.phi1 = CustomDistribution(["x", "y"], self.pdf1)
@@ -96,9 +88,7 @@ class TestCustomDistributionMethods(unittest.TestCase):
     def test_assignment(self):
         self.assertEqual(self.phi1.assignment(1.212, 2), self.pdf1(1.212, 2))
         self.assertEqual(self.phi2.assignment(1, -2.231), self.pdf2(1, -2.231))
-        self.assertEqual(
-            self.phi3.assignment(1.212, 2.213, -3), self.pdf3(1.212, 2.213, -3)
-        )
+        self.assertEqual(self.phi3.assignment(1.212, 2.213, -3), self.pdf3(1.212, 2.213, -3))
 
     def test_reduce(self):
         phi1 = self.phi1.copy()
@@ -155,17 +145,13 @@ class TestCustomDistributionMethods(unittest.TestCase):
         self.assertEqual(phi3.variables, ["x", "z"])
         for inp in np.random.rand(4, 2):
             self.assertEqual(phi3._pdf(inp[0], inp[1]), reduced_pdf3(inp[0], inp[1]))
-            self.assertEqual(
-                phi3._pdf(x=inp[0], z=inp[1]), reduced_pdf3(inp[0], inp[1])
-            )
+            self.assertEqual(phi3._pdf(x=inp[0], z=inp[1]), reduced_pdf3(inp[0], inp[1]))
 
         phi3 = self.phi3.reduce([("y", 0.112)], inplace=False)
         self.assertEqual(phi3.variables, ["x", "z"])
         for inp in np.random.rand(4, 2):
             self.assertEqual(phi3._pdf(inp[0], inp[1]), reduced_pdf3(inp[0], inp[1]))
-            self.assertEqual(
-                phi3._pdf(x=inp[0], z=inp[1]), reduced_pdf3(inp[0], inp[1])
-            )
+            self.assertEqual(phi3._pdf(x=inp[0], z=inp[1]), reduced_pdf3(inp[0], inp[1]))
             self.assertEqual(phi3._pdf(inp[0], z=inp[1]), reduced_pdf3(inp[0], inp[1]))
 
         phi3 = self.phi3.reduce([("y", 0.112), ("z", 23)], inplace=False)
@@ -196,16 +182,12 @@ class TestCustomDistributionMethods(unittest.TestCase):
         phi2.marginalize(["x2"])
         self.assertEqual(phi2.variables, ["x1"])
         for inp in np.random.rand(4):
-            np_test.assert_almost_equal(
-                phi2._pdf(inp), multivariate_normal.pdf([inp], [0], [[1]])
-            )
+            np_test.assert_almost_equal(phi2._pdf(inp), multivariate_normal.pdf([inp], [0], [[1]]))
 
         phi2 = self.phi2.marginalize(["x2"], inplace=False)
         self.assertEqual(phi2.variables, ["x1"])
         for inp in np.random.rand(4):
-            np_test.assert_almost_equal(
-                phi2._pdf(inp), multivariate_normal.pdf([inp], [0], [[1]])
-            )
+            np_test.assert_almost_equal(phi2._pdf(inp), multivariate_normal.pdf([inp], [0], [[1]]))
 
         phi4 = self.phi4.copy()
         phi4.marginalize(["x2"])
@@ -220,9 +202,7 @@ class TestCustomDistributionMethods(unittest.TestCase):
         phi4.marginalize(["x3"])
         self.assertEqual(phi4.variables, ["x1"])
         for inp in np.random.rand(1):
-            np_test.assert_almost_equal(
-                phi4._pdf(inp), multivariate_normal.pdf([inp], [0], [[1]])
-            )
+            np_test.assert_almost_equal(phi4._pdf(inp), multivariate_normal.pdf([inp], [0], [[1]]))
 
         phi4 = self.phi4.marginalize(["x2"], inplace=False)
         self.assertEqual(phi4.variables, ["x1", "x3"])
@@ -235,9 +215,7 @@ class TestCustomDistributionMethods(unittest.TestCase):
         phi4 = phi4.marginalize(["x3"], inplace=False)
         self.assertEqual(phi4.variables, ["x1"])
         for inp in np.random.rand(1):
-            np_test.assert_almost_equal(
-                phi4._pdf(inp), multivariate_normal.pdf([inp], [0], [[1]])
-            )
+            np_test.assert_almost_equal(phi4._pdf(inp), multivariate_normal.pdf([inp], [0], [[1]]))
 
     def test_marginalize_error(self):
         self.assertRaises(TypeError, self.phi1.marginalize, "x1")
@@ -264,16 +242,12 @@ class TestCustomDistributionMethods(unittest.TestCase):
         phi4.normalize()
         self.assertEqual(phi4.variables, phi2.variables)
         for inp in np.random.rand(1, 2):
-            np_test.assert_almost_equal(
-                phi4._pdf(inp[0], inp[1]), self.pdf2(inp[0], inp[1])
-            )
+            np_test.assert_almost_equal(phi4._pdf(inp[0], inp[1]), self.pdf2(inp[0], inp[1]))
 
         phi4 = phi2.normalize(inplace=False)
         self.assertEqual(phi4.variables, phi4.variables)
         for inp in np.random.rand(1, 2):
-            np_test.assert_almost_equal(
-                phi4._pdf(inp[0], inp[1]), self.pdf2(inp[0], inp[1])
-            )
+            np_test.assert_almost_equal(phi4._pdf(inp[0], inp[1]), self.pdf2(inp[0], inp[1]))
 
     def test_operate(self):
         phi1 = self.phi1.copy()
@@ -281,113 +255,86 @@ class TestCustomDistributionMethods(unittest.TestCase):
         self.assertEqual(phi1.variables, ["x", "y", "x1", "x2"])
         for inp in np.random.rand(4, 4):
             self.assertEqual(
-                phi1._pdf(*inp),
-                self.phi1._pdf(inp[0], inp[1]) * self.phi2._pdf(inp[2], inp[3]),
+                phi1._pdf(*inp), self.phi1._pdf(inp[0], inp[1]) * self.phi2._pdf(inp[2], inp[3])
             )
 
         phi1 = self.phi1._operate(self.phi2, "product", inplace=False)
         self.assertEqual(phi1.variables, ["x", "y", "x1", "x2"])
         for inp in np.random.rand(4, 4):
             self.assertEqual(
-                phi1._pdf(*inp),
-                self.phi1._pdf(inp[0], inp[1]) * self.phi2._pdf(inp[2], inp[3]),
+                phi1._pdf(*inp), self.phi1._pdf(inp[0], inp[1]) * self.phi2._pdf(inp[2], inp[3])
             )
 
         phi1 = self.phi1 * self.phi2
         self.assertEqual(phi1.variables, ["x", "y", "x1", "x2"])
         for inp in np.random.rand(4, 4):
             self.assertEqual(
-                phi1._pdf(*inp),
-                self.phi1._pdf(inp[0], inp[1]) * self.phi2._pdf(inp[2], inp[3]),
+                phi1._pdf(*inp), self.phi1._pdf(inp[0], inp[1]) * self.phi2._pdf(inp[2], inp[3])
             )
 
         phi3 = self.phi3.copy()
         phi3._operate(self.phi1, "product")
         self.assertEqual(phi3.variables, ["x", "y", "z"])
         for inp in np.random.rand(4, 3):
-            self.assertEqual(
-                phi3._pdf(*inp), self.phi3._pdf(*inp) * self.phi1._pdf(inp[0], inp[1])
-            )
+            self.assertEqual(phi3._pdf(*inp), self.phi3._pdf(*inp) * self.phi1._pdf(inp[0], inp[1]))
 
         phi3 = self.phi3._operate(self.phi1, "product", inplace=False)
         self.assertEqual(phi3.variables, ["x", "y", "z"])
         for inp in np.random.rand(4, 3):
-            self.assertEqual(
-                phi3._pdf(*inp), self.phi3._pdf(*inp) * self.phi1._pdf(inp[0], inp[1])
-            )
+            self.assertEqual(phi3._pdf(*inp), self.phi3._pdf(*inp) * self.phi1._pdf(inp[0], inp[1]))
 
         phi3 = self.phi3 * self.phi1
         self.assertEqual(phi3.variables, ["x", "y", "z"])
         for inp in np.random.rand(4, 3):
-            self.assertEqual(
-                phi3._pdf(*inp), self.phi3._pdf(*inp) * self.phi1._pdf(inp[0], inp[1])
-            )
+            self.assertEqual(phi3._pdf(*inp), self.phi3._pdf(*inp) * self.phi1._pdf(inp[0], inp[1]))
 
         phi3 = self.phi3.copy()
         phi3._operate(self.phi1, "divide")
         self.assertEqual(phi3.variables, ["x", "y", "z"])
         for inp in np.random.rand(4, 3):
-            self.assertEqual(
-                phi3._pdf(*inp), self.phi3._pdf(*inp) / self.phi1._pdf(inp[0], inp[1])
-            )
+            self.assertEqual(phi3._pdf(*inp), self.phi3._pdf(*inp) / self.phi1._pdf(inp[0], inp[1]))
 
         phi3 = self.phi3._operate(self.phi1, "divide", inplace=False)
         self.assertEqual(phi3.variables, ["x", "y", "z"])
         for inp in np.random.rand(4, 3):
-            self.assertEqual(
-                phi3._pdf(*inp), self.phi3._pdf(*inp) / self.phi1._pdf(inp[0], inp[1])
-            )
+            self.assertEqual(phi3._pdf(*inp), self.phi3._pdf(*inp) / self.phi1._pdf(inp[0], inp[1]))
 
         phi3 = self.phi3 / self.phi1
         self.assertEqual(phi3.variables, ["x", "y", "z"])
         for inp in np.random.rand(4, 3):
-            self.assertEqual(
-                phi3._pdf(*inp), self.phi3._pdf(*inp) / self.phi1._pdf(inp[0], inp[1])
-            )
+            self.assertEqual(phi3._pdf(*inp), self.phi3._pdf(*inp) / self.phi1._pdf(inp[0], inp[1]))
 
         phi4 = self.phi4.copy()
         phi4._operate(self.phi2, "product")
         self.assertEqual(phi4.variables, ["x1", "x2", "x3"])
         for inp in np.random.rand(4, 3):
-            self.assertEqual(
-                phi4._pdf(*inp), self.phi4._pdf(*inp) * self.phi2._pdf(inp[0], inp[1])
-            )
+            self.assertEqual(phi4._pdf(*inp), self.phi4._pdf(*inp) * self.phi2._pdf(inp[0], inp[1]))
 
         phi4 = self.phi4._operate(self.phi2, "product", inplace=False)
         self.assertEqual(phi4.variables, ["x1", "x2", "x3"])
         for inp in np.random.rand(4, 3):
-            self.assertEqual(
-                phi4._pdf(*inp), self.phi4._pdf(*inp) * self.phi2._pdf(inp[0], inp[1])
-            )
+            self.assertEqual(phi4._pdf(*inp), self.phi4._pdf(*inp) * self.phi2._pdf(inp[0], inp[1]))
 
         phi4 = self.phi4 * self.phi2
         self.assertEqual(phi4.variables, ["x1", "x2", "x3"])
         for inp in np.random.rand(4, 3):
-            self.assertEqual(
-                phi4._pdf(*inp), self.phi4._pdf(*inp) * self.phi2._pdf(inp[0], inp[1])
-            )
+            self.assertEqual(phi4._pdf(*inp), self.phi4._pdf(*inp) * self.phi2._pdf(inp[0], inp[1]))
 
         phi4 = self.phi4.copy()
         phi4._operate(self.phi2, "divide")
         self.assertEqual(phi4.variables, ["x1", "x2", "x3"])
         for inp in np.random.rand(4, 3):
-            self.assertEqual(
-                phi4._pdf(*inp), self.phi4._pdf(*inp) / self.phi2._pdf(inp[0], inp[1])
-            )
+            self.assertEqual(phi4._pdf(*inp), self.phi4._pdf(*inp) / self.phi2._pdf(inp[0], inp[1]))
 
         phi4 = self.phi4._operate(self.phi2, "divide", inplace=False)
         self.assertEqual(phi4.variables, ["x1", "x2", "x3"])
         for inp in np.random.rand(4, 3):
-            self.assertEqual(
-                phi4._pdf(*inp), self.phi4._pdf(*inp) / self.phi2._pdf(inp[0], inp[1])
-            )
+            self.assertEqual(phi4._pdf(*inp), self.phi4._pdf(*inp) / self.phi2._pdf(inp[0], inp[1]))
 
         phi4 = self.phi4 / self.phi2
         self.assertEqual(phi4.variables, ["x1", "x2", "x3"])
         for inp in np.random.rand(4, 3):
-            self.assertEqual(
-                phi4._pdf(*inp), self.phi4._pdf(*inp) / self.phi2._pdf(inp[0], inp[1])
-            )
+            self.assertEqual(phi4._pdf(*inp), self.phi4._pdf(*inp) / self.phi2._pdf(inp[0], inp[1]))
 
     def test_operate_error(self):
         self.assertRaises(TypeError, self.phi1._operate, 1, "product")
@@ -412,12 +359,8 @@ class TestCustomDistributionMethods(unittest.TestCase):
         self.assertRaises(TypeError, self.phi1._operate, 1, "divide", False)
         self.assertRaises(TypeError, self.phi1._operate, "1", "product", False)
         self.assertRaises(TypeError, self.phi1._operate, "1", "divide", False)
-        self.assertRaises(
-            TypeError, self.phi1._operate, self.phi2._pdf, "product", False
-        )
-        self.assertRaises(
-            TypeError, self.phi1._operate, self.phi2._pdf, "divide", False
-        )
+        self.assertRaises(TypeError, self.phi1._operate, self.phi2._pdf, "product", False)
+        self.assertRaises(TypeError, self.phi1._operate, self.phi2._pdf, "divide", False)
         self.assertRaises(TypeError, self.phi1._operate, [1], "product", False)
         self.assertRaises(TypeError, self.phi1._operate, [1], "divide", False)
 
@@ -425,12 +368,8 @@ class TestCustomDistributionMethods(unittest.TestCase):
         self.assertRaises(TypeError, self.phi4._operate, 1, "divide", False)
         self.assertRaises(TypeError, self.phi4._operate, "1", "product", False)
         self.assertRaises(TypeError, self.phi4._operate, "1", "divide", False)
-        self.assertRaises(
-            TypeError, self.phi4._operate, self.phi2._pdf, "product", False
-        )
-        self.assertRaises(
-            TypeError, self.phi4._operate, self.phi2._pdf, "divide", False
-        )
+        self.assertRaises(TypeError, self.phi4._operate, self.phi2._pdf, "product", False)
+        self.assertRaises(TypeError, self.phi4._operate, self.phi2._pdf, "divide", False)
         self.assertRaises(TypeError, self.phi4._operate, [1], "product", False)
         self.assertRaises(TypeError, self.phi4._operate, [1], "divide", False)
 

@@ -81,9 +81,7 @@ class BIFReader(object):
                 self.network
             )  # removing comments from the file
 
-        self.name_expr, self.state_expr, self.property_expr = (
-            self.get_variable_grammar()
-        )
+        self.name_expr, self.state_expr, self.property_expr = self.get_variable_grammar()
         self.probability_expr, self.cpd_expr = self.get_probability_grammar()
         self.network_name = self.get_network_name()
         self.variable_names = self.get_variables()
@@ -129,22 +127,15 @@ class BIFReader(object):
         """
         # Creating valid word expression for probability, it is of the format
         # wor1 | var2 , var3 or var1 var2 var3 or simply var
-        word_expr = (
-            Word(alphanums + "-" + "_")
-            + Suppress(Optional("|"))
-            + Suppress(Optional(","))
+        word_expr = Word(alphanums + "-" + "_") + Suppress(Optional("|")) + Suppress(Optional(","))
+        word_expr2 = Word(initChars=printables, excludeChars=[",", ")", " ", "("]) + Suppress(
+            Optional(",")
         )
-        word_expr2 = Word(
-            initChars=printables, excludeChars=[",", ")", " ", "("]
-        ) + Suppress(Optional(","))
         # creating an expression for valid numbers, of the format
         # 1.00 or 1 or 1.00. 0.00 or 9.8e-5 etc
         num_expr = Word(nums + "-" + "+" + "e" + "E" + ".") + Suppress(Optional(","))
         probability_expr = (
-            Suppress("probability")
-            + Suppress("(")
-            + OneOrMore(word_expr)
-            + Suppress(")")
+            Suppress("probability") + Suppress("(") + OneOrMore(word_expr) + Suppress(")")
         )
         optional_expr = Suppress("(") + OneOrMore(word_expr2) + Suppress(")")
         probab_attributes = optional_expr | Suppress("table")
@@ -313,8 +304,7 @@ class BIFReader(object):
                             [0.4, 0.95]])}
         """
         cpd_values = Parallel(n_jobs=self.n_jobs)(
-            delayed(self._get_values_from_block)(block)
-            for block in self.probability_block()
+            delayed(self._get_values_from_block)(block) for block in self.probability_block()
         )
         variable_cpds = {}
         for var_name, arr in cpd_values:
@@ -363,10 +353,7 @@ class BIFReader(object):
             tabular_cpds = []
             for var in sorted(self.variable_cpds.keys()):
                 values = self.variable_cpds[var]
-                sn = {
-                    p_var: self.variable_states[p_var]
-                    for p_var in self.variable_parents[var]
-                }
+                sn = {p_var: self.variable_states[p_var] for p_var in self.variable_parents[var]}
                 sn[var] = self.variable_states[var]
                 cpd = TabularCPD(
                     var,
@@ -386,17 +373,13 @@ class BIFReader(object):
             if self.include_properties:
                 for node, properties in self.variable_properties.items():
                     for prop in properties:
-                        prop_name, prop_value = map(
-                            lambda t: t.strip(), prop.split("=")
-                        )
+                        prop_name, prop_value = map(lambda t: t.strip(), prop.split("="))
                         model.node[node][prop_name] = prop_value
 
             return model
 
         except AttributeError:
-            raise AttributeError(
-                "First get states of variables, edges, parents and network name"
-            )
+            raise AttributeError("First get states of variables, edges, parents and network name")
 
 
 class BIFWriter(object):
@@ -451,12 +434,7 @@ $properties}\n"""
     table $values ;
 }\n"""
         )
-        return (
-            network_template,
-            variable_template,
-            property_template,
-            probability_template,
-        )
+        return (network_template, variable_template, property_template, probability_template)
 
     def __str__(self):
         """
@@ -479,10 +457,7 @@ $properties}\n"""
                 for prop_val in self.property_tag[var]:
                     properties += property_template.substitute(prop=prop_val)
             network += variable_template.substitute(
-                name=var,
-                no_of_states=no_of_states,
-                states=states,
-                properties=properties,
+                name=var, no_of_states=no_of_states, states=states, properties=properties
             )
 
         for var in sorted(variables):

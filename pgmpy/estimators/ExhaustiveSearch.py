@@ -151,8 +151,7 @@ class ExhaustiveSearch(StructureEstimator):
         """
 
         scored_dags = sorted(
-            [(self.scoring_method.score(dag), dag) for dag in self.all_dags()],
-            key=lambda x: x[0],
+            [(self.scoring_method.score(dag), dag) for dag in self.all_dags()], key=lambda x: x[0]
         )
         return scored_dags
 

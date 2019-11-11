@@ -21,5 +21,5 @@ __all__ = [
     "StructureScore",
     "K2Score",
     "BdeuScore",
-    "BicScore"
+    "BicScore",
 ]

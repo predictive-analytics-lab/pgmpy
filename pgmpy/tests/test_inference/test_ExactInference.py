@@ -46,8 +46,7 @@ class TestVariableElimination(unittest.TestCase):
     def test_query_single_variable(self):
         query_result = self.bayesian_inference.query(["J"])
         self.assertEqual(
-            query_result,
-            DiscreteFactor(variables=["J"], cardinality=[2], values=[0.416, 0.584]),
+            query_result, DiscreteFactor(variables=["J"], cardinality=[2], values=[0.416, 0.584])
         )
 
     def test_query_multiple_variable(self):
@@ -62,12 +61,9 @@ class TestVariableElimination(unittest.TestCase):
         )
 
     def test_query_single_variable_with_evidence(self):
-        query_result = self.bayesian_inference.query(
-            variables=["J"], evidence={"A": 0, "R": 1}
-        )
+        query_result = self.bayesian_inference.query(variables=["J"], evidence={"A": 0, "R": 1})
         self.assertEqual(
-            query_result,
-            DiscreteFactor(variables=["J"], cardinality=[2], values=[0.6, 0.4]),
+            query_result, DiscreteFactor(variables=["J"], cardinality=[2], values=[0.6, 0.4])
         )
 
     def test_query_multiple_variable_with_evidence(self):
@@ -89,9 +85,7 @@ class TestVariableElimination(unittest.TestCase):
         query_result = self.bayesian_inference.query(["J"])
         self.assertEqual(
             query_result,
-            DiscreteFactor(
-                variables=["J"], cardinality=[2], values=np.array([0.416, 0.584])
-            ),
+            DiscreteFactor(variables=["J"], cardinality=[2], values=np.array([0.416, 0.584])),
         )
 
         query_result = self.bayesian_inference.query(["Q", "J"])
@@ -105,15 +99,10 @@ class TestVariableElimination(unittest.TestCase):
             ),
         )
 
-        query_result = self.bayesian_inference.query(
-            variables=["J"], evidence={"A": 0, "R": 1}
-        )
-        query_result = self.bayesian_inference.query(
-            variables=["J"], evidence={"A": 0, "R": 1}
-        )
+        query_result = self.bayesian_inference.query(variables=["J"], evidence={"A": 0, "R": 1})
+        query_result = self.bayesian_inference.query(variables=["J"], evidence={"A": 0, "R": 1})
         self.assertEqual(
-            query_result,
-            DiscreteFactor(variables=["J"], cardinality=[2], values=[0.6, 0.4]),
+            query_result, DiscreteFactor(variables=["J"], cardinality=[2], values=[0.6, 0.4])
         )
 
         query_result = self.bayesian_inference.query(
@@ -132,14 +121,10 @@ class TestVariableElimination(unittest.TestCase):
         )
 
     def test_max_marginal(self):
-        np_test.assert_almost_equal(
-            self.bayesian_inference.max_marginal(), 0.1659, decimal=4
-        )
+        np_test.assert_almost_equal(self.bayesian_inference.max_marginal(), 0.1659, decimal=4)
 
     def test_max_marginal_var(self):
-        np_test.assert_almost_equal(
-            self.bayesian_inference.max_marginal(["G"]), 0.5714, decimal=4
-        )
+        np_test.assert_almost_equal(self.bayesian_inference.max_marginal(["G"]), 0.5714, decimal=4)
 
     def test_max_marginal_var1(self):
         np_test.assert_almost_equal(
@@ -153,20 +138,14 @@ class TestVariableElimination(unittest.TestCase):
 
     def test_map_query(self):
         map_query = self.bayesian_inference.map_query()
-        self.assertDictEqual(
-            map_query, {"A": 1, "R": 1, "J": 1, "Q": 1, "G": 0, "L": 0}
-        )
+        self.assertDictEqual(map_query, {"A": 1, "R": 1, "J": 1, "Q": 1, "G": 0, "L": 0})
 
     def test_map_query_with_evidence(self):
-        map_query = self.bayesian_inference.map_query(
-            ["A", "R", "L"], {"J": 0, "Q": 1, "G": 0}
-        )
+        map_query = self.bayesian_inference.map_query(["A", "R", "L"], {"J": 0, "Q": 1, "G": 0})
         self.assertDictEqual(map_query, {"A": 1, "R": 0, "L": 0})
 
     def test_induced_graph(self):
-        induced_graph = self.bayesian_inference.induced_graph(
-            ["G", "Q", "A", "J", "L", "R"]
-        )
+        induced_graph = self.bayesian_inference.induced_graph(["G", "Q", "A", "J", "L", "R"])
         result_edges = sorted([sorted(x) for x in induced_graph.edges()])
         self.assertEqual(
             [
@@ -183,9 +162,7 @@ class TestVariableElimination(unittest.TestCase):
         )
 
     def test_induced_width(self):
-        result_width = self.bayesian_inference.induced_width(
-            ["G", "Q", "A", "J", "L", "R"]
-        )
+        result_width = self.bayesian_inference.induced_width(["G", "Q", "A", "J", "L", "R"])
         self.assertEqual(2, result_width)
 
     def tearDown(self):
@@ -198,15 +175,7 @@ class TestVariableEliminationMarkov(unittest.TestCase):
         # It is just a moralised version of the above Bayesian network so all the results are same. Only factors
         # are under consideration for inference so this should be fine.
         self.markov_model = MarkovModel(
-            [
-                ("A", "J"),
-                ("R", "J"),
-                ("J", "Q"),
-                ("J", "L"),
-                ("G", "L"),
-                ("A", "R"),
-                ("J", "G"),
-            ]
+            [("A", "J"), ("R", "J"), ("J", "Q"), ("J", "L"), ("G", "L"), ("A", "R"), ("J", "G")]
         )
 
         factor_a = TabularCPD("A", 2, values=[[0.2], [0.8]]).to_factor()
@@ -230,9 +199,7 @@ class TestVariableEliminationMarkov(unittest.TestCase):
         ).to_factor()
         factor_g = TabularCPD("G", 2, [[0.6], [0.4]]).to_factor()
 
-        self.markov_model.add_factors(
-            factor_a, factor_r, factor_j, factor_q, factor_l, factor_g
-        )
+        self.markov_model.add_factors(factor_a, factor_r, factor_j, factor_q, factor_l, factor_g)
         self.markov_inference = VariableElimination(self.markov_model)
 
     # All the values that are used for comparision in the all the tests are
@@ -242,9 +209,7 @@ class TestVariableEliminationMarkov(unittest.TestCase):
         query_result = self.markov_inference.query(["J"])
         self.assertEqual(
             query_result,
-            DiscreteFactor(
-                variables=["J"], cardinality=[2], values=np.array([0.416, 0.584])
-            ),
+            DiscreteFactor(variables=["J"], cardinality=[2], values=np.array([0.416, 0.584])),
         )
 
     def test_query_multiple_variable(self):
@@ -259,12 +224,9 @@ class TestVariableEliminationMarkov(unittest.TestCase):
         )
 
     def test_query_single_variable_with_evidence(self):
-        query_result = self.markov_inference.query(
-            variables=["J"], evidence={"A": 0, "R": 1}
-        )
+        query_result = self.markov_inference.query(variables=["J"], evidence={"A": 0, "R": 1})
         self.assertEqual(
-            query_result,
-            DiscreteFactor(variables=["J"], cardinality=[2], values=[0.6, 0.4]),
+            query_result, DiscreteFactor(variables=["J"], cardinality=[2], values=[0.6, 0.4])
         )
 
     def test_query_multiple_variable_with_evidence(self):
@@ -286,9 +248,7 @@ class TestVariableEliminationMarkov(unittest.TestCase):
         query_result = self.markov_inference.query(["J"])
         self.assertEqual(
             query_result,
-            DiscreteFactor(
-                variables=["J"], cardinality=[2], values=np.array([0.416, 0.584])
-            ),
+            DiscreteFactor(variables=["J"], cardinality=[2], values=np.array([0.416, 0.584])),
         )
 
         query_result = self.markov_inference.query(["Q", "J"])
@@ -302,15 +262,10 @@ class TestVariableEliminationMarkov(unittest.TestCase):
             ),
         )
 
-        query_result = self.markov_inference.query(
-            variables=["J"], evidence={"A": 0, "R": 1}
-        )
-        query_result = self.markov_inference.query(
-            variables=["J"], evidence={"A": 0, "R": 1}
-        )
+        query_result = self.markov_inference.query(variables=["J"], evidence={"A": 0, "R": 1})
+        query_result = self.markov_inference.query(variables=["J"], evidence={"A": 0, "R": 1})
         self.assertEqual(
-            query_result,
-            DiscreteFactor(variables=["J"], cardinality=[2], values=[0.6, 0.4]),
+            query_result, DiscreteFactor(variables=["J"], cardinality=[2], values=[0.6, 0.4])
         )
 
         query_result = self.markov_inference.query(
@@ -329,14 +284,10 @@ class TestVariableEliminationMarkov(unittest.TestCase):
         )
 
     def test_max_marginal(self):
-        np_test.assert_almost_equal(
-            self.markov_inference.max_marginal(), 0.1659, decimal=4
-        )
+        np_test.assert_almost_equal(self.markov_inference.max_marginal(), 0.1659, decimal=4)
 
     def test_max_marginal_var(self):
-        np_test.assert_almost_equal(
-            self.markov_inference.max_marginal(["G"]), 0.1659, decimal=4
-        )
+        np_test.assert_almost_equal(self.markov_inference.max_marginal(["G"]), 0.1659, decimal=4)
 
     def test_max_marginal_var1(self):
         np_test.assert_almost_equal(
@@ -350,20 +301,14 @@ class TestVariableEliminationMarkov(unittest.TestCase):
 
     def test_map_query(self):
         map_query = self.markov_inference.map_query()
-        self.assertDictEqual(
-            map_query, {"A": 1, "R": 1, "J": 1, "Q": 1, "G": 0, "L": 0}
-        )
+        self.assertDictEqual(map_query, {"A": 1, "R": 1, "J": 1, "Q": 1, "G": 0, "L": 0})
 
     def test_map_query_with_evidence(self):
-        map_query = self.markov_inference.map_query(
-            ["A", "R", "L"], {"J": 0, "Q": 1, "G": 0}
-        )
+        map_query = self.markov_inference.map_query(["A", "R", "L"], {"J": 0, "Q": 1, "G": 0})
         self.assertDictEqual(map_query, {"A": 1, "R": 0, "L": 0})
 
     def test_induced_graph(self):
-        induced_graph = self.markov_inference.induced_graph(
-            ["G", "Q", "A", "J", "L", "R"]
-        )
+        induced_graph = self.markov_inference.induced_graph(["G", "Q", "A", "J", "L", "R"])
         result_edges = sorted([sorted(x) for x in induced_graph.edges()])
         self.assertEqual(
             [
@@ -380,9 +325,7 @@ class TestVariableEliminationMarkov(unittest.TestCase):
         )
 
     def test_induced_width(self):
-        result_width = self.markov_inference.induced_width(
-            ["G", "Q", "A", "J", "L", "R"]
-        )
+        result_width = self.markov_inference.induced_width(["G", "Q", "A", "J", "L", "R"])
         self.assertEqual(2, result_width)
 
     def tearDown(self):
@@ -392,9 +335,7 @@ class TestVariableEliminationMarkov(unittest.TestCase):
 
 class TestBeliefPropagation(unittest.TestCase):
     def setUp(self):
-        self.junction_tree = JunctionTree(
-            [(("A", "B"), ("B", "C")), (("B", "C"), ("C", "D"))]
-        )
+        self.junction_tree = JunctionTree([(("A", "B"), ("B", "C")), (("B", "C"), ("C", "D"))])
         phi1 = DiscreteFactor(["A", "B"], [2, 3], range(6))
         phi2 = DiscreteFactor(["B", "C"], [3, 2], range(6))
         phi3 = DiscreteFactor(["C", "D"], [2, 2], range(4))
@@ -438,22 +379,15 @@ class TestBeliefPropagation(unittest.TestCase):
             ["C"], inplace=False
         )
         b_B_C = phi2 * (
-            phi1.marginalize(["A"], inplace=False)
-            * phi3.marginalize(["D"], inplace=False)
+            phi1.marginalize(["A"], inplace=False) * phi3.marginalize(["D"], inplace=False)
         )
         b_C_D = phi3 * (phi1.marginalize(["A"], inplace=False) * phi2).marginalize(
             ["B"], inplace=False
         )
 
-        np_test.assert_array_almost_equal(
-            clique_belief[("A", "B")].values, b_A_B.values
-        )
-        np_test.assert_array_almost_equal(
-            clique_belief[("B", "C")].values, b_B_C.values
-        )
-        np_test.assert_array_almost_equal(
-            clique_belief[("C", "D")].values, b_C_D.values
-        )
+        np_test.assert_array_almost_equal(clique_belief[("A", "B")].values, b_A_B.values)
+        np_test.assert_array_almost_equal(clique_belief[("B", "C")].values, b_B_C.values)
+        np_test.assert_array_almost_equal(clique_belief[("C", "D")].values, b_C_D.values)
 
     def test_calibrate_sepset_belief(self):
         belief_propagation = BeliefPropagation(self.junction_tree)
@@ -465,18 +399,11 @@ class TestBeliefPropagation(unittest.TestCase):
         phi3 = DiscreteFactor(["C", "D"], [2, 2], range(4))
 
         b_B = (
-            phi1
-            * (phi3.marginalize(["D"], inplace=False) * phi2).marginalize(
-                ["C"], inplace=False
-            )
+            phi1 * (phi3.marginalize(["D"], inplace=False) * phi2).marginalize(["C"], inplace=False)
         ).marginalize(["A"], inplace=False)
 
         b_C = (
-            phi2
-            * (
-                phi1.marginalize(["A"], inplace=False)
-                * phi3.marginalize(["D"], inplace=False)
-            )
+            phi2 * (phi1.marginalize(["A"], inplace=False) * phi3.marginalize(["D"], inplace=False))
         ).marginalize(["B"], inplace=False)
 
         np_test.assert_array_almost_equal(
@@ -495,25 +422,13 @@ class TestBeliefPropagation(unittest.TestCase):
         phi2 = DiscreteFactor(["B", "C"], [3, 2], range(6))
         phi3 = DiscreteFactor(["C", "D"], [2, 2], range(4))
 
-        b_A_B = phi1 * (phi3.maximize(["D"], inplace=False) * phi2).maximize(
-            ["C"], inplace=False
-        )
-        b_B_C = phi2 * (
-            phi1.maximize(["A"], inplace=False) * phi3.maximize(["D"], inplace=False)
-        )
-        b_C_D = phi3 * (phi1.maximize(["A"], inplace=False) * phi2).maximize(
-            ["B"], inplace=False
-        )
+        b_A_B = phi1 * (phi3.maximize(["D"], inplace=False) * phi2).maximize(["C"], inplace=False)
+        b_B_C = phi2 * (phi1.maximize(["A"], inplace=False) * phi3.maximize(["D"], inplace=False))
+        b_C_D = phi3 * (phi1.maximize(["A"], inplace=False) * phi2).maximize(["B"], inplace=False)
 
-        np_test.assert_array_almost_equal(
-            clique_belief[("A", "B")].values, b_A_B.values
-        )
-        np_test.assert_array_almost_equal(
-            clique_belief[("B", "C")].values, b_B_C.values
-        )
-        np_test.assert_array_almost_equal(
-            clique_belief[("C", "D")].values, b_C_D.values
-        )
+        np_test.assert_array_almost_equal(clique_belief[("A", "B")].values, b_A_B.values)
+        np_test.assert_array_almost_equal(clique_belief[("B", "C")].values, b_B_C.values)
+        np_test.assert_array_almost_equal(clique_belief[("C", "D")].values, b_C_D.values)
 
     def test_max_calibrate_sepset_belief(self):
         belief_propagation = BeliefPropagation(self.junction_tree)
@@ -525,18 +440,11 @@ class TestBeliefPropagation(unittest.TestCase):
         phi3 = DiscreteFactor(["C", "D"], [2, 2], range(4))
 
         b_B = (
-            phi1
-            * (phi3.maximize(["D"], inplace=False) * phi2).maximize(
-                ["C"], inplace=False
-            )
+            phi1 * (phi3.maximize(["D"], inplace=False) * phi2).maximize(["C"], inplace=False)
         ).maximize(["A"], inplace=False)
 
         b_C = (
-            phi2
-            * (
-                phi1.maximize(["A"], inplace=False)
-                * phi3.maximize(["D"], inplace=False)
-            )
+            phi2 * (phi1.maximize(["A"], inplace=False) * phi3.maximize(["D"], inplace=False))
         ).maximize(["B"], inplace=False)
 
         np_test.assert_array_almost_equal(
@@ -553,8 +461,7 @@ class TestBeliefPropagation(unittest.TestCase):
         belief_propagation = BeliefPropagation(self.bayesian_model)
         query_result = belief_propagation.query(["J"])
         self.assertEqual(
-            query_result,
-            DiscreteFactor(variables=["J"], cardinality=[2], values=[0.416, 0.584]),
+            query_result, DiscreteFactor(variables=["J"], cardinality=[2], values=[0.416, 0.584])
         )
 
     def test_query_multiple_variable(self):
@@ -571,14 +478,10 @@ class TestBeliefPropagation(unittest.TestCase):
 
     def test_query_single_variable_with_evidence(self):
         belief_propagation = BeliefPropagation(self.bayesian_model)
-        query_result = belief_propagation.query(
-            variables=["J"], evidence={"A": 0, "R": 1}
-        )
+        query_result = belief_propagation.query(variables=["J"], evidence={"A": 0, "R": 1})
         self.assertEqual(
             query_result,
-            DiscreteFactor(
-                variables=["J"], cardinality=[2], values=np.array([0.072, 0.048])
-            ),
+            DiscreteFactor(variables=["J"], cardinality=[2], values=np.array([0.072, 0.048])),
         )
 
     def test_query_multiple_variable_with_evidence(self):
@@ -598,15 +501,11 @@ class TestBeliefPropagation(unittest.TestCase):
     def test_map_query(self):
         belief_propagation = BeliefPropagation(self.bayesian_model)
         map_query = belief_propagation.map_query()
-        self.assertDictEqual(
-            map_query, {"A": 1, "R": 1, "J": 1, "Q": 1, "G": 0, "L": 0}
-        )
+        self.assertDictEqual(map_query, {"A": 1, "R": 1, "J": 1, "Q": 1, "G": 0, "L": 0})
 
     def test_map_query_with_evidence(self):
         belief_propagation = BeliefPropagation(self.bayesian_model)
-        map_query = belief_propagation.map_query(
-            ["A", "R", "L"], {"J": 0, "Q": 1, "G": 0}
-        )
+        map_query = belief_propagation.map_query(["A", "R", "L"], {"J": 0, "Q": 1, "G": 0})
         self.assertDictEqual(map_query, {"A": 1, "R": 0, "L": 0})
 
     def tearDown(self):

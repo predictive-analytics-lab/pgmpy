@@ -92,8 +92,7 @@ class BaseDiscretizer(with_metaclass(ABCMeta)):
         """
         step = (self.high - self.low) / self.cardinality
         labels = [
-            "x={i}".format(i=str(i))
-            for i in np.round(np.arange(self.low, self.high, step), 3)
+            "x={i}".format(i=str(i)) for i in np.round(np.arange(self.low, self.high, step), 3)
         ]
         return labels
 
@@ -132,17 +131,12 @@ class RoundingDiscretizer(BaseDiscretizer):
         step = (self.high - self.low) / self.cardinality
 
         # for x=[low]
-        discrete_values = [
-            self.factor.cdf(self.low + step / 2) - self.factor.cdf(self.low)
-        ]
+        discrete_values = [self.factor.cdf(self.low + step / 2) - self.factor.cdf(self.low)]
 
         # for x=[low+step, low+2*step, ........., high-step]
         points = np.linspace(self.low + step, self.high - step, self.cardinality - 1)
         discrete_values.extend(
-            [
-                self.factor.cdf(i + step / 2) - self.factor.cdf(i - step / 2)
-                for i in points
-            ]
+            [self.factor.cdf(i + step / 2) - self.factor.cdf(i - step / 2) for i in points]
         )
 
         return discrete_values
@@ -200,9 +194,7 @@ class UnbiasedDiscretizer(BaseDiscretizer):
 
         # for x=[low]
         discrete_values = [
-            (lev(self.low) - lev(self.low + step)) / step
-            + 1
-            - self.factor.cdf(self.low)
+            (lev(self.low) - lev(self.low + step)) / step + 1 - self.factor.cdf(self.low)
         ]
 
         # for x=[low+step, low+2*step, ........., high-step]
@@ -213,9 +205,7 @@ class UnbiasedDiscretizer(BaseDiscretizer):
 
         # for x=[high]
         discrete_values.append(
-            (lev(self.high) - lev(self.high - step)) / step
-            - 1
-            + self.factor.cdf(self.high)
+            (lev(self.high) - lev(self.high - step)) / step - 1 + self.factor.cdf(self.high)
         )
 
         return discrete_values
@@ -248,9 +238,7 @@ class UnbiasedDiscretizer(BaseDiscretizer):
         def fun(x):
             return np.power(x, order) * self.factor.pdf(x)
 
-        return integrate.quad(fun, -np.inf, u)[0] + np.power(u, order) * (
-            1 - self.factor.cdf(u)
-        )
+        return integrate.quad(fun, -np.inf, u)[0] + np.power(u, order) * (1 - self.factor.cdf(u))
 
     def get_labels(self):
         labels = list(

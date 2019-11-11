@@ -214,10 +214,7 @@ _table_formats = {
     ),
     "mediawiki": TableFormat(
         lineabove=Line(
-            '{| class="wikitable" style="text-align: left;"',
-            "",
-            "",
-            "\n|+ <!-- caption -->\n|-",
+            '{| class="wikitable" style="text-align: left;"', "", "", "\n|+ <!-- caption -->\n|-"
         ),
         linebelowheader=Line("|-", "", "", ""),
         linebetweenrows=Line("|-", "", "", ""),
@@ -327,9 +324,7 @@ def _type(string, has_invisible=True):
 
     """
 
-    if has_invisible and (
-        isinstance(string, _text_type) or isinstance(string, _binary_type)
-    ):
+    if has_invisible and (isinstance(string, _text_type) or isinstance(string, _binary_type)):
         string = _strip_invisible(string)
 
     if string is None:
@@ -568,9 +563,7 @@ def _normalize_tabular_data(tabular_data, headers):
         if hasattr(tabular_data.values, "__call__"):
             # likely a conventional dict
             keys = tabular_data.keys()
-            rows = list(
-                izip_longest(*tabular_data.values())
-            )  # columns have to be transposed
+            rows = list(izip_longest(*tabular_data.values()))  # columns have to be transposed
         elif hasattr(tabular_data, "index"):
             # values is a property, has .index => it's likely a pandas.DataFrame (pandas 0.11.0)
             keys = tabular_data.keys()
@@ -867,25 +860,17 @@ def tabulate(
     # format rows and columns, convert numeric values to strings
     cols = list(zip(*list_of_lists))
     coltypes = list(map(_column_type, cols))
-    cols = [
-        [_format(v, ct, floatfmt, missingval) for v in c]
-        for c, ct in zip(cols, coltypes)
-    ]
+    cols = [[_format(v, ct, floatfmt, missingval) for v in c] for c, ct in zip(cols, coltypes)]
 
     # align columns
     aligns = [numalign if ct in [int, float] else stralign for ct in coltypes]
     minwidths = [width_fn(h) + 2 for h in headers] if headers else [0] * len(cols)
-    cols = [
-        _align_column(c, a, minw, has_invisible)
-        for c, a, minw in zip(cols, aligns, minwidths)
-    ]
+    cols = [_align_column(c, a, minw, has_invisible) for c, a, minw in zip(cols, aligns, minwidths)]
 
     if headers:
         # align headers and add headers
         minwidths = [max(minw, width_fn(c[0])) for minw, c in zip(minwidths, cols)]
-        headers = [
-            _align_header(h, a, minw) for h, a, minw in zip(headers, aligns, minwidths)
-        ]
+        headers = [_align_header(h, a, minw) for h, a, minw in zip(headers, aligns, minwidths)]
         rows = list(zip(*cols))
     else:
         minwidths = [width_fn(c[0]) for c in cols]

@@ -54,24 +54,17 @@ class BdeuScore(StructureScore):
         num_parents_states = float(len(state_counts.columns))
 
         score = 0
-        for (
-            parents_state
-        ) in state_counts:  # iterate over df columns (only 1 if no parents)
+        for parents_state in state_counts:  # iterate over df columns (only 1 if no parents)
             conditional_sample_size = sum(state_counts[parents_state])
 
             score += lgamma(self.equivalent_sample_size / num_parents_states) - lgamma(
-                conditional_sample_size
-                + self.equivalent_sample_size / num_parents_states
+                conditional_sample_size + self.equivalent_sample_size / num_parents_states
             )
 
             for state in var_states:
                 if state_counts[parents_state][state] > 0:
                     score += lgamma(
                         state_counts[parents_state][state]
-                        + self.equivalent_sample_size
-                        / (num_parents_states * var_cardinality)
-                    ) - lgamma(
-                        self.equivalent_sample_size
-                        / (num_parents_states * var_cardinality)
-                    )
+                        + self.equivalent_sample_size / (num_parents_states * var_cardinality)
+                    ) - lgamma(self.equivalent_sample_size / (num_parents_states * var_cardinality))
         return score

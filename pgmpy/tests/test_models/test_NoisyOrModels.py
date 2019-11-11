@@ -11,9 +11,7 @@ class TestNoisyOrModelInit(unittest.TestCase):
         )
         np_test.assert_array_equal(model.variables, np.array(["x1", "x2", "x3"]))
         np_test.assert_array_equal(model.cardinality, np.array([2, 3, 2]))
-        self.assertListEqual(
-            model.inhibitor_probability, [[0.6, 0.4], [0.2, 0.4, 0.7], [0.1, 0.4]]
-        )
+        self.assertListEqual(model.inhibitor_probability, [[0.6, 0.4], [0.2, 0.4, 0.7], [0.1, 0.4]])
 
     def test_exceptions(self):
         self.assertRaises(
@@ -61,9 +59,7 @@ class TestNoisyOrModelMethods(unittest.TestCase):
 
     def test_add_variables(self):
         self.model.add_variables(["x4"], [3], [0.1, 0.2, 0.4])
-        np_test.assert_array_equal(
-            self.model.variables, np.array(["x1", "x2", "x3", "x4"])
-        )
+        np_test.assert_array_equal(self.model.variables, np.array(["x1", "x2", "x3", "x4"]))
         np_test.assert_array_equal(self.model.cardinality, np.array([2, 3, 2, 3]))
         self.assertListEqual(
             self.model.inhibitor_probability,
@@ -77,23 +73,14 @@ class TestNoisyOrModelMethods(unittest.TestCase):
         np_test.assert_array_equal(self.model.cardinality, np.array([2, 3, 2, 3, 3, 2]))
         self.assertListEqual(
             self.model.inhibitor_probability,
-            [
-                [0.6, 0.4],
-                [0.2, 0.4, 0.7],
-                [0.1, 0.4],
-                [0.1, 0.2, 0.4],
-                [0.1, 0.2, 0.4],
-                [0.5, 0.5],
-            ],
+            [[0.6, 0.4], [0.2, 0.4, 0.7], [0.1, 0.4], [0.1, 0.2, 0.4], [0.1, 0.2, 0.4], [0.5, 0.5]],
         )
 
     def test_del_variables(self):
         self.model.del_variables(["x3"])
         np_test.assert_array_equal(self.model.variables, np.array(["x1", "x2"]))
         np_test.assert_array_equal(self.model.cardinality, np.array([2, 3]))
-        self.assertListEqual(
-            self.model.inhibitor_probability, [[0.6, 0.4], [0.2, 0.4, 0.7]]
-        )
+        self.assertListEqual(self.model.inhibitor_probability, [[0.6, 0.4], [0.2, 0.4, 0.7]])
 
     def test_del_multiple_variables(self):
         self.model.del_variables(["x1", "x2"])

@@ -9,25 +9,17 @@ from pgmpy.models import BayesianModel
 
 class TestBaseEstimator(unittest.TestCase):
     def setUp(self):
-        self.rand_data = pd.DataFrame(
-            np.random.randint(0, 5, size=(5000, 2)), columns=list("AB")
-        )
+        self.rand_data = pd.DataFrame(np.random.randint(0, 5, size=(5000, 2)), columns=list("AB"))
         self.rand_data["C"] = self.rand_data["B"]
-        self.est_rand = HillClimbSearch(
-            self.rand_data, scoring_method=K2Score(self.rand_data)
-        )
+        self.est_rand = HillClimbSearch(self.rand_data, scoring_method=K2Score(self.rand_data))
         self.model1 = BayesianModel()
         self.model1.add_nodes_from(["A", "B", "C"])
         self.model2 = self.model1.copy()
         self.model2.add_edge("A", "B")
 
         # link to dataset: "https://www.kaggle.com/c/titanic/download/train.csv"
-        self.titanic_data = pd.read_csv(
-            "pgmpy/tests/test_estimators/testdata/titanic_train.csv"
-        )
-        self.titanic_data1 = self.titanic_data[
-            ["Survived", "Sex", "Pclass", "Age", "Embarked"]
-        ]
+        self.titanic_data = pd.read_csv("pgmpy/tests/test_estimators/testdata/titanic_train.csv")
+        self.titanic_data1 = self.titanic_data[["Survived", "Sex", "Pclass", "Age", "Embarked"]]
         self.titanic_data2 = self.titanic_data[["Survived", "Sex", "Pclass"]]
         self.est_titanic1 = HillClimbSearch(self.titanic_data1)
         self.est_titanic2 = HillClimbSearch(self.titanic_data2)
@@ -67,9 +59,7 @@ class TestBaseEstimator(unittest.TestCase):
         legal_ops_indegree = est._legal_operations(start_model, max_indegree=1)
         self.assertEqual(len(list(legal_ops_indegree)), 11)
 
-        legal_ops_both = est._legal_operations(
-            start_model, tabu_list=tabu_list, max_indegree=1
-        )
+        legal_ops_both = est._legal_operations(start_model, tabu_list=tabu_list, max_indegree=1)
         legal_ops_both_ref = [
             (("+", ("Embarked", "Survived")), 10.050632580087608),
             (("+", ("Survived", "Pclass")), 41.88868046549101),
@@ -86,14 +76,10 @@ class TestBaseEstimator(unittest.TestCase):
     def test_estimate_rand(self):
         est1 = self.est_rand.estimate()
         self.assertSetEqual(set(est1.nodes()), set(["A", "B", "C"]))
-        self.assertTrue(
-            list(est1.edges()) == [("B", "C")] or list(est1.edges()) == [("C", "B")]
-        )
+        self.assertTrue(list(est1.edges()) == [("B", "C")] or list(est1.edges()) == [("C", "B")])
 
         est2 = self.est_rand.estimate(start=BayesianModel([("A", "B"), ("A", "C")]))
-        self.assertTrue(
-            list(est2.edges()) == [("B", "C")] or list(est2.edges()) == [("C", "B")]
-        )
+        self.assertTrue(list(est2.edges()) == [("B", "C")] or list(est2.edges()) == [("C", "B")])
 
     def test_estimate_titanic(self):
         self.assertSetEqual(

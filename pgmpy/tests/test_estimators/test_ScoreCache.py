@@ -33,9 +33,7 @@ class TestScoreCache(unittest.TestCase):
         function_mock.assert_has_calls(expected_function_calls, any_order=False)
 
     def test_remove_least_recently_used(self):
-        function_mock = Mock(
-            side_effect=lambda key: {"key1": 1, "key2": 2, "key3": 3}[key]
-        )
+        function_mock = Mock(side_effect=lambda key: {"key1": 1, "key2": 2, "key3": 3}[key])
         cache = LRUCache(function_mock, max_size=2)
 
         cache("key1")
@@ -44,12 +42,7 @@ class TestScoreCache(unittest.TestCase):
         cache("key2")  # cached
         cache("key1")
 
-        expected_function_calls = [
-            call("key1"),
-            call("key2"),
-            call("key3"),
-            call("key1"),
-        ]
+        expected_function_calls = [call("key1"), call("key2"), call("key3"), call("key1")]
         function_mock.assert_has_calls(expected_function_calls, any_order=False)
 
     def test_score_cache_invalid_scorer(self):
@@ -75,10 +68,5 @@ class TestScoreCache(unittest.TestCase):
         self.assertEqual(cache.local_score("key2", ["key3"]), -2)
         self.assertEqual(cache.local_score("key2", ["key3"]), -2)  # cached
 
-        expected_function_calls = [
-            call("key1", ["key2", "key3"]),
-            call("key2", ["key3"]),
-        ]
-        base_scorer.local_score.assert_has_calls(
-            expected_function_calls, any_order=False
-        )
+        expected_function_calls = [call("key1", ["key2", "key3"]), call("key2", ["key3"])]
+        base_scorer.local_score.assert_has_calls(expected_function_calls, any_order=False)
