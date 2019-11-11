@@ -42,18 +42,14 @@ class BaseEstimator(object):
         variables = list(data.columns.values)
 
         if not isinstance(state_names, dict):
-            self.state_names = {
-                var: self._collect_state_names(var) for var in variables
-            }
+            self.state_names = {var: self._collect_state_names(var) for var in variables}
         else:
             self.state_names = dict()
             for var in variables:
                 if var in state_names:
                     if not set(self._collect_state_names(var)) <= set(state_names[var]):
                         raise ValueError(
-                            "Data contains unexpected states for variable '{0}'.".format(
-                                str(var)
-                            )
+                            "Data contains unexpected states for variable '{0}'.".format(str(var))
                         )
                     self.state_names[var] = sorted(state_names[var])
                 else:
@@ -131,22 +127,14 @@ class BaseEstimator(object):
         if not parents:
             # count how often each state of 'variable' occured
             state_count_data = data.ix[:, variable].value_counts()
-            state_counts = (
-                state_count_data.reindex(self.state_names[variable])
-                .fillna(0)
-                .to_frame()
-            )
+            state_counts = state_count_data.reindex(self.state_names[variable]).fillna(0).to_frame()
 
         else:
             parents_states = [self.state_names[parent] for parent in parents]
             # count how often each state of 'variable' occured, conditional on parents' states
-            state_count_data = (
-                data.groupby([variable] + parents).size().unstack(parents)
-            )
+            state_count_data = data.groupby([variable] + parents).size().unstack(parents)
             if not isinstance(state_count_data.columns, pd.MultiIndex):
-                state_count_data.columns = pd.MultiIndex.from_arrays(
-                    [state_count_data.columns]
-                )
+                state_count_data.columns = pd.MultiIndex.from_arrays([state_count_data.columns])
 
             # reindex rows & columns to sort them and to add missing ones
             # missing row    = some state of 'variable' did not occur in data
@@ -154,15 +142,11 @@ class BaseEstimator(object):
             #                  did not occur in data
             row_index = self.state_names[variable]
             column_index = pd.MultiIndex.from_product(parents_states, names=parents)
-            state_counts = state_count_data.reindex(
-                index=row_index, columns=column_index
-            ).fillna(0)
+            state_counts = state_count_data.reindex(index=row_index, columns=column_index).fillna(0)
 
         return state_counts
 
-    def test_conditional_independence(
-        self, X, Y, Zs=[], method="chi_square", tol=0.01, **kwargs
-    ):
+    def test_conditional_independence(self, X, Y, Zs=[], method="chi_square", tol=0.01, **kwargs):
         if method == "chi_square":
             param, p_value = chi_square(
                 X=X, Y=Y, Z=Zs, data=self.data, state_names=self.state_names
@@ -260,9 +244,7 @@ class ParameterEstimator(BaseEstimator):
         """
 
         parents = sorted(self.model.get_parents(variable))
-        return super(ParameterEstimator, self).state_counts(
-            variable, parents=parents, **kwargs
-        )
+        return super(ParameterEstimator, self).state_counts(variable, parents=parents, **kwargs)
 
     def get_parameters(self):
         pass

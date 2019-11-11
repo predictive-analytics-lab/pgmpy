@@ -56,9 +56,7 @@ class LinearGaussianBayesianNetwork(BayesianModel):
 
             for prev_cpd_index in range(len(self.cpds)):
                 if self.cpds[prev_cpd_index].variable == cpd.variable:
-                    logging.warning(
-                        "Replacing existing CPD for {var}".format(var=cpd.variable)
-                    )
+                    logging.warning("Replacing existing CPD for {var}".format(var=cpd.variable))
                     self.cpds[prev_cpd_index] = cpd
                     break
             else:
@@ -183,9 +181,7 @@ class LinearGaussianBayesianNetwork(BayesianModel):
             covariance[node_idx, node_idx] = (
                 sum(
                     [
-                        coeff
-                        * coeff
-                        * covariance[variables.index(parent), variables.index(parent)]
+                        coeff * coeff * covariance[variables.index(parent), variables.index(parent)]
                         for coeff, parent in zip(cpd.beta_vector, cpd.evidence)
                     ]
                 )
@@ -195,9 +191,7 @@ class LinearGaussianBayesianNetwork(BayesianModel):
         for node_i_idx in range(len(variables)):
             for node_j_idx in range(len(variables)):
                 if covariance[node_j_idx, node_i_idx] != 0:
-                    covariance[node_i_idx, node_j_idx] = covariance[
-                        node_j_idx, node_i_idx
-                    ]
+                    covariance[node_i_idx, node_j_idx] = covariance[node_j_idx, node_i_idx]
                 else:
                     cpd_j = self.get_cpds(variables[node_j_idx])
                     covariance[node_i_idx, node_j_idx] = sum(
@@ -239,9 +233,7 @@ class LinearGaussianBayesianNetwork(BayesianModel):
         """
         raise ValueError("Cardinality is not defined for continuous variables.")
 
-    def fit(
-        self, data, estimator=None, state_names=[], complete_samples_only=True, **kwargs
-    ):
+    def fit(self, data, estimator=None, state_names=[], complete_samples_only=True, **kwargs):
         """
         For now, fit method has not been implemented for LinearGaussianBayesianNetwork.
         """

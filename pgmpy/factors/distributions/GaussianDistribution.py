@@ -60,9 +60,7 @@ class GaussianDistribution(BaseDistribution):
         self._precision_matrix = None
 
         if len(mean) != no_of_var:
-            raise ValueError(
-                "Length of mean_vector must be equal to the", "number of variables."
-            )
+            raise ValueError("Length of mean_vector must be equal to the", "number of variables.")
 
         if self.covariance.shape != (no_of_var, no_of_var):
             raise ValueError(
@@ -293,24 +291,18 @@ class GaussianDistribution(BaseDistribution):
 
         # index_to_keep -> j vector
         index_to_keep = [
-            self.variables.index(var)
-            for var in self.variables
-            if var not in var_to_reduce
+            self.variables.index(var) for var in self.variables if var not in var_to_reduce
         ]
         # index_to_reduce -> i vector
         index_to_reduce = [self.variables.index(var) for var in var_to_reduce]
 
         mu_j = self.mean[index_to_keep]
         mu_i = self.mean[index_to_reduce]
-        x_i = np.array([value for var, value in values]).reshape(
-            len(index_to_reduce), 1
-        )
+        x_i = np.array([value for var, value in values]).reshape(len(index_to_reduce), 1)
 
         sig_i_j = self.covariance[np.ix_(index_to_reduce, index_to_keep)]
         sig_j_i = self.covariance[np.ix_(index_to_keep, index_to_reduce)]
-        sig_i_i_inv = np.linalg.inv(
-            self.covariance[np.ix_(index_to_reduce, index_to_reduce)]
-        )
+        sig_i_i_inv = np.linalg.inv(self.covariance[np.ix_(index_to_reduce, index_to_reduce)])
         sig_j_j = self.covariance[np.ix_(index_to_keep, index_to_keep)]
 
         phi.variables = [self.variables[index] for index in index_to_keep]
@@ -428,8 +420,7 @@ class GaussianDistribution(BaseDistribution):
         h = np.dot(K, mu)
 
         g = -(0.5) * np.dot(mu.T, h)[0, 0] - np.log(
-            np.power(2 * np.pi, len(self.variables) / 2)
-            * np.power(abs(np.linalg.det(sigma)), 0.5)
+            np.power(2 * np.pi, len(self.variables) / 2) * np.power(abs(np.linalg.det(sigma)), 0.5)
         )
 
         return CanonicalDistribution(self.variables, K, h, g)
@@ -581,10 +572,7 @@ class GaussianDistribution(BaseDistribution):
     __div__ = __truediv__
 
     def __eq__(self, other):
-        if not (
-            isinstance(self, GaussianDistribution)
-            and isinstance(self, GaussianDistribution)
-        ):
+        if not (isinstance(self, GaussianDistribution) and isinstance(self, GaussianDistribution)):
             return False
 
         elif set(self.scope()) != set(other.scope()):

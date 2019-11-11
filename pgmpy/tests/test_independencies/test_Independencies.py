@@ -110,19 +110,13 @@ class TestIndependencies(unittest.TestCase):
         self.Independencies1 = Independencies(["X", "Y", "Z"])
         self.assertEqual(self.Independencies1, Independencies(["X", "Y", "Z"]))
         self.Independencies2 = Independencies(["A", "B", "C"], ["D", "E", "F"])
-        self.assertEqual(
-            self.Independencies2, Independencies(["A", "B", "C"], ["D", "E", "F"])
-        )
+        self.assertEqual(self.Independencies2, Independencies(["A", "B", "C"], ["D", "E", "F"]))
 
     def test_get_assertions(self):
         self.Independencies1 = Independencies(["X", "Y", "Z"])
-        self.assertEqual(
-            self.Independencies1.independencies, self.Independencies1.get_assertions()
-        )
+        self.assertEqual(self.Independencies1.independencies, self.Independencies1.get_assertions())
         self.Independencies2 = Independencies(["A", "B", "C"], ["D", "E", "F"])
-        self.assertEqual(
-            self.Independencies2.independencies, self.Independencies2.get_assertions()
-        )
+        self.assertEqual(self.Independencies2.independencies, self.Independencies2.get_assertions())
 
     def test_closure(self):
         ind1 = Independencies(("A", ["B", "C"], "D"))

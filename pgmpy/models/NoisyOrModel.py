@@ -83,15 +83,9 @@ class NoisyOrModel(nx.DiGraph):
             cardinal != len(prob_array)
             for prob_array, cardinal in zip(inhibitor_probability, cardinality)
         ) or len(cardinality) != len(inhibitor_probability):
-            raise ValueError(
-                "Size of variables and inhibitor_probability should be same"
-            )
-        elif not all(
-            0 <= item <= 1 for item in chain.from_iterable(inhibitor_probability)
-        ):
-            raise ValueError(
-                "Probability values should be between 0 and 1(both inclusive)."
-            )
+            raise ValueError("Size of variables and inhibitor_probability should be same")
+        elif not all(0 <= item <= 1 for item in chain.from_iterable(inhibitor_probability)):
+            raise ValueError("Probability values should be between 0 and 1(both inclusive).")
         else:
             self.variables = np.concatenate((self.variables, variables))
             self.cardinality = np.concatenate((self.cardinality, cardinality))
@@ -114,14 +108,8 @@ class NoisyOrModel(nx.DiGraph):
         ...                                                      [0.1, 0. 4]])
         >>> model.del_variables(['x1'])
         """
-        variables = (
-            [variables] if isinstance(variables, six.string_types) else set(variables)
-        )
-        indices = [
-            index
-            for index, variable in enumerate(self.variables)
-            if variable in variables
-        ]
+        variables = [variables] if isinstance(variables, six.string_types) else set(variables)
+        indices = [index for index, variable in enumerate(self.variables) if variable in variables]
         self.variables = np.delete(self.variables, indices, 0)
         self.cardinality = np.delete(self.cardinality, indices, 0)
         self.inhibitor_probability = [

@@ -31,9 +31,7 @@ class CustomDistribution(BaseDistribution):
         """
         if not isinstance(variables, (list, tuple, np.ndarray)):
             raise TypeError(
-                "variables: Expected type: iterable, got: {type}".format(
-                    type=type(variables)
-                )
+                "variables: Expected type: iterable, got: {type}".format(type=type(variables))
             )
 
         if len(set(variables)) != len(variables):
@@ -236,9 +234,7 @@ class CustomDistribution(BaseDistribution):
         var_to_remove = [var for var, value in values]
         var_to_keep = [var for var in self.variables if var not in var_to_remove]
 
-        reduced_var_index = [
-            (self.variables.index(var), value) for var, value in values
-        ]
+        reduced_var_index = [(self.variables.index(var), value) for var, value in values]
         pdf = self.pdf
 
         def reduced_pdf(*args, **kwargs):
@@ -252,9 +248,7 @@ class CustomDistribution(BaseDistribution):
                 for variable, val in values:
                     reduced_kwargs[variable] = val
             if reduced_args and reduced_kwargs:
-                reduced_args = [
-                    arg for arg in reduced_args if arg not in reduced_kwargs.values()
-                ]
+                reduced_args = [arg for arg in reduced_args if arg not in reduced_kwargs.values()]
 
             return pdf(*reduced_args, **reduced_kwargs)
 
@@ -327,16 +321,13 @@ class CustomDistribution(BaseDistribution):
         def reordered_pdf(*args):
             # ordered_args restores the original order as it was in self.variables
             ordered_args = [
-                args[reordered_var_index.index(index_id)]
-                for index_id in range(len(all_var))
+                args[reordered_var_index.index(index_id)] for index_id in range(len(all_var))
             ]
             return pdf(*ordered_args)
 
         def marginalized_pdf(*args):
             return integrate.nquad(
-                reordered_pdf,
-                [[-np.inf, np.inf] for i in range(len(variables))],
-                args=args,
+                reordered_pdf, [[-np.inf, np.inf] for i in range(len(variables))], args=args
             )[0]
 
         phi._pdf = marginalized_pdf
@@ -388,8 +379,7 @@ class CustomDistribution(BaseDistribution):
 
     def is_valid_cpd(self):
         return np.isclose(
-            integrate.nquad(self.pdf, [[-np.inf, np.inf] for var in self.variables])[0],
-            1,
+            integrate.nquad(self.pdf, [[-np.inf, np.inf] for var in self.variables])[0], 1
         )
 
     def _operate(self, other, operation, inplace=True):
@@ -429,15 +419,11 @@ class CustomDistribution(BaseDistribution):
         pdf = self.pdf
         self_var = [var for var in self.variables]
 
-        modified_pdf_var = self_var + [
-            var for var in other.variables if var not in self_var
-        ]
+        modified_pdf_var = self_var + [var for var in other.variables if var not in self_var]
 
         def modified_pdf(*args):
             self_pdf_args = list(args[: len(self_var)])
-            other_pdf_args = [
-                args[modified_pdf_var.index(var)] for var in other.variables
-            ]
+            other_pdf_args = [args[modified_pdf_var.index(var)] for var in other.variables]
 
             if operation == "product":
                 return pdf(*self_pdf_args) * other._pdf(*other_pdf_args)

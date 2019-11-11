@@ -33,9 +33,7 @@ class ScoreCache(StructureScore):
         ), "Base scorer has to be of type StructureScore."
 
         self.base_scorer = base_scorer
-        self.cache = LRUCache(
-            original_function=self._wrapped_original, max_size=int(max_size)
-        )
+        self.cache = LRUCache(original_function=self._wrapped_original, max_size=int(max_size))
         super(ScoreCache, self).__init__(data, **kwargs)
 
     def local_score(self, variable, parents):

@@ -90,6 +90,4 @@ class Inference(object):
             self.one_and_half_model = BayesianModel(
                 model.get_inter_edges() + model.get_intra_edges(1)
             )
-            self.one_and_half_model.add_cpds(
-                *(model.get_cpds(time_slice=1) + cpd_inter)
-            )
+            self.one_and_half_model.add_cpds(*(model.get_cpds(time_slice=1) + cpd_inter))

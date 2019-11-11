@@ -40,8 +40,7 @@ class TestSEM(unittest.TestCase):
 
         self.assertSetEqual(self.demo.latents, {"xi1", "eta1", "eta2"})
         self.assertSetEqual(
-            self.demo.observed,
-            {"x1", "x2", "x3", "y1", "y2", "y3", "y4", "y5", "y6", "y7", "y8"},
+            self.demo.observed, {"x1", "x2", "x3", "y1", "y2", "y3", "y4", "y5", "y6", "y7", "y8"}
         )
         self.assertListEqual(
             sorted(self.demo.graph.nodes()),
@@ -92,9 +91,7 @@ class TestSEM(unittest.TestCase):
         self.assertDictEqual(self.demo.graph.edges[("eta1", "y2")], {"weight": np.NaN})
         self.assertDictEqual(self.demo.graph.edges[("eta1", "y3")], {"weight": np.NaN})
         self.assertDictEqual(self.demo.graph.edges[("eta1", "y4")], {"weight": np.NaN})
-        self.assertDictEqual(
-            self.demo.graph.edges[("eta1", "eta2")], {"weight": np.NaN}
-        )
+        self.assertDictEqual(self.demo.graph.edges[("eta1", "eta2")], {"weight": np.NaN})
         self.assertDictEqual(self.demo.graph.edges[("xi1", "eta2")], {"weight": np.NaN})
         self.assertDictEqual(self.demo.graph.edges[("eta2", "y5")], {"weight": np.NaN})
         self.assertDictEqual(self.demo.graph.edges[("eta2", "y6")], {"weight": np.NaN})
@@ -103,236 +100,24 @@ class TestSEM(unittest.TestCase):
 
         npt.assert_equal(
             nx.to_numpy_matrix(
-                self.demo.err_graph,
-                nodelist=sorted(self.demo.err_graph.nodes()),
-                weight=None,
+                self.demo.err_graph, nodelist=sorted(self.demo.err_graph.nodes()), weight=None
             ),
             np.array(
                 [
-                    [
-                        0.0,
-                        0.0,
-                        0.0,
-                        0.0,
-                        0.0,
-                        0.0,
-                        0.0,
-                        0.0,
-                        0.0,
-                        0.0,
-                        0.0,
-                        0.0,
-                        0.0,
-                        0.0,
-                    ],
-                    [
-                        0.0,
-                        0.0,
-                        0.0,
-                        0.0,
-                        0.0,
-                        0.0,
-                        0.0,
-                        0.0,
-                        0.0,
-                        0.0,
-                        0.0,
-                        0.0,
-                        0.0,
-                        0.0,
-                    ],
-                    [
-                        0.0,
-                        0.0,
-                        0.0,
-                        0.0,
-                        0.0,
-                        0.0,
-                        0.0,
-                        0.0,
-                        0.0,
-                        0.0,
-                        0.0,
-                        0.0,
-                        0.0,
-                        0.0,
-                    ],
-                    [
-                        0.0,
-                        0.0,
-                        0.0,
-                        0.0,
-                        0.0,
-                        0.0,
-                        0.0,
-                        0.0,
-                        0.0,
-                        0.0,
-                        0.0,
-                        0.0,
-                        0.0,
-                        0.0,
-                    ],
-                    [
-                        0.0,
-                        0.0,
-                        0.0,
-                        0.0,
-                        0.0,
-                        0.0,
-                        0.0,
-                        0.0,
-                        0.0,
-                        0.0,
-                        0.0,
-                        0.0,
-                        0.0,
-                        0.0,
-                    ],
-                    [
-                        0.0,
-                        0.0,
-                        0.0,
-                        0.0,
-                        0.0,
-                        0.0,
-                        0.0,
-                        0.0,
-                        0.0,
-                        0.0,
-                        0.0,
-                        0.0,
-                        0.0,
-                        0.0,
-                    ],
-                    [
-                        0.0,
-                        0.0,
-                        0.0,
-                        0.0,
-                        0.0,
-                        0.0,
-                        0.0,
-                        0.0,
-                        0.0,
-                        0.0,
-                        1.0,
-                        0.0,
-                        0.0,
-                        0.0,
-                    ],
-                    [
-                        0.0,
-                        0.0,
-                        0.0,
-                        0.0,
-                        0.0,
-                        0.0,
-                        0.0,
-                        0.0,
-                        0.0,
-                        1.0,
-                        0.0,
-                        1.0,
-                        0.0,
-                        0.0,
-                    ],
-                    [
-                        0.0,
-                        0.0,
-                        0.0,
-                        0.0,
-                        0.0,
-                        0.0,
-                        0.0,
-                        0.0,
-                        0.0,
-                        0.0,
-                        0.0,
-                        0.0,
-                        1.0,
-                        0.0,
-                    ],
-                    [
-                        0.0,
-                        0.0,
-                        0.0,
-                        0.0,
-                        0.0,
-                        0.0,
-                        0.0,
-                        1.0,
-                        0.0,
-                        0.0,
-                        0.0,
-                        0.0,
-                        0.0,
-                        1.0,
-                    ],
-                    [
-                        0.0,
-                        0.0,
-                        0.0,
-                        0.0,
-                        0.0,
-                        0.0,
-                        1.0,
-                        0.0,
-                        0.0,
-                        0.0,
-                        0.0,
-                        0.0,
-                        0.0,
-                        0.0,
-                    ],
-                    [
-                        0.0,
-                        0.0,
-                        0.0,
-                        0.0,
-                        0.0,
-                        0.0,
-                        0.0,
-                        1.0,
-                        0.0,
-                        0.0,
-                        0.0,
-                        0.0,
-                        0.0,
-                        1.0,
-                    ],
-                    [
-                        0.0,
-                        0.0,
-                        0.0,
-                        0.0,
-                        0.0,
-                        0.0,
-                        0.0,
-                        0.0,
-                        1.0,
-                        0.0,
-                        0.0,
-                        0.0,
-                        0.0,
-                        0.0,
-                    ],
-                    [
-                        0.0,
-                        0.0,
-                        0.0,
-                        0.0,
-                        0.0,
-                        0.0,
-                        0.0,
-                        0.0,
-                        0.0,
-                        1.0,
-                        0.0,
-                        1.0,
-                        0.0,
-                        0.0,
-                    ],
+                    [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
+                    [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
+                    [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
+                    [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
+                    [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
+                    [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
+                    [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0],
+                    [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 1.0, 0.0, 0.0],
+                    [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0],
+                    [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0],
+                    [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
+                    [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0],
+                    [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0],
+                    [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 1.0, 0.0, 0.0],
                 ]
             ),
         )
@@ -526,8 +311,7 @@ class TestSEMGraph(unittest.TestCase):
     def test_demo_init(self):
         self.assertSetEqual(self.demo.latents, {"xi1", "eta1", "eta2"})
         self.assertSetEqual(
-            self.demo.observed,
-            {"x1", "x2", "x3", "y1", "y2", "y3", "y4", "y5", "y6", "y7", "y8"},
+            self.demo.observed, {"x1", "x2", "x3", "y1", "y2", "y3", "y4", "y5", "y6", "y7", "y8"}
         )
         self.assertListEqual(
             sorted(self.demo.graph.nodes()),
@@ -578,9 +362,7 @@ class TestSEMGraph(unittest.TestCase):
         self.assertDictEqual(self.demo.graph.edges[("eta1", "y2")], {"weight": np.NaN})
         self.assertDictEqual(self.demo.graph.edges[("eta1", "y3")], {"weight": np.NaN})
         self.assertDictEqual(self.demo.graph.edges[("eta1", "y4")], {"weight": np.NaN})
-        self.assertDictEqual(
-            self.demo.graph.edges[("eta1", "eta2")], {"weight": np.NaN}
-        )
+        self.assertDictEqual(self.demo.graph.edges[("eta1", "eta2")], {"weight": np.NaN})
         self.assertDictEqual(self.demo.graph.edges[("xi1", "eta2")], {"weight": np.NaN})
         self.assertDictEqual(self.demo.graph.edges[("eta2", "y5")], {"weight": np.NaN})
         self.assertDictEqual(self.demo.graph.edges[("eta2", "y6")], {"weight": np.NaN})
@@ -589,236 +371,24 @@ class TestSEMGraph(unittest.TestCase):
 
         npt.assert_equal(
             nx.to_numpy_matrix(
-                self.demo.err_graph,
-                nodelist=sorted(self.demo.err_graph.nodes()),
-                weight=None,
+                self.demo.err_graph, nodelist=sorted(self.demo.err_graph.nodes()), weight=None
             ),
             np.array(
                 [
-                    [
-                        0.0,
-                        0.0,
-                        0.0,
-                        0.0,
-                        0.0,
-                        0.0,
-                        0.0,
-                        0.0,
-                        0.0,
-                        0.0,
-                        0.0,
-                        0.0,
-                        0.0,
-                        0.0,
-                    ],
-                    [
-                        0.0,
-                        0.0,
-                        0.0,
-                        0.0,
-                        0.0,
-                        0.0,
-                        0.0,
-                        0.0,
-                        0.0,
-                        0.0,
-                        0.0,
-                        0.0,
-                        0.0,
-                        0.0,
-                    ],
-                    [
-                        0.0,
-                        0.0,
-                        0.0,
-                        0.0,
-                        0.0,
-                        0.0,
-                        0.0,
-                        0.0,
-                        0.0,
-                        0.0,
-                        0.0,
-                        0.0,
-                        0.0,
-                        0.0,
-                    ],
-                    [
-                        0.0,
-                        0.0,
-                        0.0,
-                        0.0,
-                        0.0,
-                        0.0,
-                        0.0,
-                        0.0,
-                        0.0,
-                        0.0,
-                        0.0,
-                        0.0,
-                        0.0,
-                        0.0,
-                    ],
-                    [
-                        0.0,
-                        0.0,
-                        0.0,
-                        0.0,
-                        0.0,
-                        0.0,
-                        0.0,
-                        0.0,
-                        0.0,
-                        0.0,
-                        0.0,
-                        0.0,
-                        0.0,
-                        0.0,
-                    ],
-                    [
-                        0.0,
-                        0.0,
-                        0.0,
-                        0.0,
-                        0.0,
-                        0.0,
-                        0.0,
-                        0.0,
-                        0.0,
-                        0.0,
-                        0.0,
-                        0.0,
-                        0.0,
-                        0.0,
-                    ],
-                    [
-                        0.0,
-                        0.0,
-                        0.0,
-                        0.0,
-                        0.0,
-                        0.0,
-                        0.0,
-                        0.0,
-                        0.0,
-                        0.0,
-                        1.0,
-                        0.0,
-                        0.0,
-                        0.0,
-                    ],
-                    [
-                        0.0,
-                        0.0,
-                        0.0,
-                        0.0,
-                        0.0,
-                        0.0,
-                        0.0,
-                        0.0,
-                        0.0,
-                        1.0,
-                        0.0,
-                        1.0,
-                        0.0,
-                        0.0,
-                    ],
-                    [
-                        0.0,
-                        0.0,
-                        0.0,
-                        0.0,
-                        0.0,
-                        0.0,
-                        0.0,
-                        0.0,
-                        0.0,
-                        0.0,
-                        0.0,
-                        0.0,
-                        1.0,
-                        0.0,
-                    ],
-                    [
-                        0.0,
-                        0.0,
-                        0.0,
-                        0.0,
-                        0.0,
-                        0.0,
-                        0.0,
-                        1.0,
-                        0.0,
-                        0.0,
-                        0.0,
-                        0.0,
-                        0.0,
-                        1.0,
-                    ],
-                    [
-                        0.0,
-                        0.0,
-                        0.0,
-                        0.0,
-                        0.0,
-                        0.0,
-                        1.0,
-                        0.0,
-                        0.0,
-                        0.0,
-                        0.0,
-                        0.0,
-                        0.0,
-                        0.0,
-                    ],
-                    [
-                        0.0,
-                        0.0,
-                        0.0,
-                        0.0,
-                        0.0,
-                        0.0,
-                        0.0,
-                        1.0,
-                        0.0,
-                        0.0,
-                        0.0,
-                        0.0,
-                        0.0,
-                        1.0,
-                    ],
-                    [
-                        0.0,
-                        0.0,
-                        0.0,
-                        0.0,
-                        0.0,
-                        0.0,
-                        0.0,
-                        0.0,
-                        1.0,
-                        0.0,
-                        0.0,
-                        0.0,
-                        0.0,
-                        0.0,
-                    ],
-                    [
-                        0.0,
-                        0.0,
-                        0.0,
-                        0.0,
-                        0.0,
-                        0.0,
-                        0.0,
-                        0.0,
-                        0.0,
-                        1.0,
-                        0.0,
-                        1.0,
-                        0.0,
-                        0.0,
-                    ],
+                    [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
+                    [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
+                    [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
+                    [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
+                    [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
+                    [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
+                    [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0],
+                    [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 1.0, 0.0, 0.0],
+                    [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0],
+                    [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0],
+                    [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
+                    [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0],
+                    [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0],
+                    [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 1.0, 0.0, 0.0],
                 ]
             ),
         )
@@ -852,30 +422,16 @@ class TestSEMGraph(unittest.TestCase):
             ),
         )
 
-        self.assertDictEqual(
-            self.union.graph.edges[("yrsmill", "unionsen")], {"weight": np.NaN}
-        )
-        self.assertDictEqual(
-            self.union.graph.edges[("age", "laboract")], {"weight": np.NaN}
-        )
-        self.assertDictEqual(
-            self.union.graph.edges[("age", "deferenc")], {"weight": np.NaN}
-        )
-        self.assertDictEqual(
-            self.union.graph.edges[("deferenc", "laboract")], {"weight": np.NaN}
-        )
-        self.assertDictEqual(
-            self.union.graph.edges[("deferenc", "unionsen")], {"weight": np.NaN}
-        )
-        self.assertDictEqual(
-            self.union.graph.edges[("laboract", "unionsen")], {"weight": np.NaN}
-        )
+        self.assertDictEqual(self.union.graph.edges[("yrsmill", "unionsen")], {"weight": np.NaN})
+        self.assertDictEqual(self.union.graph.edges[("age", "laboract")], {"weight": np.NaN})
+        self.assertDictEqual(self.union.graph.edges[("age", "deferenc")], {"weight": np.NaN})
+        self.assertDictEqual(self.union.graph.edges[("deferenc", "laboract")], {"weight": np.NaN})
+        self.assertDictEqual(self.union.graph.edges[("deferenc", "unionsen")], {"weight": np.NaN})
+        self.assertDictEqual(self.union.graph.edges[("laboract", "unionsen")], {"weight": np.NaN})
 
         npt.assert_equal(
             nx.to_numpy_matrix(
-                self.union.err_graph,
-                nodelist=sorted(self.union.err_graph.nodes()),
-                weight=None,
+                self.union.err_graph, nodelist=sorted(self.union.err_graph.nodes()), weight=None
             ),
             np.array(
                 [
@@ -894,67 +450,27 @@ class TestSEMGraph(unittest.TestCase):
             self.assertDictEqual(self.union.err_graph.nodes[node], {"weight": np.NaN})
 
     def test_demo_param_init(self):
-        self.assertDictEqual(
-            self.demo_params.graph.edges[("xi1", "x1")], {"weight": 0.4}
-        )
-        self.assertDictEqual(
-            self.demo_params.graph.edges[("xi1", "x2")], {"weight": 0.5}
-        )
-        self.assertDictEqual(
-            self.demo_params.graph.edges[("xi1", "x3")], {"weight": 0.6}
-        )
-        self.assertDictEqual(
-            self.demo_params.graph.edges[("xi1", "eta1")], {"weight": 0.3}
-        )
-        self.assertDictEqual(
-            self.demo_params.graph.edges[("eta1", "y1")], {"weight": 1.1}
-        )
-        self.assertDictEqual(
-            self.demo_params.graph.edges[("eta1", "y2")], {"weight": 1.2}
-        )
-        self.assertDictEqual(
-            self.demo_params.graph.edges[("eta1", "y3")], {"weight": 1.3}
-        )
-        self.assertDictEqual(
-            self.demo_params.graph.edges[("eta1", "y4")], {"weight": 1.4}
-        )
-        self.assertDictEqual(
-            self.demo_params.graph.edges[("eta1", "eta2")], {"weight": 0.1}
-        )
-        self.assertDictEqual(
-            self.demo_params.graph.edges[("xi1", "eta2")], {"weight": 0.2}
-        )
-        self.assertDictEqual(
-            self.demo_params.graph.edges[("eta2", "y5")], {"weight": 0.7}
-        )
-        self.assertDictEqual(
-            self.demo_params.graph.edges[("eta2", "y6")], {"weight": 0.8}
-        )
-        self.assertDictEqual(
-            self.demo_params.graph.edges[("eta2", "y7")], {"weight": 0.9}
-        )
-        self.assertDictEqual(
-            self.demo_params.graph.edges[("eta2", "y8")], {"weight": 1.0}
-        )
+        self.assertDictEqual(self.demo_params.graph.edges[("xi1", "x1")], {"weight": 0.4})
+        self.assertDictEqual(self.demo_params.graph.edges[("xi1", "x2")], {"weight": 0.5})
+        self.assertDictEqual(self.demo_params.graph.edges[("xi1", "x3")], {"weight": 0.6})
+        self.assertDictEqual(self.demo_params.graph.edges[("xi1", "eta1")], {"weight": 0.3})
+        self.assertDictEqual(self.demo_params.graph.edges[("eta1", "y1")], {"weight": 1.1})
+        self.assertDictEqual(self.demo_params.graph.edges[("eta1", "y2")], {"weight": 1.2})
+        self.assertDictEqual(self.demo_params.graph.edges[("eta1", "y3")], {"weight": 1.3})
+        self.assertDictEqual(self.demo_params.graph.edges[("eta1", "y4")], {"weight": 1.4})
+        self.assertDictEqual(self.demo_params.graph.edges[("eta1", "eta2")], {"weight": 0.1})
+        self.assertDictEqual(self.demo_params.graph.edges[("xi1", "eta2")], {"weight": 0.2})
+        self.assertDictEqual(self.demo_params.graph.edges[("eta2", "y5")], {"weight": 0.7})
+        self.assertDictEqual(self.demo_params.graph.edges[("eta2", "y6")], {"weight": 0.8})
+        self.assertDictEqual(self.demo_params.graph.edges[("eta2", "y7")], {"weight": 0.9})
+        self.assertDictEqual(self.demo_params.graph.edges[("eta2", "y8")], {"weight": 1.0})
 
-        self.assertDictEqual(
-            self.demo_params.err_graph.edges[("y1", "y5")], {"weight": 1.5}
-        )
-        self.assertDictEqual(
-            self.demo_params.err_graph.edges[("y2", "y6")], {"weight": 1.6}
-        )
-        self.assertDictEqual(
-            self.demo_params.err_graph.edges[("y2", "y4")], {"weight": 1.9}
-        )
-        self.assertDictEqual(
-            self.demo_params.err_graph.edges[("y3", "y7")], {"weight": 1.7}
-        )
-        self.assertDictEqual(
-            self.demo_params.err_graph.edges[("y4", "y8")], {"weight": 1.8}
-        )
-        self.assertDictEqual(
-            self.demo_params.err_graph.edges[("y6", "y8")], {"weight": 2.0}
-        )
+        self.assertDictEqual(self.demo_params.err_graph.edges[("y1", "y5")], {"weight": 1.5})
+        self.assertDictEqual(self.demo_params.err_graph.edges[("y2", "y6")], {"weight": 1.6})
+        self.assertDictEqual(self.demo_params.err_graph.edges[("y2", "y4")], {"weight": 1.9})
+        self.assertDictEqual(self.demo_params.err_graph.edges[("y3", "y7")], {"weight": 1.7})
+        self.assertDictEqual(self.demo_params.err_graph.edges[("y4", "y8")], {"weight": 1.8})
+        self.assertDictEqual(self.demo_params.err_graph.edges[("y6", "y8")], {"weight": 2.0})
 
         self.assertDictEqual(self.demo_params.err_graph.nodes["y1"], {"weight": 2.1})
         self.assertDictEqual(self.demo_params.err_graph.nodes["y2"], {"weight": 2.2})
@@ -1027,9 +543,9 @@ class TestSEMGraph(unittest.TestCase):
             self.assertSetEqual(active_trails[node], set(union_nodes))
 
         self.assertSetEqual(
-            self.union.active_trail_nodes(
-                "age", observed=["laboract", "deferenc", "unionsen"]
-            )["age"],
+            self.union.active_trail_nodes("age", observed=["laboract", "deferenc", "unionsen"])[
+                "age"
+            ],
             {"age", "yrsmill"},
         )
 
@@ -1246,57 +762,37 @@ class TestSEMGraph(unittest.TestCase):
         self.assertSetEqual(set(self.demo.graph.nodes()), set(demo_graph.graph.nodes()))
         self.assertSetEqual(set(self.demo.graph.edges()), set(demo_graph.graph.edges()))
 
-        self.assertSetEqual(
-            set(self.demo.err_graph.nodes()), set(demo_graph.err_graph.nodes())
-        )
+        self.assertSetEqual(set(self.demo.err_graph.nodes()), set(demo_graph.err_graph.nodes()))
         npt.assert_array_equal(
-            nx.to_numpy_matrix(
-                self.demo.err_graph, nodelist=sorted(self.demo.err_graph.nodes())
-            ),
-            nx.to_numpy_matrix(
-                demo_graph, nodelist=sorted(demo_graph.err_graph.nodes())
-            ),
+            nx.to_numpy_matrix(self.demo.err_graph, nodelist=sorted(self.demo.err_graph.nodes())),
+            nx.to_numpy_matrix(demo_graph, nodelist=sorted(demo_graph.err_graph.nodes())),
         )
 
         self.assertSetEqual(
-            set(self.demo.full_graph_struct.nodes()),
-            set(demo_graph.full_graph_struct.nodes()),
+            set(self.demo.full_graph_struct.nodes()), set(demo_graph.full_graph_struct.nodes())
         )
         self.assertSetEqual(
-            set(self.demo.full_graph_struct.edges()),
-            set(demo_graph.full_graph_struct.edges()),
+            set(self.demo.full_graph_struct.edges()), set(demo_graph.full_graph_struct.edges())
         )
 
         self.assertSetEqual(self.demo.latents, demo_graph.latents)
         self.assertSetEqual(self.demo.observed, demo_graph.observed)
 
         # Test union
-        self.assertSetEqual(
-            set(self.union.graph.nodes()), set(union_graph.graph.nodes())
-        )
-        self.assertSetEqual(
-            set(self.union.graph.edges()), set(union_graph.graph.edges())
-        )
+        self.assertSetEqual(set(self.union.graph.nodes()), set(union_graph.graph.nodes()))
+        self.assertSetEqual(set(self.union.graph.edges()), set(union_graph.graph.edges()))
 
-        self.assertSetEqual(
-            set(self.union.err_graph.nodes()), set(union_graph.err_graph.nodes())
-        )
+        self.assertSetEqual(set(self.union.err_graph.nodes()), set(union_graph.err_graph.nodes()))
         npt.assert_array_equal(
-            nx.to_numpy_matrix(
-                self.union.err_graph, nodelist=sorted(self.union.err_graph.nodes())
-            ),
-            nx.to_numpy_matrix(
-                union_graph, nodelist=sorted(union_graph.err_graph.nodes())
-            ),
+            nx.to_numpy_matrix(self.union.err_graph, nodelist=sorted(self.union.err_graph.nodes())),
+            nx.to_numpy_matrix(union_graph, nodelist=sorted(union_graph.err_graph.nodes())),
         )
 
         self.assertSetEqual(
-            set(self.union.full_graph_struct.nodes()),
-            set(union_graph.full_graph_struct.nodes()),
+            set(self.union.full_graph_struct.nodes()), set(union_graph.full_graph_struct.nodes())
         )
         self.assertSetEqual(
-            set(self.union.full_graph_struct.edges()),
-            set(union_graph.full_graph_struct.edges()),
+            set(self.union.full_graph_struct.edges()), set(union_graph.full_graph_struct.edges())
         )
 
         self.assertSetEqual(self.union.latents, union_graph.latents)
@@ -1311,8 +807,7 @@ class TestSEMGraph(unittest.TestCase):
         )
 
         self.assertSetEqual(
-            set(self.demo_params.err_graph.nodes()),
-            set(demo_params_graph.err_graph.nodes()),
+            set(self.demo_params.err_graph.nodes()), set(demo_params_graph.err_graph.nodes())
         )
         npt.assert_array_equal(
             nx.to_numpy_matrix(
@@ -1340,32 +835,22 @@ class TestSEMGraph(unittest.TestCase):
         self.assertSetEqual(self.demo_params.observed, demo_params_graph.observed)
 
         # Test demo
-        self.assertSetEqual(
-            set(self.custom.graph.nodes()), set(custom_graph.graph.nodes())
-        )
-        self.assertSetEqual(
-            set(self.custom.graph.edges()), set(custom_graph.graph.edges())
-        )
+        self.assertSetEqual(set(self.custom.graph.nodes()), set(custom_graph.graph.nodes()))
+        self.assertSetEqual(set(self.custom.graph.edges()), set(custom_graph.graph.edges()))
 
-        self.assertSetEqual(
-            set(self.custom.err_graph.nodes()), set(custom_graph.err_graph.nodes())
-        )
+        self.assertSetEqual(set(self.custom.err_graph.nodes()), set(custom_graph.err_graph.nodes()))
         npt.assert_array_equal(
             nx.to_numpy_matrix(
                 self.custom.err_graph, nodelist=sorted(self.custom.err_graph.nodes())
             ),
-            nx.to_numpy_matrix(
-                custom_graph, nodelist=sorted(custom_graph.err_graph.nodes())
-            ),
+            nx.to_numpy_matrix(custom_graph, nodelist=sorted(custom_graph.err_graph.nodes())),
         )
 
         self.assertSetEqual(
-            set(self.custom.full_graph_struct.nodes()),
-            set(custom_graph.full_graph_struct.nodes()),
+            set(self.custom.full_graph_struct.nodes()), set(custom_graph.full_graph_struct.nodes())
         )
         self.assertSetEqual(
-            set(self.custom.full_graph_struct.edges()),
-            set(custom_graph.full_graph_struct.edges()),
+            set(self.custom.full_graph_struct.edges()), set(custom_graph.full_graph_struct.edges())
         )
 
         self.assertSetEqual(self.custom.latents, custom_graph.latents)
@@ -1482,39 +967,19 @@ class TestSEMGraph(unittest.TestCase):
     def test_get_conditional_ivs_demo(self):
         scale = {"eta1": "y1", "eta2": "y5", "xi1": "x1"}
 
-        self.assertEqual(
-            self.demo.get_conditional_ivs("eta1", "y2", scaling_indicators=scale), []
-        )
-        self.assertEqual(
-            self.demo.get_conditional_ivs("eta1", "y3", scaling_indicators=scale), []
-        )
-        self.assertEqual(
-            self.demo.get_conditional_ivs("eta1", "y4", scaling_indicators=scale), []
-        )
+        self.assertEqual(self.demo.get_conditional_ivs("eta1", "y2", scaling_indicators=scale), [])
+        self.assertEqual(self.demo.get_conditional_ivs("eta1", "y3", scaling_indicators=scale), [])
+        self.assertEqual(self.demo.get_conditional_ivs("eta1", "y4", scaling_indicators=scale), [])
 
-        self.assertEqual(
-            self.demo.get_conditional_ivs("eta2", "y6", scaling_indicators=scale), []
-        )
-        self.assertEqual(
-            self.demo.get_conditional_ivs("eta2", "y7", scaling_indicators=scale), []
-        )
-        self.assertEqual(
-            self.demo.get_conditional_ivs("eta2", "y8", scaling_indicators=scale), []
-        )
+        self.assertEqual(self.demo.get_conditional_ivs("eta2", "y6", scaling_indicators=scale), [])
+        self.assertEqual(self.demo.get_conditional_ivs("eta2", "y7", scaling_indicators=scale), [])
+        self.assertEqual(self.demo.get_conditional_ivs("eta2", "y8", scaling_indicators=scale), [])
 
-        self.assertEqual(
-            self.demo.get_conditional_ivs("xi1", "x2", scaling_indicators=scale), []
-        )
-        self.assertEqual(
-            self.demo.get_conditional_ivs("xi1", "x3", scaling_indicators=scale), []
-        )
+        self.assertEqual(self.demo.get_conditional_ivs("xi1", "x2", scaling_indicators=scale), [])
+        self.assertEqual(self.demo.get_conditional_ivs("xi1", "x3", scaling_indicators=scale), [])
 
-        self.assertEqual(
-            self.demo.get_conditional_ivs("xi1", "eta1", scaling_indicators=scale), []
-        )
-        self.assertEqual(
-            self.demo.get_conditional_ivs("xi1", "eta2", scaling_indicators=scale), []
-        )
+        self.assertEqual(self.demo.get_conditional_ivs("xi1", "eta1", scaling_indicators=scale), [])
+        self.assertEqual(self.demo.get_conditional_ivs("xi1", "eta2", scaling_indicators=scale), [])
         self.assertEqual(
             self.demo.get_conditional_ivs("eta1", "eta2", scaling_indicators=scale), []
         )
@@ -1559,8 +1024,7 @@ class TestSEMGraph(unittest.TestCase):
         self.assertEqual(self.union.get_conditional_ivs("deferenc", "laboract"), [])
 
         self.assertEqual(
-            self.union.get_conditional_ivs("age", "laboract"),
-            [("yrsmill", {"deferenc"})],
+            self.union.get_conditional_ivs("age", "laboract"), [("yrsmill", {"deferenc"})]
         )
         self.assertEqual(self.union.get_conditional_ivs("age", "deferenc"), [])
 
@@ -1638,28 +1102,22 @@ class TestSEMGraph(unittest.TestCase):
             self.custom.get_ivs("xi1", "y4", scaling_indicators=scale_custom), {"x2"}
         )
         self.assertSetEqual(
-            self.custom.get_ivs("xi1", "y1", scaling_indicators=scale_custom),
-            {"x2", "y4"},
+            self.custom.get_ivs("xi1", "y1", scaling_indicators=scale_custom), {"x2", "y4"}
         )
         self.assertSetEqual(
-            self.custom.get_ivs("xi1", "eta1", scaling_indicators=scale_custom),
-            {"x2", "y4"},
+            self.custom.get_ivs("xi1", "eta1", scaling_indicators=scale_custom), {"x2", "y4"}
         )
         # TODO: Test this and fix.
         self.assertSetEqual(
-            self.custom.get_ivs("y1", "eta1", scaling_indicators=scale_custom),
-            {"x2", "y4", "y5"},
+            self.custom.get_ivs("y1", "eta1", scaling_indicators=scale_custom), {"x2", "y4", "y5"}
         )
         self.assertSetEqual(
             self.custom.get_ivs("y1", "eta2", scaling_indicators=scale_custom),
             {"x1", "x2", "y2", "y3", "y4"},
         )
+        self.assertSetEqual(self.custom.get_ivs("y4", "y1", scaling_indicators=scale_custom), set())
         self.assertSetEqual(
-            self.custom.get_ivs("y4", "y1", scaling_indicators=scale_custom), set()
-        )
-        self.assertSetEqual(
-            self.custom.get_ivs("eta1", "y3", scaling_indicators=scale_custom),
-            {"x1", "x2", "y4"},
+            self.custom.get_ivs("eta1", "y3", scaling_indicators=scale_custom), {"x1", "x2", "y4"}
         )
 
     def test_small_model_ivs(self):
@@ -1672,21 +1130,12 @@ class TestSEMGraph(unittest.TestCase):
         self.assertEqual(model1.get_conditional_ivs("X", "Y"), [("I", {"W"})])
 
         model2 = SEMGraph(
-            ebunch=[
-                ("x", "y"),
-                ("z", "x"),
-                ("w", "z"),
-                ("w", "u"),
-                ("u", "x"),
-                ("u", "y"),
-            ],
+            ebunch=[("x", "y"), ("z", "x"), ("w", "z"), ("w", "u"), ("u", "x"), ("u", "y")],
             latents=["u"],
         )
         self.assertEqual(model2.get_conditional_ivs("x", "y"), [("z", {"w"})])
 
-        model3 = SEMGraph(
-            ebunch=[("x", "y"), ("u", "x"), ("u", "y"), ("z", "x")], latents=["u"]
-        )
+        model3 = SEMGraph(ebunch=[("x", "y"), ("u", "x"), ("u", "y"), ("z", "x")], latents=["u"])
         self.assertEqual(model3.get_ivs("x", "y"), {"z"})
 
         model4 = SEMGraph(ebunch=[("x", "y"), ("z", "x"), ("u", "x"), ("u", "y")])

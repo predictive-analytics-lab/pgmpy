@@ -73,13 +73,7 @@ class TestBIFReader(unittest.TestCase):
 
     def test_get_variables(self):
 
-        var_expected = [
-            "light-on",
-            "bowel-problem",
-            "dog-out",
-            "hear-bark",
-            "family-out",
-        ]
+        var_expected = ["light-on", "bowel-problem", "dog-out", "hear-bark", "family-out"]
         self.assertListEqual(self.reader.get_variables(), var_expected)
 
     def test_states(self):
@@ -198,13 +192,7 @@ class TestBIFReader(unittest.TestCase):
             ("family-out", "light-on"),
             ("dog-out", "hear-bark"),
         ]
-        nodes_expected = [
-            "bowel-problem",
-            "hear-bark",
-            "light-on",
-            "dog-out",
-            "family-out",
-        ]
+        nodes_expected = ["bowel-problem", "hear-bark", "light-on", "dog-out", "family-out"]
         edge_expected = {
             "bowel-problem": {"dog-out": {"weight": None}},
             "dog-out": {"hear-bark": {"weight": None}},
@@ -252,14 +240,7 @@ class TestBIFReader(unittest.TestCase):
 
 class TestBIFWriter(unittest.TestCase):
     def setUp(self):
-        variables = [
-            "kid",
-            "bowel-problem",
-            "dog-out",
-            "family-out",
-            "hear-bark",
-            "light-on",
-        ]
+        variables = ["kid", "bowel-problem", "dog-out", "family-out", "hear-bark", "light-on"]
 
         edges = [
             ["family-out", "dog-out"],
@@ -316,9 +297,7 @@ class TestBIFWriter(unittest.TestCase):
                 len(states[var]),
                 values,
                 evidence=parents[var],
-                evidence_card=[
-                    len(states[evidence_var]) for evidence_var in parents[var]
-                ],
+                evidence_card=[len(states[evidence_var]) for evidence_var in parents[var]],
             )
             tabular_cpds.append(cpd)
         self.model.add_cpds(*tabular_cpds)

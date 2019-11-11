@@ -163,11 +163,7 @@ class NaiveBayes(BayesianModel):
         for variable in [variables] if isinstance(variables, str) else variables:
             if variable != self.parent_node:
                 independencies.add_assertions(
-                    [
-                        variable,
-                        list(set(self.children_nodes) - set(variable)),
-                        self.parent_node,
-                    ]
+                    [variable, list(set(self.children_nodes) - set(variable)), self.parent_node]
                 )
         return independencies
 
@@ -214,9 +210,7 @@ class NaiveBayes(BayesianModel):
                 parent_node = self.parent_node
         if parent_node not in data.columns:
             raise ValueError(
-                "parent node: {node} is not present in the given data".format(
-                    node=parent_node
-                )
+                "parent node: {node} is not present in the given data".format(node=parent_node)
             )
         for child_node in data.columns:
             if child_node != parent_node:

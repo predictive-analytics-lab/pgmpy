@@ -341,9 +341,7 @@ class PomdpXReader(object):
                     edges[edge.get("val")] = edge.find("Terminal").text
                 elif edge.find("Node") is not None:
                     node_cpd = defaultdict(list)
-                    node_cpd[edge.find("Node").get("var")] = get_param(
-                        edge.find("Node")
-                    )
+                    node_cpd[edge.find("Node").get("var")] = get_param(edge.find("Node"))
                     edges[edge.get("val")] = node_cpd
                 elif edge.find("SubDAG") is not None:
                     subdag_attribute = defaultdict(list)
@@ -473,9 +471,7 @@ class PomdpXWriter(object):
 
         obs_variables = self.model["variables"]["ObsVar"]
         for var in obs_variables:
-            obs_var_tag = etree.SubElement(
-                self.variable, "ObsVar", attrib={"vname": var["vname"]}
-            )
+            obs_var_tag = etree.SubElement(self.variable, "ObsVar", attrib={"vname": var["vname"]})
             self._add_value_enum(var, obs_var_tag)
 
         action_variables = self.model["variables"]["ActionVar"]
@@ -536,9 +532,7 @@ class PomdpXWriter(object):
                         )
                     else:
                         etree.SubElement(
-                            edge_tag,
-                            "SubDAG",
-                            attrib={"type": value["type"], "var": value["var"]},
+                            edge_tag, "SubDAG", attrib={"type": value["type"], "var": value["var"]}
                         )
                 else:
                     self.add_parameter_dd(edge_tag, value)
@@ -569,9 +563,7 @@ class PomdpXWriter(object):
         parameter_tag = etree.SubElement(
             condprob,
             "Parameter",
-            attrib={
-                "type": condition["Type"] if condition["Type"] is not None else "TBL"
-            },
+            attrib={"type": condition["Type"] if condition["Type"] is not None else "TBL"},
         )
         if condition["Type"] == "DD":
             dag_tag = etree.SubElement(parameter_tag, "DAG")

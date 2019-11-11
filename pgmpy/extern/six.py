@@ -234,9 +234,7 @@ class _MovedItems(_LazyModule):
 _moved_attributes = [
     MovedAttribute("cStringIO", "cStringIO", "io", "StringIO"),
     MovedAttribute("filter", "itertools", "builtins", "ifilter", "filter"),
-    MovedAttribute(
-        "filterfalse", "itertools", "itertools", "ifilterfalse", "filterfalse"
-    ),
+    MovedAttribute("filterfalse", "itertools", "itertools", "ifilterfalse", "filterfalse"),
     MovedAttribute("input", "__builtin__", "builtins", "raw_input", "input"),
     MovedAttribute("intern", "__builtin__", "sys"),
     MovedAttribute("map", "itertools", "builtins", "imap", "map"),
@@ -244,9 +242,7 @@ _moved_attributes = [
     MovedAttribute("getcwdb", "os", "os", "getcwd", "getcwdb"),
     MovedAttribute("getoutput", "commands", "subprocess"),
     MovedAttribute("range", "__builtin__", "builtins", "xrange", "range"),
-    MovedAttribute(
-        "reload_module", "__builtin__", "importlib" if PY34 else "imp", "reload"
-    ),
+    MovedAttribute("reload_module", "__builtin__", "importlib" if PY34 else "imp", "reload"),
     MovedAttribute("reduce", "__builtin__", "functools"),
     MovedAttribute("shlex_quote", "pipes", "shlex", "quote"),
     MovedAttribute("StringIO", "StringIO", "io"),
@@ -255,9 +251,7 @@ _moved_attributes = [
     MovedAttribute("UserString", "UserString", "collections"),
     MovedAttribute("xrange", "__builtin__", "builtins", "xrange", "range"),
     MovedAttribute("zip", "itertools", "builtins", "izip", "zip"),
-    MovedAttribute(
-        "zip_longest", "itertools", "itertools", "izip_longest", "zip_longest"
-    ),
+    MovedAttribute("zip_longest", "itertools", "itertools", "izip_longest", "zip_longest"),
     MovedModule("builtins", "__builtin__"),
     MovedModule("configparser", "ConfigParser"),
     MovedModule("copyreg", "copy_reg"),
@@ -271,9 +265,7 @@ _moved_attributes = [
     MovedModule("email_mime_base", "email.MIMEBase", "email.mime.base"),
     MovedModule("email_mime_image", "email.MIMEImage", "email.mime.image"),
     MovedModule("email_mime_multipart", "email.MIMEMultipart", "email.mime.multipart"),
-    MovedModule(
-        "email_mime_nonmultipart", "email.MIMENonMultipart", "email.mime.nonmultipart"
-    ),
+    MovedModule("email_mime_nonmultipart", "email.MIMENonMultipart", "email.mime.nonmultipart"),
     MovedModule("email_mime_text", "email.MIMEText", "email.mime.text"),
     MovedModule("BaseHTTPServer", "BaseHTTPServer", "http.server"),
     MovedModule("CGIHTTPServer", "CGIHTTPServer", "http.server"),
@@ -341,9 +333,7 @@ _urllib_parse_moved_attributes = [
     MovedAttribute("quote_plus", "urllib", "urllib.parse"),
     MovedAttribute("unquote", "urllib", "urllib.parse"),
     MovedAttribute("unquote_plus", "urllib", "urllib.parse"),
-    MovedAttribute(
-        "unquote_to_bytes", "urllib", "urllib.parse", "unquote", "unquote_to_bytes"
-    ),
+    MovedAttribute("unquote_to_bytes", "urllib", "urllib.parse", "unquote", "unquote_to_bytes"),
     MovedAttribute("urlencode", "urllib", "urllib.parse"),
     MovedAttribute("splitquery", "urllib", "urllib.parse"),
     MovedAttribute("splittag", "urllib", "urllib.parse"),
@@ -482,9 +472,7 @@ for attr in _urllib_robotparser_moved_attributes:
     setattr(Module_six_moves_urllib_robotparser, attr.name, attr)
 del attr
 
-Module_six_moves_urllib_robotparser._moved_attributes = (
-    _urllib_robotparser_moved_attributes
-)
+Module_six_moves_urllib_robotparser._moved_attributes = _urllib_robotparser_moved_attributes
 
 _importer._add_module(
     Module_six_moves_urllib_robotparser(__name__ + ".moves.urllib.robotparser"),
@@ -508,9 +496,7 @@ class Module_six_moves_urllib(types.ModuleType):
         return ["parse", "error", "request", "response", "robotparser"]
 
 
-_importer._add_module(
-    Module_six_moves_urllib(__name__ + ".moves.urllib"), "moves.urllib"
-)
+_importer._add_module(Module_six_moves_urllib(__name__ + ".moves.urllib"), "moves.urllib")
 
 
 def add_move(move):
@@ -593,9 +579,7 @@ else:
             return type(self).__next__(self)
 
     callable = callable
-_add_doc(
-    get_unbound_function, """Get the function out of a possibly unbound function"""
-)
+_add_doc(get_unbound_function, """Get the function out of a possibly unbound function""")
 
 
 get_method_function = operator.attrgetter(_meth_func)
@@ -648,9 +632,7 @@ else:
 _add_doc(iterkeys, "Return an iterator over the keys of a dictionary.")
 _add_doc(itervalues, "Return an iterator over the values of a dictionary.")
 _add_doc(iteritems, "Return an iterator over the (key, value) pairs of a dictionary.")
-_add_doc(
-    iterlists, "Return an iterator over the (key, [values]) pairs of a dictionary."
-)
+_add_doc(iterlists, "Return an iterator over the (key, [values]) pairs of a dictionary.")
 
 
 if PY3:
@@ -800,11 +782,7 @@ if print_ is None:
             if not isinstance(data, basestring):
                 data = str(data)
             # If the file has an encoding, encode unicode with it.
-            if (
-                isinstance(fp, file)
-                and isinstance(data, unicode)
-                and fp.encoding is not None
-            ):
+            if isinstance(fp, file) and isinstance(data, unicode) and fp.encoding is not None:
                 errors = getattr(fp, "errors", None)
                 if errors is None:
                     errors = "strict"
@@ -863,11 +841,7 @@ _add_doc(reraise, """Reraise an exception.""")
 
 if sys.version_info[0:2] < (3, 4):
 
-    def wraps(
-        wrapped,
-        assigned=functools.WRAPPER_ASSIGNMENTS,
-        updated=functools.WRAPPER_UPDATES,
-    ):
+    def wraps(wrapped, assigned=functools.WRAPPER_ASSIGNMENTS, updated=functools.WRAPPER_UPDATES):
         def wrapper(f):
             f = functools.wraps(wrapped, assigned, updated)(f)
             f.__wrapped__ = wrapped
@@ -949,10 +923,7 @@ if sys.meta_path:
         # be floating around. Therefore, we can't use isinstance() to check for
         # the six meta path importer, since the other six instance will have
         # inserted an importer with different class.
-        if (
-            type(importer).__name__ == "_SixMetaPathImporter"
-            and importer.name == __name__
-        ):
+        if type(importer).__name__ == "_SixMetaPathImporter" and importer.name == __name__:
             del sys.meta_path[i]
             break
     del i, importer

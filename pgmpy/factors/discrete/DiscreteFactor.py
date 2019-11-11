@@ -103,9 +103,7 @@ class DiscreteFactor(BaseFactor, StateNameMixin):
 
         if values.size != np.product(cardinality):
             raise ValueError(
-                "Values array must be of size: {size}".format(
-                    size=np.product(cardinality)
-                )
+                "Values array must be of size: {size}".format(size=np.product(cardinality))
             )
 
         if len(set(variables)) != len(variables):
@@ -116,9 +114,7 @@ class DiscreteFactor(BaseFactor, StateNameMixin):
         self.values = values.reshape(self.cardinality)
 
         # Set the state names
-        super(DiscreteFactor, self).store_state_names(
-            variables, cardinality, state_names
-        )
+        super(DiscreteFactor, self).store_state_names(variables, cardinality, state_names)
 
     def scope(self):
         """
@@ -203,10 +199,7 @@ class DiscreteFactor(BaseFactor, StateNameMixin):
         assignments = assignments[:, ::-1]
 
         return [
-            [
-                (key, self.get_state_names(key, val))
-                for key, val in zip(self.variables, values)
-            ]
+            [(key, self.get_state_names(key, val)) for key, val in zip(self.variables, values)]
             for values in assignments
         ]
 
@@ -437,9 +430,7 @@ class DiscreteFactor(BaseFactor, StateNameMixin):
             )
 
         phi = self if inplace else self.copy()
-        values = [
-            (var, self.get_state_no(var, state_name)) for var, state_name in values
-        ]
+        values = [(var, self.get_state_no(var, state_name)) for var, state_name in values]
 
         var_index_to_del = []
         slice_ = [slice(None)] * len(self.variables)
@@ -448,9 +439,7 @@ class DiscreteFactor(BaseFactor, StateNameMixin):
             slice_[var_index] = state
             var_index_to_del.append(var_index)
 
-        var_index_to_keep = sorted(
-            set(range(len(phi.variables))) - set(var_index_to_del)
-        )
+        var_index_to_keep = sorted(set(range(len(phi.variables))) - set(var_index_to_del))
         # set difference is not gaurenteed to maintain ordering
         phi.variables = [phi.variables[index] for index in var_index_to_keep]
         phi.cardinality = phi.cardinality[var_index_to_keep]
@@ -749,9 +738,7 @@ class DiscreteFactor(BaseFactor, StateNameMixin):
 
     def is_valid_cpd(self):
         return np.allclose(
-            self.to_factor()
-            .marginalize(self.scope()[:1], inplace=False)
-            .values.flatten("C"),
+            self.to_factor().marginalize(self.scope()[:1], inplace=False).values.flatten("C"),
             np.ones(np.product(self.cardinality[:0:-1])),
             atol=0.01,
         )
@@ -773,9 +760,7 @@ class DiscreteFactor(BaseFactor, StateNameMixin):
         """
         string_header = list(map(lambda x: six.text_type(x), self.scope()))
         string_header.append(
-            "{phi_or_p}_{variables}".format(
-                phi_or_p=phi_or_p, variables=",".join(string_header)
-            )
+            "{phi_or_p}_{variables}".format(phi_or_p=phi_or_p, variables=",".join(string_header))
         )
 
         value_index = 0
@@ -799,9 +784,7 @@ class DiscreteFactor(BaseFactor, StateNameMixin):
             factor_table.append(prob_list)
             value_index += 1
 
-        return tabulate(
-            factor_table, headers=string_header, tablefmt=tablefmt, floatfmt=".4f"
-        )
+        return tabulate(factor_table, headers=string_header, tablefmt=tablefmt, floatfmt=".4f")
 
     def __repr__(self):
         var_card = ", ".join(

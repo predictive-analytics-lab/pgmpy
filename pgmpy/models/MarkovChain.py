@@ -74,9 +74,7 @@ class MarkovChain(object):
             variables = []
         if card is None:
             card = []
-        if not hasattr(variables, "__iter__") or isinstance(
-            variables, six.string_types
-        ):
+        if not hasattr(variables, "__iter__") or isinstance(variables, six.string_types):
             raise ValueError("variables must be a non-string iterable.")
         if not hasattr(card, "__iter__") or isinstance(card, six.string_types):
             raise ValueError("card must be a non-string iterable.")
@@ -104,9 +102,7 @@ class MarkovChain(object):
         >>> model.set_start_state([State('a', 0), State('b', 1)])
         """
         if start_state is not None:
-            if not hasattr(start_state, "__iter__") or isinstance(
-                start_state, six.string_types
-            ):
+            if not hasattr(start_state, "__iter__") or isinstance(start_state, six.string_types):
                 raise ValueError("start_state must be a non-string iterable.")
             # Must be an array-like iterable. Reorder according to self.variables.
             state_dict = {var: st for var, st in start_state}
@@ -130,9 +126,7 @@ class MarkovChain(object):
             )
         for var, val in state:
             if val >= self.cardinalities[var]:
-                raise ValueError(
-                    "Assignment {val} to {var} invalid.".format(val=val, var=var)
-                )
+                raise ValueError("Assignment {val} to {var} invalid.".format(val=val, var=var))
         return True
 
     def add_variable(self, variable, card=0):
@@ -213,9 +207,7 @@ class MarkovChain(object):
                 raise ValueError("Transition model must be a dict or numpy array")
             elif len(transition_model.shape) != 2:
                 raise ValueError(
-                    "Transition model must be 2d array.given {t}".format(
-                        t=transition_model.shape
-                    )
+                    "Transition model must be 2d array.given {t}".format(t=transition_model.shape)
                 )
             elif transition_model.shape[0] != transition_model.shape[1]:
                 raise ValueError(
@@ -227,12 +219,7 @@ class MarkovChain(object):
                 # convert the matrix to dict
                 size = transition_model.shape[0]
                 transition_model = dict(
-                    (
-                        i,
-                        dict(
-                            (j, float(transition_model[i][j])) for j in range(0, size)
-                        ),
-                    )
+                    (i, dict((j, float(transition_model[i][j])) for j in range(0, size)))
                     for i in range(0, size)
                 )
 
@@ -241,9 +228,7 @@ class MarkovChain(object):
         if not exp_states == tm_states:
             raise ValueError(
                 "Transitions must be defined for all states of variable {v}. "
-                "Expected states: {es}, Got: {ts}.".format(
-                    v=variable, es=exp_states, ts=tm_states
-                )
+                "Expected states: {es}, Got: {ts}.".format(v=variable, es=exp_states, ts=tm_states)
             )
 
         for _, transition in transition_model.items():
@@ -253,9 +238,7 @@ class MarkovChain(object):
 
             for _, prob in transition.items():
                 if prob < 0 or prob > 1:
-                    raise ValueError(
-                        "Transitions must represent valid probability weights."
-                    )
+                    raise ValueError("Transitions must represent valid probability weights.")
                 prob_sum += prob
 
             if not np.allclose(prob_sum, 1):
@@ -451,12 +434,8 @@ class MarkovChain(object):
             probabilites = []
             window_size = 10000 if sample is None else len(sample)
             for i in range(0, transition_mat.shape[0]):
-                probabilites.extend(
-                    self.prob_from_sample([State(k, i)], window_size=window_size)
-                )
-            if any(
-                np.abs(i) > tolerance for i in np.subtract(probabilites, stationary)
-            ):
+                probabilites.extend(self.prob_from_sample([State(k, i)], window_size=window_size))
+            if any(np.abs(i) > tolerance for i in np.subtract(probabilites, stationary)):
                 return_val = return_val and False
             else:
                 return_val = return_val and True
@@ -478,10 +457,7 @@ class MarkovChain(object):
         >>> model.random_state()
         [State('diff', 2), State('intel', 1)]
         """
-        return [
-            State(var, np.random.randint(self.cardinalities[var]))
-            for var in self.variables
-        ]
+        return [State(var, np.random.randint(self.cardinalities[var])) for var in self.variables]
 
     def copy(self):
         """

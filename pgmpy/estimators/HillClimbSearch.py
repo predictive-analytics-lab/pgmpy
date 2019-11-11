@@ -65,9 +65,7 @@ class HillClimbSearch(StructureEstimator):
                     old_parents = model.get_parents(Y)
                     new_parents = old_parents + [X]
                     if max_indegree is None or len(new_parents) <= max_indegree:
-                        score_delta = local_score(Y, new_parents) - local_score(
-                            Y, old_parents
-                        )
+                        score_delta = local_score(Y, new_parents) - local_score(Y, old_parents)
                         yield (operation, score_delta)
 
         for (X, Y) in model.edges():  # (2) remove single edge
@@ -99,9 +97,7 @@ class HillClimbSearch(StructureEstimator):
                         )
                         yield (operation, score_delta)
 
-    def estimate(
-        self, start=None, tabu_length=0, max_indegree=None, epsilon=1e-4, max_iter=1e6
-    ):
+    def estimate(self, start=None, tabu_length=0, max_indegree=None, epsilon=1e-4, max_iter=1e6):
         """
         Performs local hill climb search to estimates the `DAG` structure
         that has optimal score, according to the scoring method supplied in the constructor.

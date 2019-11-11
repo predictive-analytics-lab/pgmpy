@@ -53,9 +53,7 @@ class ContinuousFactor(BaseFactor):
         if isinstance(pdf, str):
             if pdf == "gaussian":
                 self.distribution = GaussianDistribution(
-                    variables=variables,
-                    mean=kwargs["mean"],
-                    covariance=kwargs["covariance"],
+                    variables=variables, mean=kwargs["mean"], covariance=kwargs["covariance"]
                 )
             else:
                 raise NotImplementedError(
@@ -67,9 +65,7 @@ class ContinuousFactor(BaseFactor):
             self.distribution = pdf
 
         elif callable(pdf):
-            self.distribution = CustomDistribution(
-                variables=variables, distribution=pdf
-            )
+            self.distribution = CustomDistribution(variables=variables, distribution=pdf)
 
         else:
             raise ValueError(
@@ -337,9 +333,7 @@ class ContinuousFactor(BaseFactor):
             raise TypeError(
                 "ContinuousFactor objects can only be multiplied ",
                 "or divided with another ContinuousFactor object. ",
-                "Got {other_type}, expected: ContinuousFactor.".format(
-                    other_type=type(other)
-                ),
+                "Got {other_type}, expected: ContinuousFactor.".format(other_type=type(other)),
             )
 
         phi = self if inplace else self.copy()

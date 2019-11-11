@@ -37,15 +37,7 @@ class TestBackdoorPaths(unittest.TestCase):
 
     def test_game2(self):
         game2 = BayesianModel(
-            [
-                ("X", "E"),
-                ("E", "Y"),
-                ("A", "B"),
-                ("A", "X"),
-                ("B", "C"),
-                ("D", "B"),
-                ("D", "E"),
-            ]
+            [("X", "E"), ("E", "Y"), ("A", "B"), ("A", "X"), ("B", "C"), ("D", "B"), ("D", "E")]
         )
         inference = CausalInference(game2)
         self.assertTrue(inference.is_valid_backdoor_adjustment_set("X", "Y"))
@@ -53,9 +45,7 @@ class TestBackdoorPaths(unittest.TestCase):
         self.assertEqual(deconfounders, frozenset())
 
     def test_game3(self):
-        game3 = BayesianModel(
-            [("X", "Y"), ("X", "A"), ("B", "A"), ("B", "Y"), ("B", "X")]
-        )
+        game3 = BayesianModel([("X", "Y"), ("X", "A"), ("B", "A"), ("B", "Y"), ("B", "X")])
         inference = CausalInference(game3)
         self.assertFalse(inference.is_valid_backdoor_adjustment_set("X", "Y"))
         deconfounders = inference.get_all_backdoor_adjustment_sets("X", "Y")
@@ -75,9 +65,7 @@ class TestBackdoorPaths(unittest.TestCase):
         inference = CausalInference(game5)
         self.assertFalse(inference.is_valid_backdoor_adjustment_set("X", "Y"))
         deconfounders = inference.get_all_backdoor_adjustment_sets("X", "Y")
-        self.assertEqual(
-            deconfounders, frozenset({frozenset({"C"}), frozenset({"A", "B"})})
-        )
+        self.assertEqual(deconfounders, frozenset({frozenset({"C"}), frozenset({"A", "B"})}))
 
     def test_game6(self):
         game6 = BayesianModel(
@@ -113,9 +101,7 @@ class TestBackdoorPaths(unittest.TestCase):
 class TestEstimator(unittest.TestCase):
     def test_create_estimator(self):
         game1 = BayesianModel([("X", "A"), ("A", "Y"), ("A", "B")])
-        data = pd.DataFrame(
-            np.random.randint(2, size=(1000, 4)), columns=["X", "A", "B", "Y"]
-        )
+        data = pd.DataFrame(np.random.randint(2, size=(1000, 4)), columns=["X", "A", "B", "Y"])
         inference = CausalInference(model=game1)
         ate = inference.estimate_ate("X", "Y", data=data, estimator_type="linear")
         self.assertAlmostEqual(ate, 0, places=0)

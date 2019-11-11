@@ -19,18 +19,13 @@ class TestJunctionTreeCreation(unittest.TestCase):
 
     def test_add_multiple_nodes(self):
         self.graph.add_nodes_from([("a", "b"), ("b", "c")])
-        self.assertListEqual(
-            hf.recursive_sorted(self.graph.nodes()), [["a", "b"], ["b", "c"]]
-        )
+        self.assertListEqual(hf.recursive_sorted(self.graph.nodes()), [["a", "b"], ["b", "c"]])
 
     def test_add_single_edge(self):
         self.graph.add_edge(("a", "b"), ("b", "c"))
+        self.assertListEqual(hf.recursive_sorted(self.graph.nodes()), [["a", "b"], ["b", "c"]])
         self.assertListEqual(
-            hf.recursive_sorted(self.graph.nodes()), [["a", "b"], ["b", "c"]]
-        )
-        self.assertListEqual(
-            sorted([node for edge in self.graph.edges() for node in edge]),
-            [("a", "b"), ("b", "c")],
+            sorted([node for edge in self.graph.edges() for node in edge]), [("a", "b"), ("b", "c")]
         )
 
     def test_add_single_edge_raises_error(self):
@@ -68,11 +63,7 @@ class TestJunctionTreeMethods(unittest.TestCase):
 
         self.graph4 = JunctionTree()
         self.graph4.add_edges_from(
-            [
-                (("a", "b", "e"), ("b", "c")),
-                (("a", "b", "e"), ("e", "f")),
-                (("d", "e"), ("e", "f")),
-            ]
+            [(("a", "b", "e"), ("b", "c")), (("a", "b", "e"), ("e", "f")), (("d", "e"), ("e", "f"))]
         )
         self.graph4.add_factors(self.factor5, self.factor2, self.factor3, self.factor4)
 
@@ -101,9 +92,7 @@ class TestJunctionTreeCopy(unittest.TestCase):
 
     def test_copy_with_nodes(self):
         self.graph.add_nodes_from([("a", "b", "c"), ("a", "b"), ("a", "c")])
-        self.graph.add_edges_from(
-            [(("a", "b", "c"), ("a", "b")), (("a", "b", "c"), ("a", "c"))]
-        )
+        self.graph.add_edges_from([(("a", "b", "c"), ("a", "b")), (("a", "b", "c"), ("a", "c"))])
         graph_copy = self.graph.copy()
 
         self.graph.remove_edge(("a", "b", "c"), ("a", "c"))
@@ -128,20 +117,16 @@ class TestJunctionTreeCopy(unittest.TestCase):
         self.assertIsInstance(graph_copy, JunctionTree)
         self.assertIsNot(self.graph, graph_copy)
         self.assertEqual(
-            hf.recursive_sorted(self.graph.nodes()),
-            hf.recursive_sorted(graph_copy.nodes()),
+            hf.recursive_sorted(self.graph.nodes()), hf.recursive_sorted(graph_copy.nodes())
         )
         self.assertEqual(
-            hf.recursive_sorted(self.graph.edges()),
-            hf.recursive_sorted(graph_copy.edges()),
+            hf.recursive_sorted(self.graph.edges()), hf.recursive_sorted(graph_copy.edges())
         )
         self.assertTrue(graph_copy.check_model())
         self.assertEqual(self.graph.get_factors(), graph_copy.get_factors())
 
         self.graph.remove_factors(phi1, phi2)
-        self.assertTrue(
-            phi1 not in self.graph.factors and phi2 not in self.graph.factors
-        )
+        self.assertTrue(phi1 not in self.graph.factors and phi2 not in self.graph.factors)
         self.assertTrue(phi1 in graph_copy.factors and phi2 in graph_copy.factors)
 
         self.graph.add_factors(phi1, phi2)
@@ -157,14 +142,10 @@ class TestJunctionTreeCopy(unittest.TestCase):
         graph_copy = self.graph.copy()
 
         self.graph.factors[0].reduce([("a", 0)])
-        self.assertNotEqual(
-            self.graph.factors[0].scope(), graph_copy.factors[0].scope()
-        )
+        self.assertNotEqual(self.graph.factors[0].scope(), graph_copy.factors[0].scope())
         self.assertNotEqual(self.graph, graph_copy)
         self.graph.factors[1].marginalize(["b"])
-        self.assertNotEqual(
-            self.graph.factors[1].scope(), graph_copy.factors[1].scope()
-        )
+        self.assertNotEqual(self.graph.factors[1].scope(), graph_copy.factors[1].scope())
         self.assertNotEqual(self.graph, graph_copy)
 
     def tearDown(self):

@@ -93,10 +93,7 @@ class XBNReader(object):
         >>> reader.get_static_properties()
         {'FORMAT': 'MSR DTAS XML', 'VERSION': '0.2', 'CREATOR': 'Microsoft Research DTAS'}
         """
-        return {
-            tags.tag: tags.get("VALUE")
-            for tags in self.bnmodel.find("STATICPROPERTIES")
-        }
+        return {tags.tag: tags.get("VALUE") for tags in self.bnmodel.find("STATICPROPERTIES")}
 
     def get_variables(self):
         """
@@ -138,10 +135,7 @@ class XBNReader(object):
         >>> reader.get_edges()
         [('a', 'b'), ('a', 'c'), ('b', 'd'), ('c', 'd'), ('c', 'e')]
         """
-        return [
-            (arc.get("PARENT"), arc.get("CHILD"))
-            for arc in self.bnmodel.find("STRUCTURE")
-        ]
+        return [(arc.get("PARENT"), arc.get("CHILD")) for arc in self.bnmodel.find("STRUCTURE")]
 
     def get_distributions(self):
         """
@@ -220,9 +214,7 @@ class XBNReader(object):
             cpd = values["DPIS"]
             evidence_card = values["CARDINALITY"] if "CARDINALITY" in values else []
             states = self.variables[var]["STATES"]
-            cpd = TabularCPD(
-                var, len(states), cpd, evidence=evidence, evidence_card=evidence_card
-            )
+            cpd = TabularCPD(var, len(states), cpd, evidence=evidence, evidence_card=evidence_card)
             tabular_cpds.append(cpd)
 
         model.add_cpds(*tabular_cpds)
@@ -393,9 +385,7 @@ class XBNWriter(object):
                 },
             )
             etree.SubElement(
-                variable,
-                "DESCRIPTION",
-                attrib={"DESCRIPTION": data[var]["DESCRIPTION"]},
+                variable, "DESCRIPTION", attrib={"DESCRIPTION": data[var]["DESCRIPTION"]}
             )
             for state in data[var]["STATES"]:
                 etree.SubElement(variable, "STATENAME").text = state
@@ -417,9 +407,7 @@ class XBNWriter(object):
         """
         structure = etree.SubElement(self.bnmodel, "STRUCTURE")
         for edge in edge_list:
-            etree.SubElement(
-                structure, "ARC", attrib={"PARENT": edge[0], "CHILD": edge[1]}
-            )
+            etree.SubElement(structure, "ARC", attrib={"PARENT": edge[0], "CHILD": edge[1]})
 
     def set_distributions(self):
         """
@@ -451,13 +439,7 @@ class XBNWriter(object):
                 # TODO: Get Index value.
                 for val in range(0, len(cpd_values), 2):
                     etree.SubElement(dpis, "DPI", attrib={"INDEXES": " "}).text = (
-                        " "
-                        + str(cpd_values[val])
-                        + " "
-                        + str(cpd_values[val + 1])
-                        + " "
+                        " " + str(cpd_values[val]) + " " + str(cpd_values[val + 1]) + " "
                     )
             else:
-                etree.SubElement(dpis, "DPI").text = " " + " ".join(
-                    map(str, cpd_values)
-                )
+                etree.SubElement(dpis, "DPI").text = " " + " ".join(map(str, cpd_values))

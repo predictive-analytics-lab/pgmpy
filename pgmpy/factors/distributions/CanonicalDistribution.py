@@ -72,8 +72,7 @@ class CanonicalDistribution(BaseDistribution):
 
         if len(h) != no_of_var:
             raise ValueError(
-                "Length of h parameter vector must be equal to "
-                "the number of variables."
+                "Length of h parameter vector must be equal to " "the number of variables."
             )
 
         self.variables = variables
@@ -94,9 +93,7 @@ class CanonicalDistribution(BaseDistribution):
     def pdf(self):
         def fun(*args):
             x = np.array(args)
-            return np.exp(
-                self.g + np.dot(x, self.h)[0] - 0.5 * np.dot(x.T, np.dot(self.K, x))
-            )
+            return np.exp(self.g + np.dot(x, self.h)[0] - 0.5 * np.dot(x.T, np.dot(self.K, x)))
 
         return fun
 
@@ -165,9 +162,7 @@ class CanonicalDistribution(BaseDistribution):
         -3
 
         """
-        copy_factor = CanonicalDistribution(
-            self.variables, self.K.copy(), self.h.copy(), self.g
-        )
+        copy_factor = CanonicalDistribution(self.variables, self.K.copy(), self.h.copy(), self.g)
 
         return copy_factor
 
@@ -282,9 +277,7 @@ class CanonicalDistribution(BaseDistribution):
 
         # index_to_keep -> j vector
         index_to_keep = [
-            self.variables.index(var)
-            for var in self.variables
-            if var not in var_to_reduce
+            self.variables.index(var) for var in self.variables if var not in var_to_reduce
         ]
         # index_to_reduce -> i vector
         index_to_reduce = [self.variables.index(var) for var in var_to_reduce]
@@ -301,9 +294,7 @@ class CanonicalDistribution(BaseDistribution):
         phi.variables = [self.variables[index] for index in index_to_keep]
         phi.K = K_i_i
         phi.h = h_i - np.dot(K_i_j, y)
-        phi.g = (
-            self.g + (np.dot(h_j.T, y) - (0.5 * np.dot(np.dot(y.T, K_j_j), y)))[0][0]
-        )
+        phi.g = self.g + (np.dot(h_j.T, y) - (0.5 * np.dot(np.dot(y.T, K_j_j), y)))[0][0]
 
         if not inplace:
             return phi
@@ -491,9 +482,7 @@ class CanonicalDistribution(BaseDistribution):
 
         phi = self if inplace else self.copy()
 
-        all_vars = self.variables + [
-            var for var in other.variables if var not in self.variables
-        ]
+        all_vars = self.variables + [var for var in other.variables if var not in self.variables]
         no_of_var = len(all_vars)
 
         self_var_index = [all_vars.index(var) for var in self.variables]

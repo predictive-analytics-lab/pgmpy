@@ -137,9 +137,7 @@ class MarkovModel(UndirectedGraph):
         >>> student.add_factors(factor)
         """
         for factor in factors:
-            if set(factor.variables) - set(factor.variables).intersection(
-                set(self.nodes())
-            ):
+            if set(factor.variables) - set(factor.variables).intersection(set(self.nodes())):
                 raise ValueError("Factors defined on variable not in the model", factor)
 
             self.factors.append(factor)
@@ -381,9 +379,7 @@ class MarkovModel(UndirectedGraph):
             Size of a clique is defined as product of cardinalities of all the
             nodes present in the clique.
             """
-            return list(
-                map(lambda x: np.prod([cardinalities[node] for node in x]), clique)
-            )
+            return list(map(lambda x: np.prod([cardinalities[node] for node in x]), clique))
 
         def _get_cliques_dict(node):
             """
@@ -398,13 +394,9 @@ class MarkovModel(UndirectedGraph):
             graph_working_copy = nx.Graph(graph_copy.edges())
             neighbors = list(graph_working_copy.neighbors(node))
             graph_working_copy.add_edges_from(itertools.combinations(neighbors, 2))
-            clique_dict = nx.cliques_containing_node(
-                graph_working_copy, nodes=([node] + neighbors)
-            )
+            clique_dict = nx.cliques_containing_node(graph_working_copy, nodes=([node] + neighbors))
             graph_working_copy.remove_node(node)
-            clique_dict_removed = nx.cliques_containing_node(
-                graph_working_copy, nodes=neighbors
-            )
+            clique_dict_removed = nx.cliques_containing_node(graph_working_copy, nodes=neighbors)
             return clique_dict, clique_dict_removed
 
         if not order:
@@ -424,8 +416,7 @@ class MarkovModel(UndirectedGraph):
                 for node in set(graph_copy.nodes()) - set(order):
                     clique_dict, clique_dict_removed = _get_cliques_dict(node)
                     S[node] = _find_size_of_clique(
-                        _find_common_cliques(list(clique_dict_removed.values())),
-                        cardinalities,
+                        _find_common_cliques(list(clique_dict_removed.values())), cardinalities
                     )[0]
                     common_clique_size = _find_size_of_clique(
                         _find_common_cliques(list(clique_dict.values())), cardinalities
@@ -526,9 +517,7 @@ class MarkovModel(UndirectedGraph):
                 complete_graph.add_edge(*edge, weight=-weight)
 
             # Create clique trees by minimum (or maximum) spanning tree method
-            clique_trees = JunctionTree(
-                nx.minimum_spanning_tree(complete_graph).edges()
-            )
+            clique_trees = JunctionTree(nx.minimum_spanning_tree(complete_graph).edges())
 
         # Check whether the factors are defined for all the random variables or not
         all_vars = itertools.chain(*[factor.scope() for factor in self.factors])
@@ -552,9 +541,7 @@ class MarkovModel(UndirectedGraph):
 
             # To compute clique potential, initially set it as unity factor
             var_card = [self.get_cardinality()[x] for x in node]
-            clique_potential = DiscreteFactor(
-                node, var_card, np.ones(np.product(var_card))
-            )
+            clique_potential = DiscreteFactor(node, var_card, np.ones(np.product(var_card)))
             # multiply it with the factors associated with the variables present
             # in the clique (or node)
             # Checking if there's clique_factors, to handle the case when clique_factors
@@ -620,9 +607,7 @@ class MarkovModel(UndirectedGraph):
             markov_blanket = set(self.markov_blanket(node))
             rest = all_vars - set([node]) - markov_blanket
             try:
-                local_independencies.add_assertions(
-                    [node, list(rest), list(markov_blanket)]
-                )
+                local_independencies.add_assertions([node, list(rest), list(markov_blanket)])
             except ValueError:
                 pass
 
@@ -717,9 +702,7 @@ class MarkovModel(UndirectedGraph):
         self.check_model()
 
         factor = self.factors[0]
-        factor = factor_product(
-            factor, *[self.factors[i] for i in range(1, len(self.factors))]
-        )
+        factor = factor_product(factor, *[self.factors[i] for i in range(1, len(self.factors))])
         if set(factor.scope()) != set(self.nodes()):
             raise ValueError("DiscreteFactor for all the random variables not defined.")
 

@@ -98,13 +98,7 @@ class TabularCPD(DiscreteFactor):
     """
 
     def __init__(
-        self,
-        variable,
-        variable_card,
-        values,
-        evidence=None,
-        evidence_card=None,
-        state_names={},
+        self, variable, variable_card, values, evidence=None, evidence_card=None, state_names={}
     ):
 
         self.variable = variable
@@ -127,9 +121,7 @@ class TabularCPD(DiscreteFactor):
                 raise TypeError("Evidence must be list, tuple or array of strings.")
             variables.extend(evidence)
             if not len(evidence_card) == len(evidence):
-                raise ValueError(
-                    "Length of evidence_card doesn't match length of evidence"
-                )
+                raise ValueError("Length of evidence_card doesn't match length of evidence")
 
         values = np.array(values)
         if values.ndim != 2:
@@ -175,9 +167,7 @@ class TabularCPD(DiscreteFactor):
                [ 0.8,  0.8]])
         """
         if self.variable in self.variables:
-            return self.values.reshape(
-                self.cardinality[0], np.prod(self.cardinality[1:])
-            )
+            return self.values.reshape(self.cardinality[0], np.prod(self.cardinality[1:]))
         else:
             return self.values.reshape(1, np.prod(self.cardinality))
 
@@ -223,15 +213,10 @@ class TabularCPD(DiscreteFactor):
             ]
         else:
             variable_array = [
-                [
-                    "{s}_{d}".format(s=self.variable, d=i)
-                    for i in range(self.variable_card)
-                ]
+                ["{s}_{d}".format(s=self.variable, d=i) for i in range(self.variable_card)]
             ]
         # Stack with data
-        labeled_rows = np.hstack(
-            (np.array(variable_array).T, self.get_values())
-        ).tolist()
+        labeled_rows = np.hstack((np.array(variable_array).T, self.get_values())).tolist()
         # No support for multi-headers in tabulate
         cdf_str = tabulate(headers_list + labeled_rows, tablefmt=tablefmt)
         return cdf_str
@@ -323,9 +308,7 @@ class TabularCPD(DiscreteFactor):
                 [ 0.35,  0.6 ]])
         """
         if self.variable in variables:
-            raise ValueError(
-                "Marginalization not allowed on the variable on which CPD is defined"
-            )
+            raise ValueError("Marginalization not allowed on the variable on which CPD is defined")
 
         tabular_cpd = self if inplace else self.copy()
 
@@ -360,9 +343,7 @@ class TabularCPD(DiscreteFactor):
                [ 0.3,  0.4]])
         """
         if self.variable in (value[0] for value in values):
-            raise ValueError(
-                "Reduce not allowed on the variable on which CPD is defined"
-            )
+            raise ValueError("Reduce not allowed on the variable on which CPD is defined")
 
         tabular_cpd = self if inplace else self.copy()
 
@@ -500,17 +481,14 @@ class TabularCPD(DiscreteFactor):
 
                 if inplace:
                     variables = [self.variables[0]] + new_order
-                    cardinality = [self.variable_card] + [
-                        card_map[var] for var in new_order
-                    ]
+                    cardinality = [self.variable_card] + [card_map[var] for var in new_order]
                     super(TabularCPD, self).__init__(
                         variables, cardinality, new_values.flatten("C")
                     )
                     return self.get_values()
                 else:
                     return new_values.reshape(
-                        self.cardinality[0],
-                        np.prod([card_map[var] for var in new_order]),
+                        self.cardinality[0], np.prod([card_map[var] for var in new_order])
                     )
             else:
                 warn("Same ordering provided as current")

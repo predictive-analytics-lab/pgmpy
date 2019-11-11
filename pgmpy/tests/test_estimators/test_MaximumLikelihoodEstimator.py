@@ -45,11 +45,7 @@ class TestMLE(unittest.TestCase):
         m = BayesianModel([("A", "B")])
         d = pd.DataFrame(data={"A": [2, 3, 8, 8, 8], "B": ["X", "O", "X", "O", "X"]})
         cpd_b = TabularCPD(
-            "B",
-            2,
-            [[0, 1, 1.0 / 3], [1, 0, 2.0 / 3]],
-            evidence=["A"],
-            evidence_card=[3],
+            "B", 2, [[0, 1, 1.0 / 3], [1, 0, 2.0 / 3]], evidence=["A"], evidence_card=[3]
         )
         mle2 = MaximumLikelihoodEstimator(m, d)
         self.assertEqual(mle2.estimate_cpd("B"), cpd_b)
@@ -81,9 +77,7 @@ class TestMLE(unittest.TestCase):
 
     def test_nonoccurring_values(self):
         mle = MaximumLikelihoodEstimator(
-            self.m1,
-            self.d1,
-            state_names={"A": [0, 1, 23], "B": [0, 1], "C": [0, 42, 1], 1: [2]},
+            self.m1, self.d1, state_names={"A": [0, 1, 23], "B": [0, 1], "C": [0, 42, 1], 1: [2]}
         )
         cpds = [
             TabularCPD("A", 3, [[2.0 / 3], [1.0 / 3], [0]]),

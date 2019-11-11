@@ -141,9 +141,7 @@ class HamiltonianMC(object):
             self.model, position, momentum, stepsize_app, self.grad_log_pdf
         ).get_proposed_values()
 
-        acceptance_prob = self._acceptance_prob(
-            position, position_bar, momentum, momentum_bar
-        )
+        acceptance_prob = self._acceptance_prob(position, position_bar, momentum, momentum_bar)
 
         # a = 2I[acceptance_prob] -1
         a = 2 * (acceptance_prob > 0.5) - 1
@@ -157,9 +155,7 @@ class HamiltonianMC(object):
                 self.model, position, momentum, stepsize_app, self.grad_log_pdf
             ).get_proposed_values()
 
-            acceptance_prob = self._acceptance_prob(
-                position, position_bar, momentum, momentum_bar
-            )
+            acceptance_prob = self._acceptance_prob(position, position_bar, momentum, momentum_bar)
 
             condition = self._get_condition(acceptance_prob, a)
 
@@ -183,17 +179,10 @@ class HamiltonianMC(object):
 
         for _ in range(lsteps):
             position_bar, momentum_bar, grad_bar = self.simulate_dynamics(
-                self.model,
-                position_bar,
-                momentum_bar,
-                stepsize,
-                self.grad_log_pdf,
-                grad_bar,
+                self.model, position_bar, momentum_bar, stepsize, self.grad_log_pdf, grad_bar
             ).get_proposed_values()
 
-        acceptance_prob = self._acceptance_prob(
-            position, position_bar, momentum, momentum_bar
-        )
+        acceptance_prob = self._acceptance_prob(position, position_bar, momentum, momentum_bar)
 
         # Metropolis acceptance probability
         alpha = min(1, acceptance_prob)
@@ -206,12 +195,7 @@ class HamiltonianMC(object):
         return position, alpha
 
     def sample(
-        self,
-        initial_pos,
-        num_samples,
-        trajectory_length,
-        stepsize=None,
-        return_type="dataframe",
+        self, initial_pos, num_samples, trajectory_length, stepsize=None, return_type="dataframe"
     ):
         """
         Method to return samples using Hamiltonian Monte Carlo
@@ -274,9 +258,7 @@ class HamiltonianMC(object):
 
         self.accepted_proposals = 1.0
         initial_pos = _check_1d_array_object(initial_pos, "initial_pos")
-        _check_length_equal(
-            initial_pos, self.model.variables, "initial_pos", "model.variables"
-        )
+        _check_length_equal(initial_pos, self.model.variables, "initial_pos", "model.variables")
 
         if stepsize is None:
             stepsize = self._find_reasonable_stepsize(initial_pos)
@@ -293,18 +275,14 @@ class HamiltonianMC(object):
         for i in tqdm(range(1, num_samples)):
 
             # Genrating sample
-            position_m, _ = self._sample(
-                position_m, trajectory_length, stepsize, lsteps
-            )
+            position_m, _ = self._sample(position_m, trajectory_length, stepsize, lsteps)
             samples[i] = tuple(position_m)
 
         self.acceptance_rate = self.accepted_proposals / num_samples
 
         return _return_samples(return_type, samples)
 
-    def generate_sample(
-        self, initial_pos, num_samples, trajectory_length, stepsize=None
-    ):
+    def generate_sample(self, initial_pos, num_samples, trajectory_length, stepsize=None):
         """
         Method returns a generator type object whose each iteration yields a sample
         using Hamiltonian Monte Carlo
@@ -360,9 +338,7 @@ class HamiltonianMC(object):
 
         self.accepted_proposals = 0
         initial_pos = _check_1d_array_object(initial_pos, "initial_pos")
-        _check_length_equal(
-            initial_pos, self.model.variables, "initial_pos", "model.variables"
-        )
+        _check_length_equal(initial_pos, self.model.variables, "initial_pos", "model.variables")
 
         if stepsize is None:
             stepsize = self._find_reasonable_stepsize(initial_pos)
@@ -372,9 +348,7 @@ class HamiltonianMC(object):
 
         for i in range(0, num_samples):
 
-            position_m, _ = self._sample(
-                position_m, trajectory_length, stepsize, lsteps
-            )
+            position_m, _ = self._sample(position_m, trajectory_length, stepsize, lsteps)
 
             yield position_m
 
@@ -434,9 +408,7 @@ class HamiltonianMCDA(HamiltonianMC):
     Algorithm 5 : Hamiltonian Monte Carlo with dual averaging
     """
 
-    def __init__(
-        self, model, grad_log_pdf=None, simulate_dynamics=LeapFrog, delta=0.65
-    ):
+    def __init__(self, model, grad_log_pdf=None, simulate_dynamics=LeapFrog, delta=0.65):
 
         if not isinstance(delta, float) or delta > 1.0 or delta < 0.0:
             raise ValueError("delta should be a floating value in between 0 and 1")
@@ -447,16 +419,12 @@ class HamiltonianMCDA(HamiltonianMC):
             model=model, grad_log_pdf=grad_log_pdf, simulate_dynamics=simulate_dynamics
         )
 
-    def _adapt_params(
-        self, stepsize, stepsize_bar, h_bar, mu, index_i, alpha, n_alpha=1
-    ):
+    def _adapt_params(self, stepsize, stepsize_bar, h_bar, mu, index_i, alpha, n_alpha=1):
         """
         Run tha adaptation for stepsize for better proposals of position
         """
         gamma = 0.05  # free parameter that controls the amount of shrinkage towards mu
-        t0 = (
-            10.0
-        )  # free parameter that stabilizes the initial iterations of the algorithm
+        t0 = 10.0  # free parameter that stabilizes the initial iterations of the algorithm
         kappa = 0.75
         # See equation (6) section 3.2.1 for details
 
@@ -465,9 +433,7 @@ class HamiltonianMCDA(HamiltonianMC):
 
         stepsize = np.exp(mu - sqrt(index_i) / gamma * h_bar)
         i_kappa = index_i ** (-kappa)
-        stepsize_bar = np.exp(
-            i_kappa * np.log(stepsize) + (1 - i_kappa) * np.log(stepsize_bar)
-        )
+        stepsize_bar = np.exp(i_kappa * np.log(stepsize) + (1 - i_kappa) * np.log(stepsize_bar))
 
         return stepsize, stepsize_bar, h_bar
 
@@ -533,17 +499,13 @@ class HamiltonianMCDA(HamiltonianMC):
         self.accepted_proposals = 1.0
 
         initial_pos = _check_1d_array_object(initial_pos, "initial_pos")
-        _check_length_equal(
-            initial_pos, self.model.variables, "initial_pos", "model.variables"
-        )
+        _check_length_equal(initial_pos, self.model.variables, "initial_pos", "model.variables")
 
         if stepsize is None:
             stepsize = self._find_reasonable_stepsize(initial_pos)
 
         if num_adapt <= 1:  # Return samples genrated using Simple HMC algorithm
-            return HamiltonianMC.sample(
-                self, initial_pos, num_samples, trajectory_length, stepsize
-            )
+            return HamiltonianMC.sample(self, initial_pos, num_samples, trajectory_length, stepsize)
 
         # stepsize is epsilon
         # freely chosen point, after each iteration xt(/position) is shrunk towards it
@@ -627,9 +589,7 @@ class HamiltonianMCDA(HamiltonianMC):
         """
         self.accepted_proposals = 0
         initial_pos = _check_1d_array_object(initial_pos, "initial_pos")
-        _check_length_equal(
-            initial_pos, self.model.variables, "initial_pos", "model.variables"
-        )
+        _check_length_equal(initial_pos, self.model.variables, "initial_pos", "model.variables")
 
         if stepsize is None:
             stepsize = self._find_reasonable_stepsize(initial_pos)

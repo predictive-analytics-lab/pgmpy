@@ -65,9 +65,7 @@ class TestBaseModelCreation(unittest.TestCase):
         self.G.add_edge("a", "c")
         self.G.add_edge("a", "d")
         six.assertCountEqual(self, list(self.G.nodes()), ["a", "b", "c", "d"])
-        six.assertCountEqual(
-            self, list(self.G.edges()), [("a", "b"), ("a", "c"), ("a", "d")]
-        )
+        six.assertCountEqual(self, list(self.G.edges()), [("a", "b"), ("a", "c"), ("a", "d")])
         self.assertEqual(self.G.parent_node, "a")
         self.assertSetEqual(self.G.children_nodes, {"b", "c", "d"})
 
@@ -130,53 +128,34 @@ class TestNaiveBayesMethods(unittest.TestCase):
     def test_local_independencies(self):
         self.assertEqual(self.G1.local_independencies("a"), Independencies())
         self.assertEqual(
-            self.G1.local_independencies("b"),
-            Independencies(["b", ["e", "c", "d"], "a"]),
+            self.G1.local_independencies("b"), Independencies(["b", ["e", "c", "d"], "a"])
         )
         self.assertEqual(
-            self.G1.local_independencies("c"),
-            Independencies(["c", ["e", "b", "d"], "a"]),
+            self.G1.local_independencies("c"), Independencies(["c", ["e", "b", "d"], "a"])
         )
         self.assertEqual(
-            self.G1.local_independencies("d"),
-            Independencies(["d", ["b", "c", "e"], "a"]),
+            self.G1.local_independencies("d"), Independencies(["d", ["b", "c", "e"], "a"])
         )
 
     def test_active_trail_nodes(self):
-        self.assertListEqual(
-            sorted(self.G2.active_trail_nodes("d")), ["d", "g", "l", "s"]
-        )
-        self.assertListEqual(
-            sorted(self.G2.active_trail_nodes("g")), ["d", "g", "l", "s"]
-        )
-        self.assertListEqual(
-            sorted(self.G2.active_trail_nodes("l")), ["d", "g", "l", "s"]
-        )
-        self.assertListEqual(
-            sorted(self.G2.active_trail_nodes("s")), ["d", "g", "l", "s"]
-        )
+        self.assertListEqual(sorted(self.G2.active_trail_nodes("d")), ["d", "g", "l", "s"])
+        self.assertListEqual(sorted(self.G2.active_trail_nodes("g")), ["d", "g", "l", "s"])
+        self.assertListEqual(sorted(self.G2.active_trail_nodes("l")), ["d", "g", "l", "s"])
+        self.assertListEqual(sorted(self.G2.active_trail_nodes("s")), ["d", "g", "l", "s"])
 
     def test_active_trail_nodes_args(self):
-        self.assertListEqual(
-            sorted(self.G2.active_trail_nodes("d", observed="g")), ["d", "l", "s"]
-        )
-        self.assertListEqual(
-            sorted(self.G2.active_trail_nodes("l", observed="g")), ["d", "l", "s"]
-        )
+        self.assertListEqual(sorted(self.G2.active_trail_nodes("d", observed="g")), ["d", "l", "s"])
+        self.assertListEqual(sorted(self.G2.active_trail_nodes("l", observed="g")), ["d", "l", "s"])
         self.assertListEqual(
             sorted(self.G2.active_trail_nodes("s", observed=["g", "l"])), ["d", "s"]
         )
-        self.assertListEqual(
-            sorted(self.G2.active_trail_nodes("s", observed=["d", "l"])), ["s"]
-        )
+        self.assertListEqual(sorted(self.G2.active_trail_nodes("s", observed=["d", "l"])), ["s"])
 
     def test_get_ancestors_of(self):
         self.assertListEqual(sorted(self.G1._get_ancestors_of("b")), ["a", "b"])
         self.assertListEqual(sorted(self.G1._get_ancestors_of("e")), ["a", "e"])
         self.assertListEqual(sorted(self.G1._get_ancestors_of("a")), ["a"])
-        self.assertListEqual(
-            sorted(self.G1._get_ancestors_of(["b", "e"])), ["a", "b", "e"]
-        )
+        self.assertListEqual(sorted(self.G1._get_ancestors_of(["b", "e"])), ["a", "b", "e"])
 
     def tearDown(self):
         del self.G1
@@ -190,8 +169,7 @@ class TestNaiveBayesFit(unittest.TestCase):
 
     def test_fit_model_creation(self):
         values = pd.DataFrame(
-            np.random.randint(low=0, high=2, size=(1000, 5)),
-            columns=["A", "B", "C", "D", "E"],
+            np.random.randint(low=0, high=2, size=(1000, 5)), columns=["A", "B", "C", "D", "E"]
         )
 
         self.model1.fit(values, "A")
@@ -212,8 +190,7 @@ class TestNaiveBayesFit(unittest.TestCase):
 
     def test_fit_model_creation_exception(self):
         values = pd.DataFrame(
-            np.random.randint(low=0, high=2, size=(1000, 5)),
-            columns=["A", "B", "C", "D", "E"],
+            np.random.randint(low=0, high=2, size=(1000, 5)), columns=["A", "B", "C", "D", "E"]
         )
         values2 = pd.DataFrame(
             np.random.randint(low=0, high=2, size=(1000, 3)), columns=["C", "D", "E"]

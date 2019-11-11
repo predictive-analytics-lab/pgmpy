@@ -85,16 +85,12 @@ def chi_square(X, Y, Z, data, **kwargs):
     if not sufficient_data:
         warn(
             "Insufficient data for testing {0} _|_ {1} | {2}. ".format(X, Y, Z)
-            + "At least {0} samples recommended, {1} present.".format(
-                5 * num_params, len(data)
-            )
+            + "At least {0} samples recommended, {1} present.".format(5 * num_params, len(data))
         )
 
     # compute actual frequency/state_count table:
     # = P(X,Y,Zs)
-    XYZ_state_counts = pd.crosstab(
-        index=data[X], columns=[data[Y]] + [data[z] for z in Z]
-    )
+    XYZ_state_counts = pd.crosstab(index=data[X], columns=[data[Y]] + [data[z] for z in Z])
     # reindex to add missing rows & columns (if some values don't appear in data)
     row_index = state_names[X]
     column_index = pd.MultiIndex.from_product(
@@ -102,9 +98,7 @@ def chi_square(X, Y, Z, data, **kwargs):
     )
     if not isinstance(XYZ_state_counts.columns, pd.MultiIndex):
         XYZ_state_counts.columns = pd.MultiIndex.from_arrays([XYZ_state_counts.columns])
-    XYZ_state_counts = XYZ_state_counts.reindex(
-        index=row_index, columns=column_index
-    ).fillna(0)
+    XYZ_state_counts = XYZ_state_counts.reindex(index=row_index, columns=column_index).fillna(0)
 
     # compute the expected frequency/state_count table if X _|_ Y | Zs:
     # = P(X|Zs)*P(Y|Zs)*P(Zs) = P(X,Zs)*P(Y,Zs)/P(Zs)
@@ -116,32 +110,24 @@ def chi_square(X, Y, Z, data, **kwargs):
         YZ_state_counts = XYZ_state_counts.sum()
     Z_state_counts = YZ_state_counts.sum()  # marginalize out both
 
-    XYZ_expected = pd.DataFrame(
-        index=XYZ_state_counts.index, columns=XYZ_state_counts.columns
-    )
+    XYZ_expected = pd.DataFrame(index=XYZ_state_counts.index, columns=XYZ_state_counts.columns)
     for X_val in XYZ_expected.index:
         if Z:
             for Y_val in XYZ_expected.columns.levels[0]:
                 XYZ_expected.loc[X_val, Y_val] = (
-                    XZ_state_counts.loc[X_val]
-                    * YZ_state_counts.loc[Y_val]
-                    / Z_state_counts
+                    XZ_state_counts.loc[X_val] * YZ_state_counts.loc[Y_val] / Z_state_counts
                 ).values
         else:
             for Y_val in XYZ_expected.columns:
                 XYZ_expected.loc[X_val, Y_val] = (
-                    XZ_state_counts.loc[X_val]
-                    * YZ_state_counts.loc[Y_val]
-                    / float(Z_state_counts)
+                    XZ_state_counts.loc[X_val] * YZ_state_counts.loc[Y_val] / float(Z_state_counts)
                 )
 
     observed = XYZ_state_counts.values.flatten()
     expected = XYZ_expected.fillna(0).values.flatten()
     # remove elements where the expected value is 0;
     # this also corrects the degrees of freedom for chisquare
-    observed, expected = zip(
-        *((o, e) for o, e in zip(observed, expected) if not e == 0)
-    )
+    observed, expected = zip(*((o, e) for o, e in zip(observed, expected) if not e == 0))
 
     chi2, significance_level = stats.chisquare(observed, expected)
 
@@ -180,17 +166,13 @@ def pearsonr(X, Y, Z, data):
     """
     # Step 1: Test if the inputs are correct
     if not hasattr(Z, "__iter__"):
-        raise ValueError(
-            "Variable Z. Expected type: iterable. Got type: {t}".format(t=type(Z))
-        )
+        raise ValueError("Variable Z. Expected type: iterable. Got type: {t}".format(t=type(Z)))
     else:
         Z = list(Z)
 
     if not isinstance(data, pd.DataFrame):
         raise ValueError(
-            "Variable data. Expected type: pandas.DataFrame. Got type: {t}".format(
-                t=type(data)
-            )
+            "Variable data. Expected type: pandas.DataFrame. Got type: {t}".format(t=type(data))
         )
 
     # Step 2: If Z is empty compute a non-conditional test.

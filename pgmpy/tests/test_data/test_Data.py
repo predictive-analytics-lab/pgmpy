@@ -11,9 +11,7 @@ from pgmpy.data import Data
 class TestData(unittest.TestCase):
     def setUp(self):
         self.random_values = np.random.randint(low=0, high=2, size=(1000000, 5))
-        self.random_df = pd.DataFrame(
-            self.random_values, columns=["A", "B", "C", "D", "E"]
-        )
+        self.random_df = pd.DataFrame(self.random_values, columns=["A", "B", "C", "D", "E"])
         self.random_data = Data(self.random_df)
 
         self.dep_df = self.random_df.copy()

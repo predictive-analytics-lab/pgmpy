@@ -40,9 +40,7 @@ class Data(object):
         else:
             data = np.array(data)
             if data.ndim != 2:
-                raise ValueError(
-                    "data must be a 2-D array or a pandas.DataFrame instance"
-                )
+                raise ValueError("data must be a 2-D array or a pandas.DataFrame instance")
             self.data = pd.DataFrame(data, columns=variables)
             self.variables = variables
 
@@ -79,9 +77,7 @@ class Data(object):
                 chi_stat, p_value, dof, _ = stats.chi2_contingency(observed)
 
             else:
-                observed_combinations = (
-                    self.data.groupby(conditioned_vars).size().reset_index()
-                )
+                observed_combinations = self.data.groupby(conditioned_vars).size().reset_index()
                 chi_stat = 0
                 dof = 0
                 for combination in range(len(observed_combinations)):

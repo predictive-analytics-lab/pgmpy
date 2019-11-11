@@ -9,9 +9,7 @@ from pgmpy.extern import six
 
 class TestBaseEstimator(unittest.TestCase):
     def setUp(self):
-        self.rand_data = pd.DataFrame(
-            np.random.randint(0, 5, size=(5000, 2)), columns=list("AB")
-        )
+        self.rand_data = pd.DataFrame(np.random.randint(0, 5, size=(5000, 2)), columns=list("AB"))
         self.rand_data["C"] = self.rand_data["B"]
         self.est_rand = ExhaustiveSearch(self.rand_data)
         self.est_rand_bdeu = ExhaustiveSearch(
@@ -22,9 +20,7 @@ class TestBaseEstimator(unittest.TestCase):
         )
 
         # link to dataset: "https://www.kaggle.com/c/titanic/download/train.csv"
-        self.titanic_data = pd.read_csv(
-            "pgmpy/tests/test_estimators/testdata/titanic_train.csv"
-        )
+        self.titanic_data = pd.read_csv("pgmpy/tests/test_estimators/testdata/titanic_train.csv")
         self.titanic_data2 = self.titanic_data[["Survived", "Sex", "Pclass"]]
         self.est_titanic = ExhaustiveSearch(self.titanic_data2)
 
@@ -33,9 +29,7 @@ class TestBaseEstimator(unittest.TestCase):
         # self.assertEqual(len(list(self.est_rand.all_dags(nodes=range(5)))), 29281)  # takes ~30s
 
         abc_dags = set(
-            six.moves.map(
-                tuple, [sorted(dag.edges()) for dag in self.est_rand.all_dags()]
-            )
+            six.moves.map(tuple, [sorted(dag.edges()) for dag in self.est_rand.all_dags()])
         )
         abc_dags_ref = set(
             [
@@ -71,27 +65,22 @@ class TestBaseEstimator(unittest.TestCase):
     def test_estimate_rand(self):
         est = self.est_rand.estimate()
         self.assertSetEqual(set(est.nodes()), set(["A", "B", "C"]))
-        self.assertTrue(
-            list(est.edges()) == [("B", "C")] or list(est.edges()) == [("C", "B")]
-        )
+        self.assertTrue(list(est.edges()) == [("B", "C")] or list(est.edges()) == [("C", "B")])
 
         est_bdeu = self.est_rand.estimate()
         self.assertTrue(
-            list(est_bdeu.edges()) == [("B", "C")]
-            or list(est_bdeu.edges()) == [("C", "B")]
+            list(est_bdeu.edges()) == [("B", "C")] or list(est_bdeu.edges()) == [("C", "B")]
         )
 
         est_bic = self.est_rand.estimate()
         self.assertTrue(
-            list(est_bic.edges()) == [("B", "C")]
-            or list(est_bic.edges()) == [("C", "B")]
+            list(est_bic.edges()) == [("B", "C")] or list(est_bic.edges()) == [("C", "B")]
         )
 
     def test_estimate_titanic(self):
         e1 = self.est_titanic.estimate()
         self.assertSetEqual(
-            set(e1.edges()),
-            set([("Survived", "Pclass"), ("Sex", "Pclass"), ("Sex", "Survived")]),
+            set(e1.edges()), set([("Survived", "Pclass"), ("Sex", "Pclass"), ("Sex", "Survived")])
         )
 
     def test_all_scores(self):
@@ -116,30 +105,12 @@ class TestBaseEstimator(unittest.TestCase):
             (-1894.2501991761198, [("Pclass", "Survived"), ("Survived", "Sex")]),
             (-1894.2282564935958, [("Sex", "Survived"), ("Survived", "Pclass")]),
             (-1891.0630673606006, [("Pclass", "Survived"), ("Sex", "Survived")]),
-            (
-                -1887.2215250849,
-                [("Pclass", "Sex"), ("Pclass", "Survived"), ("Sex", "Survived")],
-            ),
-            (
-                -1887.1642506270096,
-                [("Pclass", "Survived"), ("Sex", "Pclass"), ("Sex", "Survived")],
-            ),
-            (
-                -1887.0907383830947,
-                [("Pclass", "Sex"), ("Survived", "Pclass"), ("Survived", "Sex")],
-            ),
-            (
-                -1887.0771788477243,
-                [("Pclass", "Sex"), ("Pclass", "Survived"), ("Survived", "Sex")],
-            ),
-            (
-                -1885.9200755341915,
-                [("Sex", "Pclass"), ("Survived", "Pclass"), ("Survived", "Sex")],
-            ),
-            (
-                -1885.884573316297,
-                [("Sex", "Pclass"), ("Sex", "Survived"), ("Survived", "Pclass")],
-            ),
+            (-1887.2215250849, [("Pclass", "Sex"), ("Pclass", "Survived"), ("Sex", "Survived")]),
+            (-1887.1642506270096, [("Pclass", "Survived"), ("Sex", "Pclass"), ("Sex", "Survived")]),
+            (-1887.0907383830947, [("Pclass", "Sex"), ("Survived", "Pclass"), ("Survived", "Sex")]),
+            (-1887.0771788477243, [("Pclass", "Sex"), ("Pclass", "Survived"), ("Survived", "Sex")]),
+            (-1885.9200755341915, [("Sex", "Pclass"), ("Survived", "Pclass"), ("Survived", "Sex")]),
+            (-1885.884573316297, [("Sex", "Pclass"), ("Sex", "Survived"), ("Survived", "Pclass")]),
         ]
 
         self.assertEqual(

@@ -14,9 +14,7 @@ class TestBayesianModelSampling(unittest.TestCase):
         )
         cpd_a = TabularCPD("A", 2, [[0.2], [0.8]])
         cpd_r = TabularCPD("R", 2, [[0.4], [0.6]])
-        cpd_j = TabularCPD(
-            "J", 2, [[0.9, 0.6, 0.7, 0.1], [0.1, 0.4, 0.3, 0.9]], ["R", "A"], [2, 2]
-        )
+        cpd_j = TabularCPD("J", 2, [[0.9, 0.6, 0.7, 0.1], [0.1, 0.4, 0.3, 0.9]], ["R", "A"], [2, 2])
         cpd_q = TabularCPD("Q", 2, [[0.9, 0.2], [0.1, 0.8]], ["J"], [2])
         cpd_l = TabularCPD(
             "L", 2, [[0.9, 0.45, 0.8, 0.1], [0.1, 0.55, 0.2, 0.9]], ["G", "J"], [2, 2]
@@ -118,9 +116,7 @@ class TestGibbsSampling(unittest.TestCase):
         # A test Markov model
         self.markov_model = MarkovModel([("A", "B"), ("C", "B"), ("B", "D")])
         factor_ab = DiscreteFactor(["A", "B"], [2, 3], [1, 2, 3, 4, 5, 6])
-        factor_cb = DiscreteFactor(
-            ["C", "B"], [4, 3], [3, 1, 4, 5, 7, 8, 1, 3, 10, 4, 5, 6]
-        )
+        factor_cb = DiscreteFactor(["C", "B"], [4, 3], [3, 1, 4, 5, 7, 8, 1, 3, 10, 4, 5, 6])
         factor_bd = DiscreteFactor(["B", "D"], [3, 2], [5, 7, 2, 1, 9, 3])
         self.markov_model.add_factors(factor_ab, factor_cb, factor_bd)
 
@@ -130,9 +126,7 @@ class TestGibbsSampling(unittest.TestCase):
         del self.bayesian_model
         del self.markov_model
 
-    @patch(
-        "pgmpy.sampling.GibbsSampling._get_kernel_from_bayesian_model", autospec=True
-    )
+    @patch("pgmpy.sampling.GibbsSampling._get_kernel_from_bayesian_model", autospec=True)
     @patch("pgmpy.models.MarkovChain.__init__", autospec=True)
     def test_init_bayesian_model(self, init, get_kernel):
         model = MagicMock(spec_set=BayesianModel)
@@ -173,11 +167,7 @@ class TestGibbsSampling(unittest.TestCase):
     @patch("pgmpy.sampling.GibbsSampling.random_state", autospec=True)
     def test_sample_less_arg(self, random_state):
         self.gibbs.state = None
-        random_state.return_value = [
-            State("diff", 0),
-            State("intel", 0),
-            State("grade", 0),
-        ]
+        random_state.return_value = [State("diff", 0), State("intel", 0), State("grade", 0)]
         sample = self.gibbs.sample(size=2)
         random_state.assert_called_once_with(self.gibbs)
         self.assertEqual(len(sample), 2)
@@ -188,12 +178,10 @@ class TestGibbsSampling(unittest.TestCase):
         samples = [sample for sample in gen]
         self.assertEqual(len(samples), 2)
         self.assertEqual(
-            {samples[0][0].var, samples[0][1].var, samples[0][2].var},
-            {"diff", "intel", "grade"},
+            {samples[0][0].var, samples[0][1].var, samples[0][2].var}, {"diff", "intel", "grade"}
         )
         self.assertEqual(
-            {samples[1][0].var, samples[1][1].var, samples[1][2].var},
-            {"diff", "intel", "grade"},
+            {samples[1][0].var, samples[1][1].var, samples[1][2].var}, {"diff", "intel", "grade"}
         )
 
     @patch("pgmpy.sampling.GibbsSampling.random_state", autospec=True)

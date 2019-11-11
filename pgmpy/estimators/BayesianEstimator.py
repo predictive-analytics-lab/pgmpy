@@ -20,9 +20,7 @@ class BayesianEstimator(ParameterEstimator):
 
         super(BayesianEstimator, self).__init__(model, data, **kwargs)
 
-    def get_parameters(
-        self, prior_type="BDeu", equivalent_sample_size=5, pseudo_counts=None
-    ):
+    def get_parameters(self, prior_type="BDeu", equivalent_sample_size=5, pseudo_counts=None):
         """
         Method to estimate the model parameters (CPDs).
 
@@ -85,9 +83,7 @@ class BayesianEstimator(ParameterEstimator):
 
         return parameters
 
-    def estimate_cpd(
-        self, node, prior_type="BDeu", pseudo_counts=[], equivalent_sample_size=5
-    ):
+    def estimate_cpd(self, node, prior_type="BDeu", pseudo_counts=[], equivalent_sample_size=5):
         """
         Method to estimate the CPD for a given variable.
 
@@ -152,9 +148,7 @@ class BayesianEstimator(ParameterEstimator):
             pseudo_counts = np.array(pseudo_counts)
             if pseudo_counts.shape != cpd_shape:
                 raise ValueError(
-                    "The shape of pseudo_counts must be: {shape}".format(
-                        shape=str(cpd_shape)
-                    )
+                    "The shape of pseudo_counts must be: {shape}".format(shape=str(cpd_shape))
                 )
         else:
             raise ValueError("'prior_type' not specified")

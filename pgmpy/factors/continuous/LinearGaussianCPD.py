@@ -34,9 +34,7 @@ class LinearGaussianCPD(BaseFactor):
     Reference: https://cedar.buffalo.edu/~srihari/CSE574/Chap8/Ch8-PGM-GaussianBNs/8.5%20GaussianBNs.pdf
     """
 
-    def __init__(
-        self, variable, evidence_mean, evidence_variance, evidence=[], beta=None
-    ):
+    def __init__(self, variable, evidence_mean, evidence_variance, evidence=[], beta=None):
         """
         Parameters
         ----------
@@ -151,12 +149,9 @@ class LinearGaussianCPD(BaseFactor):
                     self.beta[i + 1]
                     * self.beta[j + 1]
                     * (
-                        self.sum_of_product(
-                            x_df[self.evidence[i]], x_df[self.evidence[j]]
-                        )
+                        self.sum_of_product(x_df[self.evidence[i]], x_df[self.evidence[j]])
                         / x_len_df
-                        - np.mean(x_df[self.evidence[i]])
-                        * np.mean(x_df[self.evidence[j]])
+                        - np.mean(x_df[self.evidence[i]]) * np.mean(x_df[self.evidence[j]])
                     )
                 )
 
@@ -198,12 +193,9 @@ class LinearGaussianCPD(BaseFactor):
             # and the rest of the elements give the mean values of the parent
             # variables.
             mean = (
-                sum([arg * coeff for (arg, coeff) in zip(args[1:], self.beta_vector)])
-                + self.beta_0
+                sum([arg * coeff for (arg, coeff) in zip(args[1:], self.beta_vector)]) + self.beta_0
             )
-            return multivariate_normal.pdf(
-                args[0], np.array(mean), np.array([[self.variance]])
-            )
+            return multivariate_normal.pdf(args[0], np.array(mean), np.array([[self.variance]]))
 
         return _pdf
 
@@ -225,9 +217,7 @@ class LinearGaussianCPD(BaseFactor):
         >>> copy_cpd.evidence
         ['X1', 'X2', 'X3']
         """
-        copy_cpd = LinearGaussianCPD(
-            self.variable, self.beta, self.variance, list(self.evidence)
-        )
+        copy_cpd = LinearGaussianCPD(self.variable, self.beta, self.variance, list(self.evidence))
 
         return copy_cpd
 
@@ -249,8 +239,6 @@ class LinearGaussianCPD(BaseFactor):
         else:
             # P(X) = N(1, 4)
             rep_str = "P({X}) = N({beta_0}; {variance})".format(
-                X=str(self.variable),
-                beta_0=str(self.beta_0),
-                variance=str(self.variance),
+                X=str(self.variable), beta_0=str(self.beta_0), variance=str(self.variance)
             )
         return rep_str
