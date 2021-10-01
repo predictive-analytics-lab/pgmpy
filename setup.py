@@ -2,7 +2,7 @@
 
 from setuptools import setup, find_packages
 
-VERSION = "v0.1.8.dev45.PAL"
+VERSION = "v0.1.8"
 
 setup(
     name="pgmpy",
